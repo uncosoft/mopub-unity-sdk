@@ -1,0 +1,4 @@
+rootProject.name = 'mopub-sdk-unity'
+
+include ':mopub-android-sdk:mopub-sdk'
+project(':mopub-android-sdk:mopub-sdk').projectDir = new File("../mopub-android-sdk/mopub-sdk")

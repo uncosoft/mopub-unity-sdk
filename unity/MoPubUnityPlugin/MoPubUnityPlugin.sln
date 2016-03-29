@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{F99C1634-ADD8-8B76-DBDD-A87C65687C99}") = "MoPubUnityPlugin", "Assembly-CSharp.csproj", "{92C63252-84C5-91EE-20C8-AED5576EAB39}"
+EndProject
+Project("{F99C1634-ADD8-8B76-DBDD-A87C65687C99}") = "MoPubUnityPlugin", "Assembly-CSharp-Editor.csproj", "{064E510D-301B-D26F-01BA-6647D0E87374}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92C63252-84C5-91EE-20C8-AED5576EAB39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92C63252-84C5-91EE-20C8-AED5576EAB39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92C63252-84C5-91EE-20C8-AED5576EAB39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92C63252-84C5-91EE-20C8-AED5576EAB39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{064E510D-301B-D26F-01BA-6647D0E87374}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{064E510D-301B-D26F-01BA-6647D0E87374}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{064E510D-301B-D26F-01BA-6647D0E87374}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{064E510D-301B-D26F-01BA-6647D0E87374}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
