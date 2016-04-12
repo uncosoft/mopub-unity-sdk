@@ -48,6 +48,7 @@
 				CheckiOSVersion ();
 
 				PrepareProject (buildPath);
+				RenameMRAIDSource (buildPath);
 			}
 		}
 
@@ -83,6 +84,16 @@
 			AddBuildProperty (project, target, "OTHER_LDFLAGS", "-ObjC");
 
 			File.WriteAllText (projPath, project.WriteToString());			
+		}
+
+		private static void RenameMRAIDSource (string buildPath)
+		{
+			// Unity will try to compile anything with the ".js" extension. Since mraid.js is not intended
+			// for Unity, it'd break the build. So we store the file with a fake extension and after the 
+			// build rename it to the correct one.
+			
+			string basePath = Path.Combine (buildPath, "Frameworks/Plugins/iOS/Fabric/MoPub/MRAID.bundle");
+			File.Move(Path.Combine(basePath, "mraid.js.prevent_unity_compilation"), Path.Combine(basePath, "mraid.js"));
 		}
 	}
 }
