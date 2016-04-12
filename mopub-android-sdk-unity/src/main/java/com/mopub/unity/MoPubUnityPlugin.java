@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Set;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,11 +22,13 @@ import android.widget.RelativeLayout;
 import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPub;
 import com.mopub.common.MoPubReward;
+import com.mopub.mobileads.*;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubRewardedVideoListener;
 import com.mopub.mobileads.MoPubView;
+import com.mopub.mobileads.VungleRewardedVideo.VungleMediationSettings;
 import com.unity3d.player.UnityPlayer;
 
 import static com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
@@ -359,69 +362,69 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
     {
         ArrayList<MediationSettings> settings = new ArrayList<MediationSettings>();
 
-//        try
-//        {
-//            JSONArray jsonArray = new JSONArray( json );
-//            for( int i = 0; i < jsonArray.length(); i++ )
-//            {
-//                JSONObject jsonObj = jsonArray.getJSONObject( i );
-//                String adVendor = jsonObj.getString( "adVendor" );
-//                Log.i( TAG, "adding MediationSettings for ad vendor: " + adVendor );
-//
-//                if( adVendor.equalsIgnoreCase( "chartboost" ) )
-//                {
-//                    if( jsonObj.has( "customId" ) )
-//                    {
-//                        MediationSettings s = new com.mopub.mobileads.ChartboostRewardedVideo.ChartboostMediationSettings( jsonObj.getString( "customId" ) );
-//                        settings.add( s );
-//                    }
-//                    else
-//                    {
-//                        Log.i( TAG, "No customId key found in the settings object. Aborting adding Chartboost MediationSettings" );
-//                    }
-//                }
-//                else if( adVendor.equalsIgnoreCase( "vungle" ) )
-//                {
-//                    VungleMediationSettings.Builder s = new VungleMediationSettings.Builder();
-//
-//                    if( jsonObj.has( "userId" ) )
-//                        s.withUserId( jsonObj.getString( "userId" ) );
-//
-//                    if( jsonObj.has( "cancelDialogBody" ) )
-//                        s.withCancelDialogBody( jsonObj.getString( "cancelDialogBody" ) );
-//
-//                    if( jsonObj.has( "cancelDialogCloseButton" ) )
-//                        s.withCancelDialogCloseButton( jsonObj.getString( "cancelDialogCloseButton" ) );
-//
-//                    if( jsonObj.has( "cancelDialogKeepWatchingButton" ) )
-//                        s.withCancelDialogKeepWatchingButton( jsonObj.getString( "cancelDialogKeepWatchingButton" ) );
-//
-//                    if( jsonObj.has( "cancelDialogTitle" ) )
-//                        s.withCancelDialogTitle( jsonObj.getString( "cancelDialogTitle" ) );
-//
-//                    settings.add( s.build() );
-//                }
-//                else if( adVendor.equalsIgnoreCase( "adcolony" ) )
-//                {
-//                    if( jsonObj.has( "withConfirmationDialog" ) && jsonObj.has( "withResultsDialog" ) )
-//                    {
-//                        boolean withConfirmationDialog = jsonObj.getBoolean( "withConfirmationDialog" );
-//                        boolean withResultsDialog = jsonObj.getBoolean( "withResultsDialog" );
-//
-//                        MediationSettings s = new com.mopub.mobileads.AdColonyRewardedVideo.AdColonyInstanceMediationSettings( withConfirmationDialog, withResultsDialog );
-//                        settings.add( s );
-//                    }
-//                }
-//                else
-//                {
-//                    Log.e( TAG, "adVendor not available for custom mediation settings: [" + adVendor + "]" );
-//                }
-//            }
-//        }
-//        catch( JSONException e )
-//        {
-//            e.printStackTrace();
-//        }
+        try
+        {
+            JSONArray jsonArray = new JSONArray( json );
+            for( int i = 0; i < jsonArray.length(); i++ )
+            {
+                JSONObject jsonObj = jsonArray.getJSONObject( i );
+                String adVendor = jsonObj.getString( "adVendor" );
+                Log.i( TAG, "adding MediationSettings for ad vendor: " + adVendor );
+
+                if( adVendor.equalsIgnoreCase( "chartboost" ) )
+                {
+                    if( jsonObj.has( "customId" ) )
+                    {
+                        MediationSettings s = new com.mopub.mobileads.ChartboostRewardedVideo.ChartboostMediationSettings( jsonObj.getString( "customId" ) );
+                        settings.add( s );
+                    }
+                    else
+                    {
+                        Log.i( TAG, "No customId key found in the settings object. Aborting adding Chartboost MediationSettings" );
+                    }
+                }
+                else if( adVendor.equalsIgnoreCase( "vungle" ) )
+                {
+                    VungleMediationSettings.Builder s = new VungleMediationSettings.Builder();
+
+                    if( jsonObj.has( "userId" ) )
+                        s.withUserId( jsonObj.getString( "userId" ) );
+
+                    if( jsonObj.has( "cancelDialogBody" ) )
+                        s.withCancelDialogBody( jsonObj.getString( "cancelDialogBody" ) );
+
+                    if( jsonObj.has( "cancelDialogCloseButton" ) )
+                        s.withCancelDialogCloseButton( jsonObj.getString( "cancelDialogCloseButton" ) );
+
+                    if( jsonObj.has( "cancelDialogKeepWatchingButton" ) )
+                        s.withCancelDialogKeepWatchingButton( jsonObj.getString( "cancelDialogKeepWatchingButton" ) );
+
+                    if( jsonObj.has( "cancelDialogTitle" ) )
+                        s.withCancelDialogTitle( jsonObj.getString( "cancelDialogTitle" ) );
+
+                    settings.add( s.build() );
+                }
+                else if( adVendor.equalsIgnoreCase( "adcolony" ) )
+                {
+                    if( jsonObj.has( "withConfirmationDialog" ) && jsonObj.has( "withResultsDialog" ) )
+                    {
+                        boolean withConfirmationDialog = jsonObj.getBoolean( "withConfirmationDialog" );
+                        boolean withResultsDialog = jsonObj.getBoolean( "withResultsDialog" );
+
+                        MediationSettings s = new com.mopub.mobileads.AdColonyRewardedVideo.AdColonyInstanceMediationSettings( withConfirmationDialog, withResultsDialog );
+                        settings.add( s );
+                    }
+                }
+                else
+                {
+                    Log.e( TAG, "adVendor not available for custom mediation settings: [" + adVendor + "]" );
+                }
+            }
+        }
+        catch( JSONException e )
+        {
+            e.printStackTrace();
+        }
 
         return settings.toArray( new MediationSettings[settings.size()] );
     }

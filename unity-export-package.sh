@@ -15,5 +15,8 @@ $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exp
 
 if [[ $? -ne 0 ]]; then
     echo "Building the unity package has failed, please check $EXPORT_LOG"
+    echo "Make sure Unity isn't running when invoking this script!"
     exit 1
 fi
+
+echo "Exported $DEST_PACKAGE"
