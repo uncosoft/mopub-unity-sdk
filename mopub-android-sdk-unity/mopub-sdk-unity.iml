@@ -93,10 +93,18 @@
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="UnityPlayer" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="InMobi-4.5.2" level="project" />
     <orderEntry type="library" exported="" name="mopub-volley-1.1.0" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="1_mopub-volley-1.1.0" level="project" />
+    <orderEntry type="library" exported="" name="MMSDK" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="unity-ads" level="project" />
+    <orderEntry type="library" exported="" name="AudienceNetwork" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="VunglePub" level="project" />
+    <orderEntry type="library" exported="" name="adcolony" level="project" />
+    <orderEntry type="library" exported="" name="chartboost" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="mockable-android-22" level="project" />
     <orderEntry type="module" module-name="mopub-sdk" exported="" />
   </component>
