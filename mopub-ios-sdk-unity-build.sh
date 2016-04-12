@@ -6,16 +6,14 @@ if [[ -e mopub-ios-sdk-unity/bin/libmopub-ios-sdk-unity.a ]]; then
     mv mopub-ios-sdk-unity/bin/libMoPubSDK.a mopub-ios-sdk-unity/bin/libMoPubSDK.a.backup
 fi
 
-cd mopub-ios-sdk-unity
-xcodebuild -workspace mopub-ios-sdk.xcworkspace/ -scheme mopub-ios-sdk-unity clean
-xcodebuild -workspace mopub-ios-sdk.xcworkspace/ -scheme mopub-ios-sdk-unity build
+xcrun xcodebuild -project mopub-ios-sdk-unity/mopub-ios-sdk-unity.xcodeproj -scheme "MoPub for Unity" -destination generic/platform=iphoneos clean
+xcrun xcodebuild -project mopub-ios-sdk-unity/mopub-ios-sdk-unity.xcodeproj -scheme "MoPub for Unity" -destination generic/platform=iphoneos build
 
 if [[ $? -ne 0 ]]; then
     echo "Building mopub-ios-sdk-unity failed, quitting..."
     exit 1
 fi
 
-cd ..
 cp mopub-ios-sdk-unity/bin/libmopub-ios-sdk-unity.a unity/MoPubUnityPlugin/Assets/Plugins/iOS/mopub/libmopub-ios-sdk-unity.a
 cp mopub-ios-sdk-unity/bin/libMoPubSDK.a unity/MoPubUnityPlugin/Assets/Plugins/iOS/mopub/libMoPubSDK.a
 
