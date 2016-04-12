@@ -48,6 +48,7 @@
 				CheckiOSVersion ();
 
 				PrepareProject (buildPath);
+
 				RenameMRAIDSource (buildPath);
 			}
 		}
