@@ -574,6 +574,7 @@
 				1832FFE71CBD33070065521D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4D208F081CAD6A2100F2C8F0 /* Build configuration list for PBXProject "mopub-ios-sdk-unity" */ = {
 			isa = XCConfigurationList;
