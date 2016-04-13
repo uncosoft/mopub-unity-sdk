@@ -123,6 +123,10 @@
 #endif
 		}
 
+		protected static void PreparePlist(string buildpath, string descriptor)
+		{
+		}
+
 		protected static void AddBuildProperty(PBXProject project, string target, string property, string value)
 		{
 			project.AddBuildProperty (target, property, value);

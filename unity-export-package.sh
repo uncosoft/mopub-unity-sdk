@@ -34,7 +34,7 @@ rm mopub.tar.gz
 find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read pathname filename; do
     parent="$(dirname "$filename")"
 
-    if [[ $pathname == *"Support"* ]]; then
+    if [[ $pathname == *"Support"* ]] && [[ $pathname != *"Support/MoPubSDK"* ]]; then
 	echo "Removing $filename ($pathname), and parent dir $parent from main package"
 	rm -rf $filename
 	rm -rf $parent

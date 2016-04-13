@@ -48,6 +48,7 @@
 				CheckiOSVersion ();
 
 				PrepareProject (buildPath);
+				PreparePlist (buildPath, "MoPub");
 
 				RenameMRAIDSource (buildPath);
 			}
