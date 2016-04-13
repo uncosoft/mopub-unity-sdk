@@ -11,6 +11,8 @@ EXPORT_LOG="$OUT_DIR/exportlog.txt"
 rm -rf $OUT_DIR
 mkdir -p $OUT_DIR
 
+echo "Attempting to export the main package..."
+
 $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $EXPORT_FOLDERS_MAIN $DEST_PACKAGE
 
 if [[ $? -ne 0 ]]; then
@@ -20,6 +22,8 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # We need to remove the Support folders from the main package
+
+echo "Done, removing third-party support folders from the main package..."
 
 mkdir -p $OUT_DIR/trim
 mv $DEST_PACKAGE $OUT_DIR/trim/mopub.tar.gz
@@ -37,9 +41,20 @@ find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read
     fi
 done
 
-tar -zcf MoPubUnityPlugin.unitypackage *
-mv MoPubUnityPlugin.unitypackage ../
+tar -zcf "$PACKAGE_NAME.unitypackage" *
+mv "$PACKAGE_NAME.unitypackage" ../
 cd ..
 rm -rf trim
 
 echo "Exported $DEST_PACKAGE"
+
+SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "Millennial" "UnityAds" "Vungle" )
+
+for SUPPORT_LIB in "${SUPPORT_LIBS[@]}"
+do
+    EXPORT_FOLDERS_SUPPORT="Assets/MoPub/Editor/Support/$SUPPORT_LIB"
+    DEST_PACKAGE="$OUT_DIR/${SUPPORT_LIB}Support.unitypackage"
+
+    echo "Exporting $SUPPORT_LIB ($EXPORT_FOLDERS_SUPPORT) to $DEST_PACKAGE"
+    $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $EXPORT_FOLDERS_SUPPORT $DEST_PACKAGE
+done
