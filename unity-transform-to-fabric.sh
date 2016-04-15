@@ -11,19 +11,28 @@ fi
 
 mkdir -p out/transform
 
+# Unpack the mopub package.
+
 cd out/transform
 cp ../MoPubUnity.unitypackage mopub.tar.gz
 tar -xf mopub.tar.gz
 rm mopub.tar.gz
 
+# Remove all files that exist in Fabric; namely MiniJSON and the PBX manipulator.
+
 find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read pathname filename; do
     parent="$(dirname "$filename")"
+
+    # Remove third-party dependencies that exist in Fabric, and remove the PostBuildiOS.cs base file, it also exists in
+    # Fabric.
 
     if [[ $pathname == *"ThirdParty"* ]] || [[ $pathname == *"/PostBuildiOS"* ]]; then
 	echo "Removing $filename ($pathname), and parent dir $parent"
 	rm -rf $filename
 	rm -rf $parent
     fi
+
+    # Replace the references to MiniJSON and PBX with Fabric-namespced versions.
 
     if [[ $pathname == *"/MoPubPostBuildiOS"* ]]; then
 	echo "Modifying MoPubPostBuildiOS"
@@ -41,6 +50,8 @@ find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read
 	sed -i -e 's/MoPubInternal\.ThirdParty\.MiniJSON\.Json\.Serialize/Fabric\.Internal\.ThirdParty\.MiniJSON\.Json\.Serialize/' $parent/asset
     fi
 done
+
+# Repack.
 
 tar -zcf MoPubUnityFabric.unitypackage *
 mv MoPubUnityFabric.unitypackage ../

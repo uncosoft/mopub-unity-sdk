@@ -13,6 +13,9 @@ mkdir -p $OUT_DIR
 
 echo "Attempting to export the main package..."
 
+# Programatically export MaPub.unitypackage. This will export all folders under Assets/MoPub and Assets/Plugins, including
+# all third-party network adapters. This is ok, in the next step, we remove those folders.
+
 $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $EXPORT_FOLDERS_MAIN $DEST_PACKAGE
 
 if [[ $? -ne 0 ]]; then
@@ -21,9 +24,11 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# We need to remove the Support folders from the main package
+# We need to remove the third-party network adapters from the main package. They will be exported separately.
 
 echo "Done, removing third-party support folders from the main package..."
+
+# Unpack the generated package.
 
 mkdir -p $OUT_DIR/trim
 mv $DEST_PACKAGE $OUT_DIR/trim/mopub.tar.gz
@@ -34,6 +39,8 @@ rm mopub.tar.gz
 find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read pathname filename; do
     parent="$(dirname "$filename")"
 
+    # Remove any path that contains "Support", but leave the MoPubSDK headers in place.
+
     if [[ $pathname == *"Support"* ]] && [[ $pathname != *"Support/MoPubSDK"* ]]; then
 	echo "Removing $filename ($pathname), and parent dir $parent from main package"
 	rm -rf $filename
@@ -41,12 +48,16 @@ find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read
     fi
 done
 
+# Repack the package.
+
 tar -zcf "$PACKAGE_NAME.unitypackage" *
 mv "$PACKAGE_NAME.unitypackage" ../
 cd ..
 rm -rf trim
 
 echo "Exported $DEST_PACKAGE"
+
+# Now, export each of the third-party network adapters.
 
 SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "Millennial" "UnityAds" "Vungle" )
 
