@@ -47,7 +47,7 @@ find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read
 	rm -rf $parent
     fi
 
-    if [[ $pathname == *"Android/assets"* ]] || [[ $pathname == *"google-play-services"* ]] || [[ $pathname == *"mopub-support"* ]]; then
+    if [[ $pathname == *"Android/assets"* ]] || [[ $pathname == *"google-play-services"* ]] || [[ $pathname == *"mopub-support"* ]] || [[ $pathname == *"mm-activity"* ]]; then
 	echo "Removing $filename ($pathname), and parent dir $parent from main package"
 	rm -rf $filename
 	rm -rf $parent
