@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_3_4;UNITY_5_3;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;ENABLE_RUNTIME_GI;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_NETWORK;ENABLE_LOG_MIXED_STACKTRACE;ENABLE_UNITYWEBREQUEST;ENABLE_TEXTUREID_MAP;PLAYERCONNECTION_LISTENS_FIXED_PORT;DEBUGGER_LISTENS_FIXED_PORT;PLATFORM_SUPPORTS_ADS_ID;SUPPORT_ENVIRONMENT_VARIABLES;PLATFORM_SUPPORTS_PROFILER;PLATFORM_HAS_NO_SUPPORT_FOR_BUCKET_ALLOCATOR;STRICTCPP_NEW_DELETE_SIGNATURES;WWW_USE_CURL;HAS_NEON_SKINNIG;UNITY_INPUT_SIMULATE_EVENTS;PLATFORM_ALWAYS_USES_STDOUT_FOR_LOG;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;UNITY_IOS;UNITY_IPHONE;UNITY_IPHONE_API;SUPPORT_MULTIPLE_DISPLAYS;ENABLE_IL2CPP;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_IOS_ON_DEMAND_RESOURCES;ENABLE_IOS_APP_SLICING;ENABLE_DUCK_TYPING</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_3_4;UNITY_5_3;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_LOG_MIXED_STACKTRACE;ENABLE_UNITYWEBREQUEST;PLATFORM_SUPPORTS_ADS_ID;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_DUCK_TYPING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -56,7 +56,106 @@
      <Compile Include="Assets\MoPub\Editor\ThirdParty\xcodeapi\PBXProject.cs" />
      <Compile Include="Assets\MoPub\Editor\ThirdParty\xcodeapi\PlistParser.cs" />
      <Compile Include="Assets\MoPub\Editor\ThirdParty\xcodeapi\Properties\AssemblyInfo.cs" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-lv\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-pt\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\color\wallet_primary_text_holo_light.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-en-rGB\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ar\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-am\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\drawable\common_signin_btn_text_dark.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ca\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\wallet_attrs.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\color\common_signin_btn_text_light.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ne-rNP\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\admob_ads_attrs.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-eu-rES\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-hy-rAM\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-zu\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-es\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-in\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-te-rIN\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ky-rKG\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-nb\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-km-rKH\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ta-rIN\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ml-rIN\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-bg\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\proguard.txt" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\drawable\common_signin_btn_icon_light.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-vi\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-af\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\drawable\common_signin_btn_icon_dark.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\color\wallet_secondary_text_holo_dark.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\wallet_colors.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-bn-rBD\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-pl\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-cs\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-fr\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\version.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-tl\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ur-rPK\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-uk\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\drawable\common_signin_btn_text_light.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\common_colors.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-is-rIS\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-it\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-hr\common_strings.xml" />
      <None Include="Assets\Plugins\Android\mopub\AndroidManifest.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ms-rMY\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-fr-rCA\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-lt\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\AndroidManifest.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\common_attrs.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\wallet_styles.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-sv\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ro\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-mk-rMK\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ka-rGE\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ko\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-es\wallet_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-zh-rHK\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\color\common_signin_btn_text_dark.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\mopub-support\AndroidManifest.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-zh-rCN\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-es-rUS\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-de\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-zh-rTW\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-nl\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-sw\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-fi\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-fa\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-be\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-uz-rUZ\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-hu\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-el\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-kn-rIN\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-sl\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\wallet_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-kk-rKZ\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-my-rMM\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-pt-rPT\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-sr\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\admob_iap_style.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-hi\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-da\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ja\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-tr\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-et-rEE\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-iw\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-sk\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-pt-rBR\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-mr-rIN\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-gl-rES\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\README.txt" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-th\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-mn-rMN\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\admob_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-si-rLK\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-ru\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-en-rIN\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values\maps_attrs.xml" />
+     <None Include="Assets\Plugins\Android\google-play-services\res\values-lo-rLA\common_strings.xml" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>
