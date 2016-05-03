@@ -108,8 +108,8 @@ public class AdColonyRewardedVideo extends CustomEventRewardedVideo {
 
     @Override
     public boolean checkAndInitializeSdk(@NonNull final Activity launcherActivity,
-                                         @NonNull final Map<String, Object> localExtras,
-                                         @NonNull final Map<String, String> serverExtras) throws Exception {
+            @NonNull final Map<String, Object> localExtras,
+            @NonNull final Map<String, String> serverExtras) throws Exception {
         synchronized (AdColonyRewardedVideo.class) {
             if (sInitialized) {
                 return false;
@@ -136,8 +136,8 @@ public class AdColonyRewardedVideo extends CustomEventRewardedVideo {
 
     @Override
     protected void loadWithSdkInitialized(@NonNull final Activity activity,
-                                          @NonNull final Map<String, Object> localExtras,
-                                          @NonNull final Map<String, String> serverExtras) throws Exception {
+            @NonNull final Map<String, Object> localExtras,
+            @NonNull final Map<String, String> serverExtras) throws Exception {
 
         mZoneId = DEFAULT_ZONE_ID;
         if (extrasAreValid(serverExtras)) {
@@ -244,6 +244,7 @@ public class AdColonyRewardedVideo extends CustomEventRewardedVideo {
         }
     }
 
+    // TODO: Add the AdColonyAdAvailabilityListener in AdColony 2.1+
     private static class AdColonyListener implements AdColonyAdListener,
             AdColonyV4VCListener, CustomEventRewardedVideoListener {
 

@@ -56,8 +56,8 @@ public class UnityRewardedVideo extends CustomEventRewardedVideo {
 
     @Override
     public boolean checkAndInitializeSdk(@NonNull final Activity launcherActivity,
-                                         @NonNull final Map<String, Object> localExtras,
-                                         @NonNull final Map<String, String> serverExtras) throws Exception {
+            @NonNull final Map<String, Object> localExtras,
+            @NonNull final Map<String, String> serverExtras) throws Exception {
         if (sInitialized) {
             return false;
         }
@@ -82,7 +82,7 @@ public class UnityRewardedVideo extends CustomEventRewardedVideo {
 
     @Override
     protected void loadWithSdkInitialized(@NonNull Activity activity,
-                                          @NonNull Map<String, Object> localExtras, @NonNull Map<String, String> serverExtras)
+            @NonNull Map<String, Object> localExtras, @NonNull Map<String, String> serverExtras)
             throws Exception {
 
         if (serverExtras.containsKey(ZONE_ID_KEY)) {

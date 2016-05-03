@@ -17,7 +17,7 @@ import static com.google.android.gms.ads.AdSize.LEADERBOARD;
 import static com.google.android.gms.ads.AdSize.MEDIUM_RECTANGLE;
 
 /*
- * Compatible with version 7.0.0 of the Google Play Services SDK.
+ * Compatible with version 7.8.0 of the Google Play Services SDK.
  */
 
 // Note: AdMob ads will now use this class as Google has deprecated the AdMob SDK.
@@ -67,7 +67,7 @@ class GooglePlayServicesBanner extends CustomEventBanner {
         mGoogleAdView.setAdSize(adSize);
 
         final AdRequest adRequest = new AdRequest.Builder()
-                //.setRequestAgent("MoPub")
+                .setRequestAgent("MoPub")
                 .build();
 
         try {
@@ -98,6 +98,7 @@ class GooglePlayServicesBanner extends CustomEventBanner {
         return serverExtras.containsKey(AD_UNIT_ID_KEY);
     }
 
+    // TODO: Alternatively we could make our own AdSize
     private AdSize calculateAdSize(int width, int height) {
         // Use the smallest AdSize that will properly contain the adView
         if (width <= BANNER.getWidth() && height <= BANNER.getHeight()) {

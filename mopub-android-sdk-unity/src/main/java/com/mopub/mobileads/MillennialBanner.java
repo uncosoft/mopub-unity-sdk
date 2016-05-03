@@ -39,7 +39,7 @@ class MillennialBanner extends CustomEventBanner {
 
     @Override
     protected void loadBanner(final Context context, final CustomEventBannerListener customEventBannerListener,
-                              final Map<String, Object> localExtras, final Map<String, String> serverExtras) {
+            final Map<String, Object> localExtras, final Map<String, String> serverExtras) {
 
         LayoutParams lp;
         String apid = null;
@@ -123,7 +123,7 @@ class MillennialBanner extends CustomEventBanner {
         }
 
         mInlineAd.setListener(new MillennialInlineListener());
-
+        
         /* If MoPub gets location, so do we. */
         MMSDK.setLocationEnabled( (localExtras.get("location") != null) );
 

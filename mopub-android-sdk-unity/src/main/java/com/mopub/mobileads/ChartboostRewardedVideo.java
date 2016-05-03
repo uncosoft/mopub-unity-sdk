@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * A custom event for showing Chartboost rewarded videos.
  *
- * Certified with Chartboost 5.3.0
+ * Certified with Chartboost 6.4.1
  */
 public class ChartboostRewardedVideo extends CustomEventRewardedVideo {
     @NonNull private static final LifecycleListener sLifecycleListener =
@@ -49,8 +49,8 @@ public class ChartboostRewardedVideo extends CustomEventRewardedVideo {
 
     @Override
     public boolean checkAndInitializeSdk(@NonNull Activity launcherActivity,
-                                         @NonNull Map<String, Object> localExtras,
-                                         @NonNull Map<String, String> serverExtras) throws Exception {
+            @NonNull Map<String, Object> localExtras,
+            @NonNull Map<String, String> serverExtras) throws Exception {
         // We need to attempt to reinitialize Chartboost on each request, in case an interstitial has been
         // loaded and used since then.
         ChartboostShared.initializeSdk(launcherActivity, serverExtras);  // throws IllegalStateException
@@ -62,7 +62,7 @@ public class ChartboostRewardedVideo extends CustomEventRewardedVideo {
 
     @Override
     protected void loadWithSdkInitialized(@NonNull Activity activity,
-                                          @NonNull Map<String, Object> localExtras, @NonNull Map<String, String> serverExtras)
+            @NonNull Map<String, Object> localExtras, @NonNull Map<String, String> serverExtras)
             throws Exception {
 
         if (serverExtras.containsKey(ChartboostShared.LOCATION_KEY)) {

@@ -32,7 +32,7 @@ class MillennialInterstitial extends CustomEventInterstitial {
 
     @Override
     protected void loadInterstitial(final Context context, final CustomEventInterstitialListener customEventInterstitialListener,
-                                    final Map<String, Object> localExtras, final Map<String, String> serverExtras) {
+            final Map<String, Object> localExtras, final Map<String, String> serverExtras) {
         String dcn = null;
         mInterstitialListener = customEventInterstitialListener;
         mContext = context;
@@ -81,7 +81,7 @@ class MillennialInterstitial extends CustomEventInterstitial {
         } catch ( IllegalStateException e ) {
             Log.i(LOGCAT_TAG, "SDK not finished initializing-- " + e.getMessage());
         }
-
+        
         /* If MoPub gets location, so do we. */
         MMSDK.setLocationEnabled( (localExtras.get("location") != null) );
 
@@ -177,7 +177,7 @@ class MillennialInterstitial extends CustomEventInterstitial {
 
         @Override
         public void onLoadFailed(InterstitialAd arg0,
-                                 InterstitialErrorStatus err) {
+                InterstitialErrorStatus err) {
             Log.d(LOGCAT_TAG, "Millennial Interstitial Ad - load failed (" + err.getErrorCode() + "): " + err.getDescription() );
             final MoPubErrorCode moPubErrorCode;
 
@@ -226,7 +226,7 @@ class MillennialInterstitial extends CustomEventInterstitial {
 
         @Override
         public void onShowFailed(InterstitialAd arg0,
-                                 InterstitialErrorStatus arg1) {
+                InterstitialErrorStatus arg1) {
             Log.e(LOGCAT_TAG, "Millennial Interstitial Ad - Show failed (" + arg1.getErrorCode() + "): " + arg1.getDescription());
             UI_THREAD_HANDLER.post(new Runnable() {
                 @Override
