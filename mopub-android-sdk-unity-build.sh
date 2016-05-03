@@ -14,7 +14,7 @@ fi
 
 cd ..
 cp mopub-android-sdk-unity/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub.jar
-cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk/3.13.0/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk.jar
+cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk/4.6.0/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk.jar
 
 if [[ $? -ne 0 ]]; then
     echo "Couldn't copy the generated jar into the Unity project, quitting..."
