@@ -8,6 +8,11 @@ public class MoPubDemoGUI : MonoBehaviour
 	private string _bannerAdUnit = "23b49916add211e281c11231392559e4";
 	private string _interstitialAdUnit = "3aba0056add211e281c11231392559e4";
 
+#if UNITY_IPHONE
+	private string _rewardedVideoAdUnit = "fdd35fb5d55b4ccf9ceb27c7a3926b7d";
+#else
+	private string _rewardedVideoAdUnit = "db2ef0eb1600433a8cdc31c75549c6b1";
+#endif
 
 	void Start()
 	{
@@ -91,22 +96,33 @@ public class MoPubDemoGUI : MonoBehaviour
 		GUILayout.Space( 20 );
 		if( GUILayout.Button( "Request Rewarded Video" ) )
 		{
-			MoPub.requestRewardedVideo( _interstitialAdUnit );
-			Debug.Log( "requesting rewarded video with ad unit: " + _interstitialAdUnit );
+			MoPub.requestRewardedVideo( _rewardedVideoAdUnit );
+			Debug.Log( "requesting rewarded video with ad unit: " + _rewardedVideoAdUnit );
 		}
 
 
 		if( GUILayout.Button( "Request Rewarded Video with Options" ) )
 		{
-			MoPub.requestRewardedVideo( _interstitialAdUnit, getMediationSettings() );
-			Debug.Log( "requesting rewarded video with ad unit: " + _interstitialAdUnit );
+			MoPub.requestRewardedVideo( _rewardedVideoAdUnit, getMediationSettings() );
+			Debug.Log( "requesting rewarded video with ad unit: " + _rewardedVideoAdUnit );
 		}
-
 
 		if( GUILayout.Button( "Show Rewarded Video" ) )
 		{
-			MoPub.showRewardedVideo( _interstitialAdUnit );
+			MoPub.showRewardedVideo( _rewardedVideoAdUnit );
 		}
+
+		if( GUILayout.Button( "Request MPX Rewarded Video" ) )
+		{
+			MoPub.requestRewardedVideo( _rewardedVideoAdUnit, null, "rewarded, video, mopub", 37.7833, 122.4167 );
+			Debug.Log( "requesting mpx rewarded video with ad unit: " + _rewardedVideoAdUnit );
+		}
+
+		if( GUILayout.Button( "Show MPX Rewarded Video" ) )
+		{
+			MoPub.showRewardedVideo( _rewardedVideoAdUnit );
+		}
+
 
 
 		GUILayout.EndVertical();
