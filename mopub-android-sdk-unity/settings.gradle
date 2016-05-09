@@ -1,4 +1,4 @@
 rootProject.name = 'mopub-sdk-unity'
 
-include ':mopub-sdk'
+include ':mopub-sdk', ':adcolony-custom-events'
 project(':mopub-sdk').projectDir = new File("../mopub-android-sdk/mopub-sdk")

@@ -1,5 +1,7 @@
 package com.mopub.unity;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -412,8 +414,31 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 						boolean withConfirmationDialog = jsonObj.getBoolean( "withConfirmationDialog" );
 						boolean withResultsDialog = jsonObj.getBoolean( "withResultsDialog" );
 
-						MediationSettings s = new com.mopub.mobileads.AdColonyRewardedVideo.AdColonyInstanceMediationSettings( withConfirmationDialog, withResultsDialog );
-						settings.add( s );
+//						MediationSettings s = new com.mopub.mobileads.AdColonyRewardedVideo.AdColonyInstanceMediationSettings( withConfirmationDialog, withResultsDialog );
+
+						try {
+							Class<?> cls = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo.AdColonyInstanceMediationSettings");
+                            MediationSettings s = (MediationSettings) cls.getConstructor(boolean.class, boolean.class).newInstance(withConfirmationDialog, withResultsDialog);
+
+							settings.add(s);
+						} catch( ClassNotFoundException e ) {
+							Log.i( TAG, "could not find AdColony AdColonyInstanceMediationSettings class. Did you add the AdColony Network SDK to your Android folder?" );
+
+
+                            StringWriter errors = new StringWriter();
+                            e.printStackTrace(new PrintWriter(errors));
+                            Log.i(TAG, errors.toString());
+						} catch (InstantiationException e) {
+							e.printStackTrace();
+						} catch (NoSuchMethodException e) {
+							e.printStackTrace();
+						} catch( IllegalAccessException e ) {
+							e.printStackTrace();
+						} catch( IllegalArgumentException e ) {
+							e.printStackTrace();
+						} catch( InvocationTargetException e ) {
+							e.printStackTrace();
+						}
 					}
 				}
 				else
