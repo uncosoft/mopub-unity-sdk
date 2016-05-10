@@ -112,8 +112,8 @@
     <orderEntry type="library" exported="" name="play-services-ads-7.8.0" level="project" />
     <orderEntry type="library" exported="" name="vungle-publisher-adaptive-id-3.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-analytics-7.8.0" level="project" />
-    <orderEntry type="library" exported="" name="AudienceNetwork-4.8.1" level="project" />
     <orderEntry type="library" exported="" name="InMobi-4.4.1" level="project" />
+    <orderEntry type="library" exported="" name="AudienceNetwork-4.8.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-appindexing-7.8.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="mm-ad-sdk-6.0.0-" level="project" />

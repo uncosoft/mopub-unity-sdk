@@ -2,8 +2,11 @@ package com.mopub.unity;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -417,8 +420,13 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 //						MediationSettings s = new com.mopub.mobileads.AdColonyRewardedVideo.AdColonyInstanceMediationSettings( withConfirmationDialog, withResultsDialog );
 
 						try {
-							Class<?> cls = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo.AdColonyInstanceMediationSettings");
-                            MediationSettings s = (MediationSettings) cls.getConstructor(boolean.class, boolean.class).newInstance(withConfirmationDialog, withResultsDialog);
+							Class<?> enclosingClass = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo");
+                            Object enclosingInstance = enclosingClass.newInstance();
+
+                            Class<?> innerClass = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo$AdColonyInstanceMediationSettings");
+                            Constructor<?> ctor = innerClass.getDeclaredConstructor(enclosingClass);
+
+                            MediationSettings s = (MediationSettings) ctor.newInstance(withConfirmationDialog, withResultsDialog);
 
 							settings.add(s);
 						} catch( ClassNotFoundException e ) {

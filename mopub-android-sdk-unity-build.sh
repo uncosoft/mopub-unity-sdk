@@ -16,7 +16,7 @@ cd ..
 cp mopub-android-sdk-unity/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk/4.6.0/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk.jar
 
-cp mopub-android-sdk-unity/adcolony-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-adcolony-custom-events.jar
+cp mopub-android-sdk-unity/adcolony-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/mopub-adcolony-custom-events.jar
 
 
 # Copy MoPub SDK dependency jars

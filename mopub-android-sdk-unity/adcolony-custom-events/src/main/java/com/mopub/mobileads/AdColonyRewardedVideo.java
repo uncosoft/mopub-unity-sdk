@@ -18,6 +18,9 @@ import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPubReward;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.common.util.Json;
+import com.mopub.mobileads.CustomEventRewardedVideo;
+import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.mobileads.MoPubRewardedVideoManager;
 
 import java.util.Map;
 import java.util.WeakHashMap;
