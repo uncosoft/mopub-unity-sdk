@@ -69,9 +69,10 @@ SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "Millennial" "UnityAds
 
 for SUPPORT_LIB in "${SUPPORT_LIBS[@]}"
 do
-    EXPORT_FOLDERS_SUPPORT="Assets/MoPub/Editor/Support/$SUPPORT_LIB"
+    IOS_EXPORT_FOLDERS_SUPPORT="Assets/MoPub/Editor/Support/$SUPPORT_LIB"
+    ANDROID_EXPORT_FOLDERS_SUPPORT="Assets/Plugins/Android/mopub-support/libs/$SUPPORT_LIB"
     DEST_PACKAGE="$OUT_DIR/${SUPPORT_LIB}Support.unitypackage"
 
-    echo "Exporting $SUPPORT_LIB ($EXPORT_FOLDERS_SUPPORT) to $DEST_PACKAGE"
-    $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $EXPORT_FOLDERS_SUPPORT $DEST_PACKAGE
+    echo "Exported $SUPPORT_LIB ($EXPORT_FOLDERS_SUPPORT) to $DEST_PACKAGE"
+    $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $IOS_EXPORT_FOLDERS_SUPPORT $ANDROID_EXPORT_FOLDERS_SUPPORT $DEST_PACKAGE
 done
