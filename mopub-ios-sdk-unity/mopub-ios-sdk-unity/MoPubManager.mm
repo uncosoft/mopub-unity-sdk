@@ -223,14 +223,14 @@ extern "C" {
 		return;
 	
 	_adView.hidden = NO;
-	_adView.ignoresAutorefresh = NO;
+    [_adView startAutomaticallyRefreshingContents];
 }
 
 
 - (void)hideBanner:(BOOL)shouldDestroy
 {
 	_adView.hidden = YES;
-	_adView.ignoresAutorefresh = YES;
+    [_adView stopAutomaticallyRefreshingContents];
 	
 	if( shouldDestroy )
 		[self destroyBanner];
@@ -244,7 +244,7 @@ extern "C" {
 	
 	if( keywords )
 		_adView.keywords = keywords;
-	[_adView refreshAd];
+    [_adView loadAd];
 }
 
 
