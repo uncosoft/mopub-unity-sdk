@@ -16,13 +16,14 @@ cd ..
 cp mopub-android-sdk-unity/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk/4.6.0/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk.jar
 
-cp mopub-android-sdk-unity/adcolony-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/AdColony/mopub-adcolony-custom-events.jar
-
-
 # Copy MoPub SDK dependency jars
 cp ~/Library/Android/sdk/extras/android/support/v4/android-support-v4.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-recyclerview-v7-23.1.1.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.google.android.exoplayer/exoplayer/r1.5.6/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/exoplayer-1.5.6.jar
+
+# Copy MoPub Custom Events jars
+cp mopub-android-sdk-unity/adcolony-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/AdColony/mopub-adcolony-custom-events.jar
+cp mopub-android-sdk-unity/unityads-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/UnityAds/mopub-unityads-custom-events.jar
 
 if [[ $? -ne 0 ]]; then
     echo "Couldn't copy the generated jar into the Unity project, quitting..."
