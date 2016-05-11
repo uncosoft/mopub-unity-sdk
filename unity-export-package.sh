@@ -5,7 +5,7 @@ UNITY_BIN=/Applications/Unity/Unity.app/Contents/MacOS/Unity
 PROJECT_PATH="`pwd`/unity/MoPubUnityPlugin"
 OUT_DIR="`pwd`/out"
 DEST_PACKAGE="$OUT_DIR/$PACKAGE_NAME.unitypackage"
-EXPORT_FOLDERS_MAIN="Assets/MoPub Assets/Plugins"
+EXPORT_FOLDERS_MAIN="Assets/MoPub Assets/Plugins Assets/Scripts Assets/Scenes"     #TODO: remove internal scenes
 EXPORT_LOG="$OUT_DIR/exportlog.txt"
 
 rm -rf $OUT_DIR
