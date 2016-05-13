@@ -381,8 +381,33 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 				{
 					if( jsonObj.has( "customId" ) )
 					{
-						MediationSettings s = new com.mopub.mobileads.ChartboostRewardedVideo.ChartboostMediationSettings( jsonObj.getString( "customId" ) );
-						settings.add( s );
+//						MediationSettings s = new com.mopub.mobileads.ChartboostRewardedVideo.ChartboostMediationSettings( jsonObj.getString( "customId" ) );
+
+						try {
+							Class<?> enclosingClass = Class.forName("com.mopub.mobileads.ChartboostRewardedVideo");
+							Class<?> innerClass = Class.forName("com.mopub.mobileads.ChartboostRewardedVideo$ChartboostMediationSettings");
+							Constructor<?> ctor = innerClass.getDeclaredConstructor(enclosingClass);
+
+							MediationSettings s = (MediationSettings) ctor.newInstance(jsonObj.getString("customId"));
+
+							settings.add(s);
+						} catch( ClassNotFoundException e ) {
+							Log.i( TAG, "could not find Chartboost ChartboostMediationSettings class. Did you add the Chartboost Network SDK to your Android folder?" );
+
+							StringWriter errors = new StringWriter();
+							e.printStackTrace(new PrintWriter(errors));
+							Log.i(TAG, errors.toString());
+						} catch (InstantiationException e) {
+							e.printStackTrace();
+						} catch (NoSuchMethodException e) {
+							e.printStackTrace();
+						} catch( IllegalAccessException e ) {
+							e.printStackTrace();
+						} catch( IllegalArgumentException e ) {
+							e.printStackTrace();
+						} catch( InvocationTargetException e ) {
+							e.printStackTrace();
+						}
 					}
 					else
 					{
@@ -421,8 +446,6 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 
 						try {
 							Class<?> enclosingClass = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo");
-                            Object enclosingInstance = enclosingClass.newInstance();
-
                             Class<?> innerClass = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo$AdColonyInstanceMediationSettings");
                             Constructor<?> ctor = innerClass.getDeclaredConstructor(enclosingClass);
 
