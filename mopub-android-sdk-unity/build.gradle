@@ -68,7 +68,7 @@ dependencies {
     // Custom events
 //    compile name: 'adcolony-2.0.3'
 //    compile name: 'chartboost-6.4.1'
-    compile(name: 'mm-ad-sdk-6.0.0', ext: 'aar')
+//    compile(name: 'mm-ad-sdk-6.0.0', ext: 'aar')
 //    compile name: 'AudienceNetwork-4.8.1'
 //    compile name: 'unity-ads-1.4.7'
 

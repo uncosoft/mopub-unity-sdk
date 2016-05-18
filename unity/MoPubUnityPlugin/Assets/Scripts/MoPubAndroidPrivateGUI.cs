@@ -149,7 +149,7 @@ public class MoPubAndroidPrivateGUI : MonoBehaviour
 					_interstitialAdUnit = "3aba0056add211e281c11231392559e4";
 					_rewardedVideoAdUnit = "db2ef0eb1600433a8cdc31c75549c6b1";
 					break;
-				case 1: // Millenial
+				case 1: // Millennial
 					_bannerAdUnit = "1aa442709c9f11e281c11231392559e4";
 					_interstitialAdUnit = "c6566f7bd85c40afb7afc4232a1cd463";
 					break;

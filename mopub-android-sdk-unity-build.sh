@@ -29,6 +29,10 @@ cp mopub-android-sdk-unity/facebook-custom-events/build/intermediates/bundles/re
 cp mopub-android-sdk-unity/admob-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/AdMob/mopub-admob-custom-events.jar
 
 
+cp mopub-android-sdk-unity/millennial-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/Millennial/mopub-millennial-custom-events.jar
+
+
+
 if [[ $? -ne 0 ]]; then
     echo "Couldn't copy the generated jar into the Unity project, quitting..."
     exit 1

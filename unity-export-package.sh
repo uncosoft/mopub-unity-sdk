@@ -65,7 +65,7 @@ echo "Exported $DEST_PACKAGE"
 
 # Now, export each of the third-party network adapters.
 
-SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "Millennial" "UnityAds" "Vungle" )
+SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "UnityAds" "Vungle" ) #"Millennial"
 
 for SUPPORT_LIB in "${SUPPORT_LIBS[@]}"
 do
@@ -73,6 +73,16 @@ do
     ANDROID_EXPORT_FOLDERS_SUPPORT="Assets/Plugins/Android/mopub-support/libs/$SUPPORT_LIB"
     DEST_PACKAGE="$OUT_DIR/${SUPPORT_LIB}Support.unitypackage"
 
-    echo "Exported $SUPPORT_LIB ($EXPORT_FOLDERS_SUPPORT) to $DEST_PACKAGE"
     $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $IOS_EXPORT_FOLDERS_SUPPORT $ANDROID_EXPORT_FOLDERS_SUPPORT $DEST_PACKAGE
+    echo "Exported $SUPPORT_LIB (iOS: $IOS_EXPORT_FOLDERS_SUPPORT | Android: $ANDROID_EXPORT_FOLDERS_SUPPORT) to $DEST_PACKAGE"
 done
+
+# Millennial
+MM_IOS_EXPORT_FOLDERS_SUPPORT="Assets/MoPub/Editor/Support/Millennial"
+MM_ANDROID_EXPORT_FOLDERS_SUPPORT="Assets/Plugins/Android/mopub-support/libs/Millennial"
+MM_ASSETS_FOLDER="Assets/Plugins/Android/assets"
+MM_ACTIVITY_FOLDER="Assets/Plugins/Android/mm-activity"
+MM_DEST_PACKAGE="$OUT_DIR/MillennialSupport.unitypackage"
+
+$UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $MM_IOS_EXPORT_FOLDERS_SUPPORT $MM_ANDROID_EXPORT_FOLDERS_SUPPORT $MM_ASSETS_FOLDER $MM_ACTIVITY_FOLDER $MM_DEST_PACKAGE
+echo "Exported Millennial (iOS: $MM_IOS_EXPORT_FOLDERS_SUPPORT | Android: $MM_ANDROID_EXPORT_FOLDERS_SUPPORT | MM Assets: $MM_ASSETS_FOLDER | MM Activity: $MM_ACTIVITY_FOLDER) to $MM_DEST_PACKAGE"
