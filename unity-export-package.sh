@@ -65,7 +65,7 @@ echo "Exported $DEST_PACKAGE"
 
 # Now, export each of the third-party network adapters.
 
-SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "UnityAds" "Vungle" ) #"Millennial"
+SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "UnityAds" "Vungle" )
 
 for SUPPORT_LIB in "${SUPPORT_LIBS[@]}"
 do

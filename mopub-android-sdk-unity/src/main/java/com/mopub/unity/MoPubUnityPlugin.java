@@ -1,19 +1,5 @@
 package com.mopub.unity;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.location.Location;
 import android.util.DisplayMetrics;
@@ -28,14 +14,25 @@ import android.widget.RelativeLayout;
 import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPub;
 import com.mopub.common.MoPubReward;
-import com.mopub.mobileads.*;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubRewardedVideoListener;
+import com.mopub.mobileads.MoPubRewardedVideoManager;
 import com.mopub.mobileads.MoPubView;
-import com.mopub.mobileads.VungleRewardedVideo.VungleMediationSettings;
 import com.unity3d.player.UnityPlayer;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Set;
 
 import static com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
 import static com.mopub.mobileads.MoPubView.BannerAdListener;
@@ -416,24 +413,59 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 				}
 				else if( adVendor.equalsIgnoreCase( "vungle" ) )
 				{
-					VungleMediationSettings.Builder s = new VungleMediationSettings.Builder();
+//					VungleMediationSettings.Builder s = new VungleMediationSettings.Builder();
 
-					if( jsonObj.has( "userId" ) )
-						s.withUserId( jsonObj.getString( "userId" ) );
+                    try {
+                        Class<?> builderClass = Class.forName("com.mopub.mobileads.VungleRewardedVideo$VungleMediationSettings$Builder");
+                        Constructor<?> builderConstructor = builderClass.getConstructor();
+                        Object b = builderConstructor.newInstance();
 
-					if( jsonObj.has( "cancelDialogBody" ) )
-						s.withCancelDialogBody( jsonObj.getString( "cancelDialogBody" ) );
+                        Method withUserId = builderClass.getDeclaredMethod("withUserId", String.class);
+                        Method withCancelDialogBody = builderClass.getDeclaredMethod("withCancelDialogBody", String.class);
+                        Method withCancelDialogCloseButton = builderClass.getDeclaredMethod("withCancelDialogCloseButton", String.class);
+                        Method withCancelDialogKeepWatchingButton = builderClass.getDeclaredMethod("withCancelDialogKeepWatchingButton", String.class);
+                        Method withCancelDialogTitle = builderClass.getDeclaredMethod("withCancelDialogTitle", String.class);
+                        Method build = builderClass.getDeclaredMethod("build");
 
-					if( jsonObj.has( "cancelDialogCloseButton" ) )
-						s.withCancelDialogCloseButton( jsonObj.getString( "cancelDialogCloseButton" ) );
+                        if (jsonObj.has("userId")) {
+                            withUserId.invoke(b, jsonObj.getString("userId"));
+                        }
 
-					if( jsonObj.has( "cancelDialogKeepWatchingButton" ) )
-						s.withCancelDialogKeepWatchingButton( jsonObj.getString( "cancelDialogKeepWatchingButton" ) );
+                        if (jsonObj.has("cancelDialogBody")) {
+                            withCancelDialogBody.invoke(b, jsonObj.getString("cancelDialogBody"));
+                        }
 
-					if( jsonObj.has( "cancelDialogTitle" ) )
-						s.withCancelDialogTitle( jsonObj.getString( "cancelDialogTitle" ) );
+                        if (jsonObj.has("cancelDialogCloseButton")) {
+                            withCancelDialogCloseButton.invoke(b, jsonObj.getString("cancelDialogCloseButton"));
+                        }
 
-					settings.add( s.build() );
+                        if (jsonObj.has("cancelDialogKeepWatchingButton")) {
+                            withCancelDialogKeepWatchingButton.invoke(b, jsonObj.getString("cancelDialogKeepWatchingButton"));
+                        }
+
+                        if (jsonObj.has("cancelDialogTitle")) {
+                            withCancelDialogTitle.invoke(b, jsonObj.getString("cancelDialogTitle"));
+                        }
+
+                        settings.add((MediationSettings) build.invoke(b));
+
+                    } catch( ClassNotFoundException e ) {
+                        Log.i( TAG, "could not find Vungle VungleMediationSettings class. Did you add the Vungle Network SDK to your Android folder?" );
+
+                        StringWriter errors = new StringWriter();
+                        e.printStackTrace(new PrintWriter(errors));
+                        Log.i(TAG, errors.toString());
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch( IllegalAccessException e ) {
+                        e.printStackTrace();
+                    } catch( IllegalArgumentException e ) {
+                        e.printStackTrace();
+                    } catch( InvocationTargetException e ) {
+                        e.printStackTrace();
+                    }
 				}
 				else if( adVendor.equalsIgnoreCase( "adcolony" ) )
 				{
@@ -454,7 +486,6 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 							settings.add(s);
 						} catch( ClassNotFoundException e ) {
 							Log.i( TAG, "could not find AdColony AdColonyInstanceMediationSettings class. Did you add the AdColony Network SDK to your Android folder?" );
-
 
                             StringWriter errors = new StringWriter();
                             e.printStackTrace(new PrintWriter(errors));

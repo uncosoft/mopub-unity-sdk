@@ -72,10 +72,10 @@ dependencies {
 //    compile name: 'AudienceNetwork-4.8.1'
 //    compile name: 'unity-ads-1.4.7'
 
-    // Vungle and its dependencies.
-    compile name: 'vungle-publisher-adaptive-id-3.3.0'
-    compile 'com.squareup.dagger:dagger:1.2.2'
-    compile 'com.nineoldandroids:library:2.4.0'
+//    // Vungle and its dependencies.
+//    compile name: 'vungle-publisher-adaptive-id-3.3.0'
+//    compile 'com.squareup.dagger:dagger:1.2.2'
+//    compile 'com.nineoldandroids:library:2.4.0'
 
     // Required to build MoPubUnityPlugin.java
     compile files('libs/unity-4.2.0f4.jar')
