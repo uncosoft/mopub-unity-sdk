@@ -7,7 +7,7 @@ if [[ -e mopub-ios-sdk-unity/bin/libmopub-ios-sdk-unity.a ]]; then
 fi
 
 # update version number to have unity suffix
-sed -i.bak 's/^\(#define MP_SDK_VERSION\)\(.*\)"/\1\2-unity"/'  mopub-ios-sdk/MoPubSDK/MPConstants.h
+sed -i.bak 's/^\(#define MP_SDK_VERSION\)\(.*\)"/\1\2+unity"/'  mopub-ios-sdk/MoPubSDK/MPConstants.h
 
 xcrun xcodebuild -project mopub-ios-sdk-unity/mopub-ios-sdk-unity.xcodeproj -scheme "MoPub for Unity" -destination generic/platform=iphoneos clean
 xcrun xcodebuild -project mopub-ios-sdk-unity/mopub-ios-sdk-unity.xcodeproj -scheme "MoPub for Unity" -destination generic/platform=iphoneos build
@@ -15,6 +15,7 @@ xcrun xcodebuild -project mopub-ios-sdk-unity/mopub-ios-sdk-unity.xcodeproj -sch
 # after build, undo the unity suffix
 cd mopub-ios-sdk
 git checkout MoPubSDK/MPConstants.h
+rm -f MoPubSDK/MPConstants.h.bak
 cd ..
 
 if [[ $? -ne 0 ]]; then
