@@ -5,7 +5,7 @@ UNITY_BIN=/Applications/Unity/Unity.app/Contents/MacOS/Unity
 PROJECT_PATH="`pwd`/unity/MoPubUnityPlugin"
 OUT_DIR="`pwd`/out"
 DEST_PACKAGE="$OUT_DIR/$PACKAGE_NAME.unitypackage"
-EXPORT_FOLDERS_MAIN="Assets/MoPub Assets/Plugins Assets/Scripts Assets/Scenes"
+EXPORT_FOLDERS_MAIN="Assets/MoPub Assets/Plugins Assets/Scripts Assets/Scenes"     #TODO: remove internal scenes
 EXPORT_LOG="$OUT_DIR/exportlog.txt"
 
 rm -rf $OUT_DIR
@@ -47,7 +47,7 @@ find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read
 	rm -rf $parent
     fi
 
-    if [[ $pathname == *"Android/assets"* ]] || [[ $pathname == *"google-play-services"* ]] || [[ $pathname == *"mopub-support"* ]] || [[ $pathname == *"mm-activity"* ]]; then
+    if [[ $pathname == *"Android/assets"* ]] || [[ $pathname == *"google-play-services"* ]] || [[ $pathname == *"mopub-support/libs"* ]] || [[ $pathname == *"mm-activity"* ]]; then
 	echo "Removing $filename ($pathname), and parent dir $parent from main package"
 	rm -rf $filename
 	rm -rf $parent
@@ -65,13 +65,24 @@ echo "Exported $DEST_PACKAGE"
 
 # Now, export each of the third-party network adapters.
 
-SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "Millennial" "UnityAds" "Vungle" )
+SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "UnityAds" "Vungle" )
 
 for SUPPORT_LIB in "${SUPPORT_LIBS[@]}"
 do
-    EXPORT_FOLDERS_SUPPORT="Assets/MoPub/Editor/Support/$SUPPORT_LIB"
+    IOS_EXPORT_FOLDERS_SUPPORT="Assets/MoPub/Editor/Support/$SUPPORT_LIB"
+    ANDROID_EXPORT_FOLDERS_SUPPORT="Assets/Plugins/Android/mopub-support/libs/$SUPPORT_LIB"
     DEST_PACKAGE="$OUT_DIR/${SUPPORT_LIB}Support.unitypackage"
 
-    echo "Exporting $SUPPORT_LIB ($EXPORT_FOLDERS_SUPPORT) to $DEST_PACKAGE"
-    $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $EXPORT_FOLDERS_SUPPORT $DEST_PACKAGE
+    $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $IOS_EXPORT_FOLDERS_SUPPORT $ANDROID_EXPORT_FOLDERS_SUPPORT $DEST_PACKAGE
+    echo "Exported $SUPPORT_LIB (iOS: $IOS_EXPORT_FOLDERS_SUPPORT | Android: $ANDROID_EXPORT_FOLDERS_SUPPORT) to $DEST_PACKAGE"
 done
+
+# Millennial
+MM_IOS_EXPORT_FOLDERS_SUPPORT="Assets/MoPub/Editor/Support/Millennial"
+MM_ANDROID_EXPORT_FOLDERS_SUPPORT="Assets/Plugins/Android/mopub-support/libs/Millennial"
+MM_ASSETS_FOLDER="Assets/Plugins/Android/assets"
+MM_ACTIVITY_FOLDER="Assets/Plugins/Android/mm-activity"
+MM_DEST_PACKAGE="$OUT_DIR/MillennialSupport.unitypackage"
+
+$UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $MM_IOS_EXPORT_FOLDERS_SUPPORT $MM_ANDROID_EXPORT_FOLDERS_SUPPORT $MM_ASSETS_FOLDER $MM_ACTIVITY_FOLDER $MM_DEST_PACKAGE
+echo "Exported Millennial (iOS: $MM_IOS_EXPORT_FOLDERS_SUPPORT | Android: $MM_ANDROID_EXPORT_FOLDERS_SUPPORT | MM Assets: $MM_ASSETS_FOLDER | MM Activity: $MM_ACTIVITY_FOLDER) to $MM_DEST_PACKAGE"
