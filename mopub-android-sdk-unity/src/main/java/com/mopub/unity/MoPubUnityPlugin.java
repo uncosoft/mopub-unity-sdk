@@ -159,6 +159,11 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 		});
 	}
 
+    private static void printExceptionStackTrace(Exception e) {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        Log.i(TAG, sw.toString());
+    }
 
 
 	/* ***** ***** ***** ***** ***** ***** ***** *****
@@ -385,20 +390,17 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 							settings.add(s);
 						} catch( ClassNotFoundException e ) {
 							Log.i( TAG, "could not find Chartboost ChartboostMediationSettings class. Did you add the Chartboost Network SDK to your Android folder?" );
-
-							StringWriter errors = new StringWriter();
-							e.printStackTrace(new PrintWriter(errors));
-							Log.i(TAG, errors.toString());
+                            printExceptionStackTrace(e);
 						} catch (InstantiationException e) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						} catch (NoSuchMethodException e) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						} catch( IllegalAccessException e ) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						} catch( IllegalArgumentException e ) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						} catch( InvocationTargetException e ) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						}
 					}
 					else
@@ -444,20 +446,17 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 
                     } catch( ClassNotFoundException e ) {
                         Log.i( TAG, "could not find Vungle VungleMediationSettings class. Did you add the Vungle Network SDK to your Android folder?" );
-
-                        StringWriter errors = new StringWriter();
-                        e.printStackTrace(new PrintWriter(errors));
-                        Log.i(TAG, errors.toString());
+                        printExceptionStackTrace(e);
                     } catch (InstantiationException e) {
-                        e.printStackTrace();
+                        printExceptionStackTrace(e);
                     } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
+                        printExceptionStackTrace(e);
                     } catch( IllegalAccessException e ) {
-                        e.printStackTrace();
+                        printExceptionStackTrace(e);
                     } catch( IllegalArgumentException e ) {
-                        e.printStackTrace();
+                        printExceptionStackTrace(e);
                     } catch( InvocationTargetException e ) {
-                        e.printStackTrace();
+                        printExceptionStackTrace(e);
                     }
 				}
 				else if( adVendor.equalsIgnoreCase( "adcolony" ) )
@@ -474,20 +473,17 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 							settings.add(s);
 						} catch( ClassNotFoundException e ) {
 							Log.i( TAG, "could not find AdColony AdColonyInstanceMediationSettings class. Did you add the AdColony Network SDK to your Android folder?" );
-
-                            StringWriter errors = new StringWriter();
-                            e.printStackTrace(new PrintWriter(errors));
-                            Log.i(TAG, errors.toString());
+                            printExceptionStackTrace(e);
 						} catch (InstantiationException e) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						} catch (NoSuchMethodException e) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						} catch( IllegalAccessException e ) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						} catch( IllegalArgumentException e ) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						} catch( InvocationTargetException e ) {
-							e.printStackTrace();
+                            printExceptionStackTrace(e);
 						}
 					}
 				}
