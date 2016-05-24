@@ -378,15 +378,10 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 				{
 					if( jsonObj.has( "customId" ) )
 					{
-//						MediationSettings s = new com.mopub.mobileads.ChartboostRewardedVideo.ChartboostMediationSettings( jsonObj.getString( "customId" ) );
-
 						try {
-							Class<?> enclosingClass = Class.forName("com.mopub.mobileads.ChartboostRewardedVideo");
-							Class<?> innerClass = Class.forName("com.mopub.mobileads.ChartboostRewardedVideo$ChartboostMediationSettings");
-							Constructor<?> ctor = innerClass.getDeclaredConstructor(enclosingClass);
-
-							MediationSettings s = (MediationSettings) ctor.newInstance(jsonObj.getString("customId"));
-
+							Class<?> mediationSettingsClass = Class.forName("com.mopub.mobileads.ChartboostRewardedVideo$ChartboostMediationSettings");
+							Constructor<?> mediationSettingsConstructor = mediationSettingsClass.getConstructor(String.class);
+							MediationSettings s = (MediationSettings) mediationSettingsConstructor.newInstance(jsonObj.getString("customId"));
 							settings.add(s);
 						} catch( ClassNotFoundException e ) {
 							Log.i( TAG, "could not find Chartboost ChartboostMediationSettings class. Did you add the Chartboost Network SDK to your Android folder?" );
@@ -413,8 +408,6 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 				}
 				else if( adVendor.equalsIgnoreCase( "vungle" ) )
 				{
-//					VungleMediationSettings.Builder s = new VungleMediationSettings.Builder();
-
                     try {
                         Class<?> builderClass = Class.forName("com.mopub.mobileads.VungleRewardedVideo$VungleMediationSettings$Builder");
                         Constructor<?> builderConstructor = builderClass.getConstructor();
@@ -474,15 +467,10 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 						boolean withConfirmationDialog = jsonObj.getBoolean( "withConfirmationDialog" );
 						boolean withResultsDialog = jsonObj.getBoolean( "withResultsDialog" );
 
-//						MediationSettings s = new com.mopub.mobileads.AdColonyRewardedVideo.AdColonyInstanceMediationSettings( withConfirmationDialog, withResultsDialog );
-
 						try {
-							Class<?> enclosingClass = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo");
-                            Class<?> innerClass = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo$AdColonyInstanceMediationSettings");
-                            Constructor<?> ctor = innerClass.getDeclaredConstructor(enclosingClass);
-
-                            MediationSettings s = (MediationSettings) ctor.newInstance(withConfirmationDialog, withResultsDialog);
-
+                            Class<?> mediationSettingsClass = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo$AdColonyInstanceMediationSettings");
+                            Constructor<?> mediationSettingsConstructor = mediationSettingsClass.getConstructor(boolean.class, boolean.class);
+                            MediationSettings s = (MediationSettings) mediationSettingsConstructor.newInstance(withConfirmationDialog, withResultsDialog);
 							settings.add(s);
 						} catch( ClassNotFoundException e ) {
 							Log.i( TAG, "could not find AdColony AdColonyInstanceMediationSettings class. Did you add the AdColony Network SDK to your Android folder?" );
