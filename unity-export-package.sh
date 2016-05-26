@@ -5,7 +5,7 @@ UNITY_BIN=/Applications/Unity/Unity.app/Contents/MacOS/Unity
 PROJECT_PATH="`pwd`/unity/MoPubUnityPlugin"
 OUT_DIR="`pwd`/out"
 DEST_PACKAGE="$OUT_DIR/$PACKAGE_NAME.unitypackage"
-EXPORT_FOLDERS_MAIN="Assets/MoPub Assets/Plugins Assets/Scripts Assets/Scenes"     #TODO: remove internal scenes
+EXPORT_FOLDERS_MAIN="Assets/MoPub Assets/Plugins Assets/Scripts Assets/Scenes"
 EXPORT_LOG="$OUT_DIR/exportlog.txt"
 
 rm -rf $OUT_DIR
@@ -46,6 +46,8 @@ find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read
 	rm -rf $filename
 	rm -rf $parent
     fi
+
+    # Remove third-party network adapters and dependencies for Android.
 
     if [[ $pathname == *"Android/assets"* ]] || [[ $pathname == *"google-play-services"* ]] || [[ $pathname == *"mopub-support/libs"* ]] || [[ $pathname == *"mm-activity"* ]]; then
 	echo "Removing $filename ($pathname), and parent dir $parent from main package"
