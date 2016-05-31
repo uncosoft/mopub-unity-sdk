@@ -65,19 +65,6 @@
 		protected static void AddFrameworksToProject(string[] frameworks, string buildPath, PBXProject project, string target) 
 		{
 #if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-			string frameworksDir = Path.Combine(Directory.GetCurrentDirectory (), "Assets/" + fabricPluginsPath);
-			string pluginFrameworksDir = "Frameworks/" + fabricPluginsPath + "/";
-
-			foreach (string framework in frameworks) 
-			{
-				string pluginFrameworkDir = pluginFrameworksDir + framework;
-				if (!Directory.Exists (Path.Combine(buildPath, pluginFrameworkDir))) {
-					Utils.Log ("Adding {0} to Xcode project", framework);
-					
-					AddFrameworkToProject(project, target, Path.Combine (frameworksDir, framework), buildPath,
-					                                pluginFrameworkDir);
-				}
-			}
 #else
 			// Unity 5 and above should already take care of copying and linking non-platform frameworks
 #endif
@@ -104,20 +91,6 @@
 		protected static void AddLibsToProject(string[] libs, PBXProject project, string target, string buildPath)
 		{
 #if UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
-			string fabricPluginsFullPath = Path.Combine(Directory.GetCurrentDirectory (), "Assets/" + fabricPluginsPath);
-
-			foreach (string lib in libs) {
-				string libPathInProject = Path.Combine ("Libraries", Path.GetFileName (lib));
-				string libFullPathInProject = Path.Combine (buildPath, libPathInProject);
-
-				if (!File.Exists (libFullPathInProject)) {
-					File.Copy (Path.Combine (fabricPluginsFullPath, lib),
-					           libFullPathInProject);
-
-					string libGUID = project.AddFile (libFullPathInProject, libPathInProject, PBXSourceTree.Absolute);
-					project.AddFileToBuild (target, libGUID);
-				}
-			}
 #else
 			// Unity 5 and above should already take care of copying and linking non-platform frameworks
 #endif
