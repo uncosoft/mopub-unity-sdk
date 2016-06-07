@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Current SDK version
-SDK_VERSION=4.6.1
+SDK_VERSION=4.7.0
 
 # Append "+unity" suffix to SDK_VERSION in MoPub.java
 sed -i.bak 's/^\(.*public static final String SDK_VERSION\)\(.*\)"/\1\2+unity"/' mopub-android-sdk/mopub-sdk/src/main/java/com/mopub/common/MoPub.java

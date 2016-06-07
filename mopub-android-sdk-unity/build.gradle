@@ -35,8 +35,8 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 40
-        versionName "4.6.1"
+        versionCode 41
+        versionName "4.7.0"
         consumerProguardFiles 'proguard.txt'
     }
 
