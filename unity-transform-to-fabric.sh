@@ -38,6 +38,7 @@ find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read
 	echo "Modifying MoPubPostBuildiOS"
 	sed -i -e 's/using MoPubInternal\.Editor\.Postbuild/using Fabric\.Internal\.Editor\.Postbuild/' $parent/asset
 	sed -i -e 's/using MoPubInternal\.Editor\.ThirdParty\.xcodeapi/using Fabric\.Internal\.Editor\.ThirdParty\.xcodeapi/' $parent/asset
+	sed -i -e 's/: PostBuildiOS/: Fabric\.Internal\.Editor\.Postbuild\.PostBuildiOS/' $parent/asset
     fi
 
     if [[ $pathname == *"/MoPubManager"* ]]; then
