@@ -23,7 +23,8 @@
 			"MediaPlayer.framework",
 			"PassKit.framework",
 			"Social.framework",
-			"MobileCoreServices.framework"
+			"MobileCoreServices.framework",
+			"WebKit.framework"
 		};
 
 		private static string[] frameworks = new string[] {
@@ -118,6 +119,7 @@
 
 			string targetGuid = project.TargetGuidByName ("Unity-iPhone");
 			string[] files = Directory.GetFiles (nativeCodeInXcodeFullPath, "*", SearchOption.AllDirectories);
+
 			foreach (string fileFullPath in files) {
 				string fileExt = Path.GetExtension (fileFullPath);
 				if (fileExt == ".meta" || fileExt == ".txt") {
@@ -132,9 +134,25 @@
 			string[] subdirs = Directory.GetDirectories (nativeCodeInXcodeFullPath);
 			foreach (string subdir in subdirs) {
 				project.AddBuildProperty (targetGuid, "HEADER_SEARCH_PATHS", subdir);
+
+				AddAllFoundFrameworks(project, targetGuid, subdir);
 			}
 
 			File.WriteAllText(projPath, project.WriteToString());
+		}
+
+		private static void AddAllFoundFrameworks(PBXProject project, string targetGuid, string source)
+		{
+			string[] dirs = Directory.GetDirectories (source);
+			foreach (string dir in dirs) {
+				if (dir.EndsWith (".framework")) {
+					string fileGuid = project.AddFile (dir, "Frameworks/" + dir.Substring (dir.LastIndexOf ("/") + 1));
+					project.AddFileToBuild (targetGuid, fileGuid);
+					project.AddBuildProperty (targetGuid, "FRAMEWORK_SEARCH_PATHS", source);
+				}
+
+				AddAllFoundFrameworks (project, targetGuid, dir);
+			}
 		}
 	}
 }
