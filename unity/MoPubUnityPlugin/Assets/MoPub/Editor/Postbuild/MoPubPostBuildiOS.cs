@@ -33,7 +33,8 @@
 
 		private static string[] platformLibs = new string[] {
 			"libz.dylib",
-			"libsqlite3.dylib"
+			"libsqlite3.dylib",
+			"libxml2.dylib"
 		};
 
 		private static string[] libs = new string[] {

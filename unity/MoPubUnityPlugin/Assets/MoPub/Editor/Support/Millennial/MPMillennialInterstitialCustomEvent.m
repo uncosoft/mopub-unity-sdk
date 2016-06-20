@@ -1,7 +1,6 @@
 #import "MPMillennialInterstitialCustomEvent.h"
 #import "MPInstanceProvider.h"
 #import "MPLogging.h"
-#import <MMAdSDK/MMAd.h>
 
 
 @interface MPInstanceProvider (MillennialInterstitials)
@@ -13,7 +12,7 @@
 @implementation MPInstanceProvider (MillennialInterstitials)
 
 - (MMInterstitialAd *)buildMMInterstitialWithPlacementId:(NSString *)placementId {
-	return [[MMInterstitialAd alloc] initWithPlacementID:placementId];
+    return [[MMInterstitialAd alloc] initWithPlacementId:placementId];
 }
 
 @end
@@ -112,7 +111,7 @@
 
 
 - (void)interstitialAd:(MMInterstitialAd *)ad loadDidFailWithError:(NSError *)error {
-    if ( error.code == MMInterstitialAdAlreadyLoaded ) {
+    if ( error.code == MMSDKErrorInterstitialAdAlreadyLoaded ) {
         MPLogInfo(@"Millennial interstitial already loaded-- not sending this request onto MM.");
         [self.delegate interstitialCustomEvent:self didLoadAd:nil];
     } else {
