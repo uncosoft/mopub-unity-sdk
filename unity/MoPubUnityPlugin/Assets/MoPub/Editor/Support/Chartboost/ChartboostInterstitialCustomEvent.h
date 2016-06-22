@@ -13,7 +13,7 @@
 
 
 /*
- * Certified with version 5.0.1 of the Chartboost SDK.
+ * Certified with version 6.4.0 of the Chartboost SDK.
  */
 
 @interface ChartboostInterstitialCustomEvent : MPInterstitialCustomEvent
@@ -51,7 +51,7 @@
  * IMPORTANT: If you choose to use this method, be sure to call it before making any ad requests,
  * and avoid calling it more than once. Otherwise, the Chartboost SDK may be initialized improperly.
  *
- * **Deprecated**: This method of setting the Chartboost app signature is deprecated. Use the MoPub website
+ * **Deprecated**: This method of setting the Chartboost app signature is deprecated. Use the MoPub website 
  * to set your app signature in your network settings for Chartboost. See the Custom Native Network Setup guide for more
  * information. https://dev.twitter.com/mopub/ad-networks/network-setup-custom-native
  */
