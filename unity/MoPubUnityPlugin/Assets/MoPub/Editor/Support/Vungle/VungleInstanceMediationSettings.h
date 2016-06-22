@@ -22,7 +22,7 @@
 
 /*
  * An NSString that's used as an identifier for a specific user, and is passed along to Vungle
- * when the rewarded video ad is played.
+ * when the rewarded video ad is played. 
  */
 @property (nonatomic, copy) NSString *userIdentifier;
 

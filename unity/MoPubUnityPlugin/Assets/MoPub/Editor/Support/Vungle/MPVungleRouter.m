@@ -10,6 +10,7 @@
 #import "MPLogging.h"
 #import "VungleInstanceMediationSettings.h"
 #import "MPRewardedVideoError.h"
+#import "MPRewardedVideo.h"
 
 static NSString *gAppId = nil;
 static NSString *const kMPVungleRewardedAdCompletedView = @"completedView";
@@ -55,29 +56,29 @@ static NSString *const kMPVungleAdUserDidDownloadKey = @"didDownload";
 - (void)requestAdWithCustomEventInfo:(NSDictionary *)info delegate:(id<MPVungleRouterDelegate>)delegate
 {
     self.delegate = delegate;
-
+    
     static dispatch_once_t vungleInitToken;
     dispatch_once(&vungleInitToken, ^{
         NSString *appId = [info objectForKey:@"appId"];
         if ([appId length] == 0) {
             appId = gAppId;
         }
-
+        
         [[VungleSDK sharedSDK] startWithAppId:appId];
         [[VungleSDK sharedSDK] setDelegate:self];
     });
-
+    
     // Need to check immediately as an ad may be cached.
-    if ([[VungleSDK sharedSDK] isCachedAdAvailable]) {
+    if ([[VungleSDK sharedSDK] isAdPlayable]) {
         [self.delegate vungleAdDidLoad];
     }
-
+    
     // MoPub timeout will handle the case for an ad failing to load.
 }
 
 - (BOOL)isAdAvailable
 {
-    return [[VungleSDK sharedSDK] isCachedAdAvailable];
+    return [[VungleSDK sharedSDK] isAdPlayable];
 }
 
 - (void)presentInterstitialAdFromViewController:(UIViewController *)viewController withDelegate:(id<MPVungleRouterDelegate>)delegate
@@ -96,13 +97,16 @@ static NSString *const kMPVungleAdUserDidDownloadKey = @"didDownload";
     }
 }
 
-- (void)presentRewardedVideoAdFromViewController:(UIViewController *)viewController settings:(VungleInstanceMediationSettings *)settings delegate:(id<MPVungleRouterDelegate>)delegate
+- (void)presentRewardedVideoAdFromViewController:(UIViewController *)viewController customerId:(NSString *)customerId settings:(VungleInstanceMediationSettings *)settings delegate:(id<MPVungleRouterDelegate>)delegate
 {
     if (!self.isAdPlaying && self.isAdAvailable) {
         self.delegate = delegate;
         self.isAdPlaying = YES;
         NSDictionary *options;
-        if (settings && [settings.userIdentifier length]) {
+
+        if (customerId.length > 0) {
+            options = @{VunglePlayAdOptionKeyIncentivized : @(YES), VunglePlayAdOptionKeyUser : customerId};
+        } else if (settings && [settings.userIdentifier length]) {
             options = @{VunglePlayAdOptionKeyIncentivized : @(YES), VunglePlayAdOptionKeyUser : settings.userIdentifier};
         } else {
             options = @{VunglePlayAdOptionKeyIncentivized : @(YES)};
@@ -137,9 +141,11 @@ static NSString *const kMPVungleAdUserDidDownloadKey = @"didDownload";
 
 #pragma mark - VungleSDKDelegate
 
-- (void)vungleSDKhasCachedAdAvailable
+- (void)vungleSDKAdPlayableChanged:(BOOL)isAdPlayable
 {
-    [self.delegate vungleAdDidLoad];
+    if (isAdPlayable) {
+        [self.delegate vungleAdDidLoad];
+    }
 }
 
 - (void)vungleSDKwillShowAd
@@ -152,11 +158,11 @@ static NSString *const kMPVungleAdUserDidDownloadKey = @"didDownload";
     if ([viewInfo[kMPVungleAdUserDidDownloadKey] isEqual:@YES]) {
         [self.delegate vungleAdWasTapped];
     }
-
+    
     if ([[viewInfo objectForKey:kMPVungleRewardedAdCompletedView] boolValue] && [self.delegate respondsToSelector:@selector(vungleAdShouldRewardUser)]) {
         [self.delegate vungleAdShouldRewardUser];
     }
-
+    
     if (!willPresentProductSheet) {
         [self vungleAdDidFinish];
     }
