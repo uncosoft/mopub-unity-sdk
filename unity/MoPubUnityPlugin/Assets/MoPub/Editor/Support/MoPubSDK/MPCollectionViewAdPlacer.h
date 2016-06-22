@@ -11,6 +11,7 @@
 #import "MPServerAdPositioning.h"
 
 @class MPNativeAdRequestTargeting;
+@protocol MPCollectionViewAdPlacerDelegate;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,6 +25,8 @@
  */
 
 @interface MPCollectionViewAdPlacer : NSObject
+
+@property (nonatomic, weak) id<MPCollectionViewAdPlacerDelegate> delegate;
 
 /** @name Initializing a Collection View Ad Placer */
 
@@ -41,12 +44,12 @@
  *
  * @param collectionView The collection view in which to insert ads.
  * @param controller The view controller which should be used to present modal content.
- * @param defaultAdRenderingClass The class that will be used to render ads. This class must
- * implement the `MPNativeAdRendering` protocol and must be a subclass of `UICollectionViewCell`.
+ * @param rendererConfigurations An array of MPNativeAdRendererConfiguration objects that control how
+ * the native ad is rendered.
  *
  * @return An `MPCollectionViewAdPlacer` object.
  */
-+ (instancetype)placerWithCollectionView:(UICollectionView *)collectionView viewController:(UIViewController *)controller defaultAdRenderingClass:(Class)defaultAdRenderingClass;
++ (instancetype)placerWithCollectionView:(UICollectionView *)collectionView viewController:(UIViewController *)controller rendererConfigurations:(NSArray *)rendererConfigurations;
 
 /**
  * Creates and returns an ad placer that will insert ads into a collection view.
@@ -67,12 +70,12 @@
  * @param collectionView The collection view in which to insert ads.
  * @param controller The view controller which should be used to present modal content.
  * @param positioning The positioning object that specifies where ads should be shown in the stream.
- * @param defaultAdRenderingClass The class that will be used to render ads. This class must
- * implement the `MPNativeAdRendering` protocol and must be a subclass of `UICollectionViewCell`.
+ * @param rendererConfigurations An array of MPNativeAdRendererConfiguration objects that control how
+ * the native ad is rendered.
  *
  * @return An `MPCollectionViewAdPlacer` object.
  */
-+ (instancetype)placerWithCollectionView:(UICollectionView *)collectionView viewController:(UIViewController *)controller adPositioning:(MPAdPositioning *)positioning defaultAdRenderingClass:(Class)defaultAdRenderingClass;
++ (instancetype)placerWithCollectionView:(UICollectionView *)collectionView viewController:(UIViewController *)controller adPositioning:(MPAdPositioning *)positioning rendererConfigurations:(NSArray *)rendererConfigurations;
 
 /** @name Requesting Ads */
 
@@ -96,14 +99,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * The MoPub SDK adds interfaces to the `UICollectionView` class to help your application with
+ * The MoPub SDK adds interfaces to the `UICollectionView` class to help your application with 
  * responsibilities related to `MPCollectionViewAdPlacer`. These APIs include methods to help notify
  * the ad placer of all modifications to the original collection view, as well as to simplify your
- * application code such that it does not need to perform index path manipulations to account for
+ * application code such that it does not need to perform index path manipulations to account for 
  * the presence of ads.
  *
  * Since the ad placer replaces the original data source and delegate objects of your collection
- * view, the SDK also provides new methods for you to set these properties such that the ad placer
+ * view, the SDK also provides new methods for you to set these properties such that the ad placer 
  * remains aware of the changes.
  */
 
@@ -158,7 +161,7 @@
  * Returns the original delegate of the collection view.
  *
  * When you instantiate an ad placer using a collection view, the ad placer replaces the collection
- * view's original delegate object. If your application needs to access the original delegate, use
+ * view's original delegate object. If your application needs to access the original delegate, use 
  * this method instead of -[UICollectionView delegate].
  *
  * @return The original collection view delegate.
@@ -237,7 +240,7 @@
  * Moves a section from one location to another in the collection view, and informs the attached ad
  * placer.
  *
- * @param section    The index path of the section you want to move. This parameter must not be
+ * @param section    The index path of the section you want to move. This parameter must not be 
  * `nil`.
  * @param newSection The index path of the section’s new location. This parameter must not be `nil`.
  */
@@ -260,7 +263,7 @@
  *
  * @param identifier The reuse identifier for the specified cell. This parameter must not be `nil`.
  * @param indexPath  The index path specifying the location of the cell. The data source receives
- * this information when it is asked for the cell and should just pass it along. This method uses
+ * this information when it is asked for the cell and should just pass it along. This method uses 
  * the index path to perform additional configuration based on the cell’s position in the collection
  * view.
  *
@@ -353,5 +356,32 @@
  * the receiving collection view.
  */
 - (NSArray *)mp_visibleCells;
+
+@end
+
+@protocol MPCollectionViewAdPlacerDelegate <NSObject>
+
+@optional
+
+/*
+ * This method is called when a native ad, placed by the collection view ad placer, will present a modal view controller.
+ *
+ * @param placer The collection view ad placer that contains the ad displaying the modal.
+ */
+-(void)nativeAdWillPresentModalForCollectionViewAdPlacer:(MPCollectionViewAdPlacer *)placer;
+
+/*
+ * This method is called when a native ad, placed by the collection view ad placer, did dismiss its modal view controller.
+ *
+ * @param placer The collection view ad placer that contains the ad that dismissed the modal.
+ */
+-(void)nativeAdDidDismissModalForCollectionViewAdPlacer:(MPCollectionViewAdPlacer *)placer;
+
+/*
+ * This method is called when a native ad, placed by the collection view ad placer, will cause the app to background due to user interaction with the ad.
+ *
+ * @param placer The collection view ad placer that contains the ad causing the app to background.
+ */
+-(void)nativeAdWillLeaveApplicationFromCollectionViewAdPlacer:(MPCollectionViewAdPlacer *)placer;
 
 @end

@@ -9,6 +9,7 @@
 #import "UnityAdsInstanceMediationSettings.h"
 #import "MPInstanceProvider+Unity.h"
 #import "MPRewardedVideoError.h"
+#import "MPRewardedVideo.h"
 
 @interface MPUnityRouter ()
 
@@ -60,15 +61,17 @@
     return [[UnityAds sharedInstance] canShow] && [[UnityAds sharedInstance] canShowAds];
 }
 
-- (void)presentRewardedVideoAdFromViewController:(UIViewController *)viewController zoneId:(NSString *)zoneId settings:(UnityAdsInstanceMediationSettings *)settings delegate:(id<MPUnityRouterDelegate>)delegate
+- (void)presentRewardedVideoAdFromViewController:(UIViewController *)viewController customerId:(NSString *)customerId zoneId:(NSString *)zoneId settings:(UnityAdsInstanceMediationSettings *)settings delegate:(id<MPUnityRouterDelegate>)delegate
 {
     if (!self.isAdPlaying && [self isAdAvailableForZoneId:zoneId]) {
         self.isAdPlaying = YES;
         
         self.delegate = delegate;
         [[UnityAds sharedInstance] setViewController:viewController];
-        
-        if ([settings.userIdentifier length] > 0) {
+
+        if (customerId.length >0) {
+            [[UnityAds sharedInstance] show:@{kUnityAdsOptionGamerSIDKey : customerId}];
+        } else if (settings.userIdentifier.length > 0) {
             [[UnityAds sharedInstance] show:@{kUnityAdsOptionGamerSIDKey : settings.userIdentifier}];
         } else {
             [[UnityAds sharedInstance] show];

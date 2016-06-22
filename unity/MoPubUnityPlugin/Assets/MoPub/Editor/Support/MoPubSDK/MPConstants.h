@@ -12,12 +12,7 @@
 #define DEFAULT_PUB_ID              @"agltb3B1Yi1pbmNyDAsSBFNpdGUYkaoMDA"
 #define MP_SERVER_VERSION           @"8"
 #define MP_BUNDLE_IDENTIFIER        @"com.mopub.mopub"
-
-#ifdef MP_FABRIC
-    #define MP_SDK_VERSION              @"3.13.0+kit"
-#else
-    #define MP_SDK_VERSION              @"3.13.0+unity"
-#endif
+#define MP_SDK_VERSION              @"4.7.0"
 
 // Sizing constants.
 extern CGSize const MOPUB_BANNER_SIZE;
