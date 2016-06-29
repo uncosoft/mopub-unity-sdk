@@ -101,9 +101,9 @@ public static class MoPub
 
 	// Starts loading a rewarded video ad
 	public static void requestRewardedVideo( string adUnitId, List<MoPubMediationSetting> mediationSettings = null,
-		string keywords = null, double latitude = LAT_LONG_SENTINEL, double longitude = LAT_LONG_SENTINEL)
+		string keywords = null, double latitude = LAT_LONG_SENTINEL, double longitude = LAT_LONG_SENTINEL, string customerId = null)
 	{
-		MP.requestRewardedVideo( adUnitId, mediationSettings, keywords, latitude, longitude );
+		MP.requestRewardedVideo( adUnitId, mediationSettings, keywords, latitude, longitude, customerId);
 	}
 
 

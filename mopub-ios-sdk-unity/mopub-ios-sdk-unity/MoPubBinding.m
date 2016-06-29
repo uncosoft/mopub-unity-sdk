@@ -90,7 +90,7 @@ void _moPubInitializeRewardedVideo()
 // AdColonyInstanceMediationSettings, (BOOL)showPrePopup, (BOOL)showPostPopup
 // VungleInstanceMediationSettings, (string)userIdentifier
 
-void _moPubRequestRewardedVideo( const char * adUnitId, const char * json, const char * keywords, double latitude, double longitude)
+void _moPubRequestRewardedVideo( const char * adUnitId, const char * json, const char * keywords, double latitude, double longitude, const char * customerId)
 {
     NSMutableArray* mediationSettings = nil;
 
@@ -141,6 +141,7 @@ void _moPubRequestRewardedVideo( const char * adUnitId, const char * json, const
     [MPRewardedVideo loadRewardedVideoAdWithAdUnitID:GetStringParam(adUnitId)
                                             keywords:GetStringParam(keywords)
                                             location:location
+                                            customerId:GetStringParam(customerId)
                                    mediationSettings:mediationSettings];
 }
 
@@ -153,6 +154,6 @@ void _moPubShowRewardedVideo( const char * adUnitId )
         NSLog( @"bailing out on showing rewarded video since it has not been loaded yet." );
         //return; // removed return here
     }
-    
+
     [MPRewardedVideo presentRewardedVideoAdForAdUnitID:adUnitString fromViewController:[MoPubManager unityViewController]];
 }
