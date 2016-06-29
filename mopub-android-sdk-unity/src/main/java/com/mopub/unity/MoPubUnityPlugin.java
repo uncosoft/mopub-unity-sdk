@@ -431,7 +431,7 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
     }
 
     public void requestRewardedVideo(final String adUnitId, final String json,
-            final String keywords, final double latitude, final double longitude) {
+            final String keywords, final double latitude, final double longitude, final String customerId) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 Location location = new Location("");
@@ -439,7 +439,7 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
                 location.setLongitude(longitude);
 
                 MoPubRewardedVideoManager.RequestParameters requestParameters =
-                        new MoPubRewardedVideoManager.RequestParameters(keywords, location);
+                        new MoPubRewardedVideoManager.RequestParameters(keywords, location, customerId);
 
                 if (json != null) {
                     MoPub.loadRewardedVideo(
