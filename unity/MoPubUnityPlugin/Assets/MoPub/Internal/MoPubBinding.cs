@@ -131,15 +131,15 @@ public class MoPubBinding
 
 
 	[DllImport ("__Internal")]
-	private static extern void _moPubRequestRewardedVideo (string adUnitId, string json, string keywords, double latitude, double longitude );
+	private static extern void _moPubRequestRewardedVideo (string adUnitId, string json, string keywords, double latitude, double longitude, string customerId);
 
 	// Starts loading a rewarded video ad
 	public static void requestRewardedVideo (string adUnitId, List<MoPubMediationSetting> mediationSettings = null, string keywords = null,
-		double latitude = MoPub.LAT_LONG_SENTINEL, double longitude = MoPub.LAT_LONG_SENTINEL)
+		double latitude = MoPub.LAT_LONG_SENTINEL, double longitude = MoPub.LAT_LONG_SENTINEL, string customerId = null)
 	{
 		var json = mediationSettings == null ? null : MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings);
 		if (Application.platform == RuntimePlatform.IPhonePlayer)
-			_moPubRequestRewardedVideo (adUnitId, json, keywords, latitude, longitude);
+			_moPubRequestRewardedVideo (adUnitId, json, keywords, latitude, longitude, customerId);
 	}
 
 

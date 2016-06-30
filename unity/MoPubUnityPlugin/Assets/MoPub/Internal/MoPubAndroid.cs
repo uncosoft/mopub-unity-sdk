@@ -152,13 +152,13 @@ public class MoPubAndroid
 
 	// Starts loading a rewarded video ad
 	public static void requestRewardedVideo( string adUnitId, List<MoPubMediationSetting> mediationSettings = null,
-		string keywords = null, double latitude = MoPub.LAT_LONG_SENTINEL, double longitude = MoPub.LAT_LONG_SENTINEL )
+		string keywords = null, double latitude = MoPub.LAT_LONG_SENTINEL, double longitude = MoPub.LAT_LONG_SENTINEL, string customerId = null)
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
 
 		var json = mediationSettings == null ? null : MoPubInternal.ThirdParty.MiniJSON.Json.Serialize( mediationSettings );
-		_plugin.Call( "requestRewardedVideo", adUnitId, json, keywords, latitude, longitude );
+		_plugin.Call( "requestRewardedVideo", adUnitId, json, keywords, latitude, longitude, customerId);
 	}
 
 

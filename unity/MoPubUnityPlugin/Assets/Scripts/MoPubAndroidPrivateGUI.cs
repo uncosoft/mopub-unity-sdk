@@ -117,7 +117,7 @@ public class MoPubAndroidPrivateGUI : MonoBehaviour
 				mediationSettings.Add( chartboostSettings );
 				mediationSettings.Add( vungleSettings );
 
-				MoPub.requestRewardedVideo( _rewardedVideoAdUnit, mediationSettings );
+				MoPub.requestRewardedVideo( _rewardedVideoAdUnit, mediationSettings, "rewarded, video, mopub", 37.7833, 122.4167, "customer101" );
 				Debug.Log( "requesting rewarded video with ad unit: " + _rewardedVideoAdUnit + " and mediation settings: " + MoPubInternal.ThirdParty.MiniJSON.Json.Serialize( mediationSettings ) );
 			}
 

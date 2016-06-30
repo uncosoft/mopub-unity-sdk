@@ -114,7 +114,7 @@ public class MoPubDemoGUI : MonoBehaviour
 
 		if( GUILayout.Button( "Request MPX Rewarded Video" ) )
 		{
-			MoPub.requestRewardedVideo( _rewardedVideoAdUnit, null, "rewarded, video, mopub", 37.7833, 122.4167 );
+			MoPub.requestRewardedVideo( _rewardedVideoAdUnit, null, "rewarded, video, mopub", 37.7833, 122.4167, "customer101" );
 			Debug.Log( "requesting mpx rewarded video with ad unit: " + _rewardedVideoAdUnit );
 		}
 
