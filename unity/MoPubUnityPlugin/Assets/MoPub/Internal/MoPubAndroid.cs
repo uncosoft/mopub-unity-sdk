@@ -28,60 +28,64 @@ public enum MoPubLocationAwareness
 
 public class MoPubAndroid
 {
-	private static AndroidJavaObject _plugin;
+	private static readonly AndroidJavaClass _pluginClass = new AndroidJavaClass("com.mopub.unity.MoPubUnityPlugin");
+	private readonly AndroidJavaObject _plugin;
+	//private readonly string _adUnitId;
 
-
-	static MoPubAndroid()
+	public MoPubAndroid(string adUnitId)
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
 
-		using( var pluginClass = new AndroidJavaClass( "com.mopub.unity.MoPubUnityPlugin" ) )
-			_plugin = pluginClass.CallStatic<AndroidJavaObject>( "instance" );
+//		using( var pluginClass = new AndroidJavaClass( "com.mopub.unity.MoPubUnityPlugin" ) )
+//			_plugin = pluginClass.Call<AndroidJavaObject>( "getInstance", adUnitId );
+
+		_plugin = new AndroidJavaObject("com.mopub.unity.MoPubUnityPlugin", adUnitId);
+		//_adUnitId = adUnitId;
 	}
 
 
 
-	public static void addFacebookTestDeviceId( string hashedDeviceId )
+	public static void addFacebookTestDeviceId(string hashedDeviceId)
 	{
-		if( Application.platform != RuntimePlatform.Android )
+		if (Application.platform != RuntimePlatform.Android)
 			return;
 
-		_plugin.Call( "addFacebookTestDeviceId", hashedDeviceId );
+		_pluginClass.CallStatic("addFacebookTestDeviceId", hashedDeviceId);
 	}
 
 
-	public static void addAdMobTestDeviceId( string deviceId )
-	{
-		if( Application.platform != RuntimePlatform.Android )
-			return;
-
-		_plugin.Call( "addAdMobTestDeviceId", deviceId );
-	}
+//	public void addAdMobTestDeviceId( string deviceId )
+//	{
+//		if( Application.platform != RuntimePlatform.Android )
+//			return;
+//
+//		_plugin.Call( "addAdMobTestDeviceId", deviceId );
+//	}
 
 
 	// Enables/disables location support for banners and interstitials
-	public static void setLocationAwareness( MoPubLocationAwareness locationAwareness )
+	public static void setLocationAwareness(MoPubLocationAwareness locationAwareness)
 	{
-		if( Application.platform != RuntimePlatform.Android )
+		if (Application.platform != RuntimePlatform.Android)
 			return;
 
-		_plugin.Call( "setLocationAwareness", locationAwareness.ToString() );
+		_pluginClass.CallStatic("setLocationAwareness", locationAwareness.ToString());
 	}
 
 
 	// Creates a banner of the given type at the given position
-	public static void createBanner( string adUnitId, MoPubAdPosition position )
+	public void createBanner( MoPubAdPosition position )
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
 
-		_plugin.Call( "createBanner", adUnitId, (int)position );
+		_plugin.Call( "createBanner", (int)position );
 	}
 
 
 	// Destroys the banner and removes it from view
-	public static void destroyBanner()
+	public void destroyBanner()
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
@@ -91,7 +95,7 @@ public class MoPubAndroid
 
 
 	// Shows/hides the banner
-	public static void showBanner( bool shouldShow )
+	public void showBanner( bool shouldShow )
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
@@ -101,7 +105,7 @@ public class MoPubAndroid
 
 
 	// Sets the keywords for the current banner
-	public static void setBannerKeywords( string keywords )
+	public void setBannerKeywords( string keywords )
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
@@ -111,17 +115,17 @@ public class MoPubAndroid
 
 
 	// Starts loading an interstitial ad
-	public static void requestInterstitialAd( string adUnitId, string keywords = "" )
+	public void requestInterstitialAd( string keywords = "" )
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
 
-		_plugin.Call( "requestInterstitialAd", adUnitId, keywords );
+		_plugin.Call( "requestInterstitialAd", keywords );
 	}
 
 
 	// If an interstitial ad is loaded this will take over the screen and show the ad
-	public static void showInterstitialAd( string adUnitId )
+	public void showInterstitialAd()
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
@@ -133,10 +137,10 @@ public class MoPubAndroid
 	// Reports an app download to MoPub
 	public static void reportApplicationOpen()
 	{
-		if( Application.platform != RuntimePlatform.Android )
+		if (Application.platform != RuntimePlatform.Android)
 			return;
 
-		_plugin.Call( "reportApplicationOpen" );
+		_pluginClass.CallStatic("reportApplicationOpen");
 	}
 
 
@@ -146,29 +150,29 @@ public class MoPubAndroid
 		if( Application.platform != RuntimePlatform.Android )
 			return;
 
-		_plugin.Call( "initializeRewardedVideo" );
+		_pluginClass.CallStatic("initializeRewardedVideo");
 	}
 
 
 	// Starts loading a rewarded video ad
-	public static void requestRewardedVideo( string adUnitId, List<MoPubMediationSetting> mediationSettings = null,
+	public void requestRewardedVideo( List<MoPubMediationSetting> mediationSettings = null,
 		string keywords = null, double latitude = MoPub.LAT_LONG_SENTINEL, double longitude = MoPub.LAT_LONG_SENTINEL, string customerId = null)
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
 
 		var json = mediationSettings == null ? null : MoPubInternal.ThirdParty.MiniJSON.Json.Serialize( mediationSettings );
-		_plugin.Call( "requestRewardedVideo", adUnitId, json, keywords, latitude, longitude, customerId);
+		_plugin.Call( "requestRewardedVideo", json, keywords, latitude, longitude, customerId);
 	}
 
 
 	// If a rewarded video ad is loaded this will take over the screen and show the ad
-	public static void showRewardedVideo( string adUnitId )
+	public void showRewardedVideo()
 	{
 		if( Application.platform != RuntimePlatform.Android )
 			return;
 
-		_plugin.Call( "showRewardedVideo", adUnitId );
+		_plugin.Call( "showRewardedVideo" );
 	}
 }
 #endif

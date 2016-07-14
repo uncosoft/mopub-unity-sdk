@@ -44,19 +44,19 @@ public class MoPubDemoGUI : MonoBehaviour
 
 		if( GUILayout.Button( "Destroy Banner" ) )
 		{
-			MoPub.destroyBanner();
+			MoPub.destroyBanner(_bannerAdUnit);
 		}
 
 
 		if( GUILayout.Button( "Show Banner" ) )
 		{
-			MoPub.showBanner( true );
+			MoPub.showBanner(_bannerAdUnit, true);
 		}
 
 
 		if( GUILayout.Button( "Hide Banner" ) )
 		{
-			MoPub.showBanner( false );
+			MoPub.showBanner(_bannerAdUnit, false);
 		}
 
 
