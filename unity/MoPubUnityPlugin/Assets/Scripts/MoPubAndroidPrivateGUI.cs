@@ -6,6 +6,7 @@ using System.Linq;
 public class MoPubAndroidPrivateGUI : MonoBehaviour
 {
 	#if UNITY_ANDROID
+
 	private int _selectedToggleIndex;
 	private string[] _bannerAdUnits;
 	private string[] _interstitialAdUnits;
@@ -22,11 +23,11 @@ public class MoPubAndroidPrivateGUI : MonoBehaviour
 		"Unity Ads"
 	};
 
-	private Dictionary<string, string[]> _bannerDict = new Dictionary<string, string[]> () {				
-		{ "AdMob", new string[] { "173f4589c04a43b1b2e2e49d05f58e80" } },		
+	private Dictionary<string, string[]> _bannerDict = new Dictionary<string, string[]> () {
+		{ "AdMob", new string[] { "173f4589c04a43b1b2e2e49d05f58e80" } },
 		{ "Facebook", new string[] { "b40a96dd275e4ce5be2cdf5faa92007d" } },
 		{ "Millennial", new string[] { "1aa442709c9f11e281c11231392559e4" } },
-		{ "MoPub", new string[] { "23b49916add211e281c11231392559e4" } },		
+		{ "MoPub", new string[] { "23b49916add211e281c11231392559e4" } },
 	};
 
 	private Dictionary<string, string[]> _interstitialDict = new Dictionary<string, string[]> () {
@@ -41,17 +42,17 @@ public class MoPubAndroidPrivateGUI : MonoBehaviour
 	};
 
 	private Dictionary<string, string[]> _rewardedVideoDict = new Dictionary<string, string[]> () {
-		{ "AdColony", new string[] { "e258c916e659447d9d98256a3ab2979e" } },		
-		{ "Chartboost", new string[] { "df605ab15b56400285c99e521ecc2cb1" } },		
+		{ "AdColony", new string[] { "e258c916e659447d9d98256a3ab2979e" } },
+		{ "Chartboost", new string[] { "df605ab15b56400285c99e521ecc2cb1" } },
 		{ "MoPub", new string[] { "db2ef0eb1600433a8cdc31c75549c6b1" } },
 		{ "Unity Ads", new string[] { "4302e96be4584fa6b653a0668a845407" } },
 		{ "Vungle", new string[] { "2d38f4e6881341369e9fc2c2d01ddc9d" } }
 	};
 
 
-	static bool IsNullOrEmpty (string[] strArray)
+	static bool IsAdUnitArrayNullOrEmpty (string[] adUnitArray)
 	{
-		return (strArray == null || strArray.Length == 0);
+		return (adUnitArray == null || adUnitArray.Length == 0);
 	}
 
 
@@ -78,72 +79,82 @@ public class MoPubAndroidPrivateGUI : MonoBehaviour
 
 	void OnGUI ()
 	{
+		// Set label text font size
+		var headerStyle = GUI.skin.GetStyle ("label");
+		headerStyle.fontSize = 30;
+
+		// Set button text font size
+		var buttonStyle = GUI.skin.GetStyle ("button");
+		buttonStyle.fontSize = 20;
+
 		GUI.skin.button.margin = new RectOffset (0, 0, 10, 0);
 		GUI.skin.button.stretchWidth = true;
 		GUI.skin.button.fixedHeight = (Screen.width >= 960 || Screen.height >= 960) ? 100 : 50;
+		var sectionMargin = 40;
 
-		var halfWidth = Screen.width / 2;
-		GUILayout.BeginArea (new Rect (0, 0, halfWidth, Screen.height));
-		GUILayout.BeginVertical ();
-
-//		if (GUILayout.Button ("Create Banner (bottom right)")) {
-//			if (_bannerAdUnit == "") {
-//				Debug.LogWarning ("No banner ad unit ID is available for the currently selected platform");
-//				return;
-//			}
-//			MoPub.createBanner (_bannerAdUnit, MoPubAdPosition.BottomRight);
-//		}
-//
-//
-//		if (GUILayout.Button ("Destroy Banner")) {
-//			MoPub.destroyBanner (_bannerAdUnit);
-//		}
-//
-//
-//		GUILayout.BeginHorizontal ();
-//		if (GUILayout.Button ("Show Banner")) {
-//			MoPub.showBanner (_bannerAdUnit, true);
-//		}
-//
-//
-//		if (GUILayout.Button ("Hide Banner")) {
-//			MoPub.showBanner (_bannerAdUnit, false);
-//		}
-//		GUILayout.EndHorizontal ();
-//
-//
-//		GUILayout.Space (20);
-//		if (GUILayout.Button ("Request Interstitial")) {
-//			MoPub.requestInterstitialAd (_interstitialAdUnit);
-//			Debug.Log ("requesting interstitial with ad unit: " + _interstitialAdUnit);
-//		}
-//
-//
-//		if (GUILayout.Button ("Show Interstitial")) {
-//			MoPub.showInterstitialAd (_interstitialAdUnit);
-//		}
-//
-
-		GUILayout.EndVertical ();
-		GUILayout.EndArea ();
-
-		GUILayout.BeginArea (new Rect (Screen.width - halfWidth, 0, halfWidth, Screen.height));
+		GUILayout.BeginArea (new Rect (0, 0, Screen.width, Screen.height));
 		GUILayout.BeginVertical ();
 
 
-		if (GUILayout.Button ("Report App Open")) {
-			MoPub.reportApplicationOpen ();
+		// Banner AdUnits
+		GUILayout.Space (sectionMargin);
+		GUILayout.Label ("Banners:");
+		if (!IsAdUnitArrayNullOrEmpty (_bannerAdUnits)) {
+			foreach (string bannerAdUnit in _bannerAdUnits) {
+				GUILayout.BeginHorizontal ();
+
+				if (GUILayout.Button ("Create Banner: " + bannerAdUnit)) {
+					MoPub.createBanner (bannerAdUnit, MoPubAdPosition.BottomRight);
+					Debug.Log ("requesting banner with AdUnit: " + bannerAdUnit);
+				}
+
+				if (GUILayout.Button ("Destroy Banner")) {
+					MoPub.destroyBanner (bannerAdUnit);
+				}
+
+				if (GUILayout.Button ("Show Banner")) {
+					MoPub.showBanner (bannerAdUnit, true);
+				}
+
+				if (GUILayout.Button ("Hide Banner")) {
+					MoPub.showBanner (bannerAdUnit, false);
+				}
+
+				GUILayout.EndHorizontal ();
+			}
+		} else {
+			GUILayout.Label ("No banner AdUnits for this network");
 		}
 
 
-		if (GUILayout.Button ("Enable Location Support")) {
-			MoPub.enableLocationSupport (true);
+		// Interstitial AdUnits
+		GUILayout.Space (sectionMargin);
+		GUILayout.Label ("Interstitials:");
+		if (!IsAdUnitArrayNullOrEmpty (_interstitialAdUnits)) {
+			foreach (string interstitialAdUnit in _interstitialAdUnits) {
+				GUILayout.BeginHorizontal ();
+
+				if (GUILayout.Button ("Request Interstitial: " + interstitialAdUnit)) {
+					MoPub.requestInterstitialAd (interstitialAdUnit);
+					Debug.Log ("requesting interstitial with AdUnit: " + interstitialAdUnit);
+				}
+
+				if (GUILayout.Button ("Show Interstitial")) {
+					MoPub.showInterstitialAd (interstitialAdUnit);
+				}
+
+				GUILayout.EndHorizontal ();
+			}
+		} else {
+			GUILayout.Label ("No interstitial AdUnits for this network");
 		}
 
 
-		// no need to show the rewarded ad buttons if this network doesnt have them
-		GUILayout.Space (20);
-		if (!IsNullOrEmpty (_rewardedVideoAdUnits)) {
+		// Rewarded Video AdUnits
+		GUILayout.Space (sectionMargin);
+		GUILayout.Label ("Rewarded Videos:");
+		if (!IsAdUnitArrayNullOrEmpty (_rewardedVideoAdUnits)) {
+			// Set up mediation settings
 			var adColonySettings = new MoPubMediationSetting ("AdColony");
 			adColonySettings.Add ("withConfirmationDialog", true);
 			adColonySettings.Add ("withResultsDialog", true);
@@ -164,32 +175,49 @@ public class MoPubAndroidPrivateGUI : MonoBehaviour
 			mediationSettings.Add (vungleSettings);
 
 			foreach (string rewardedVideoAdUnit in _rewardedVideoAdUnits) {
-				if (GUILayout.Button ("Request Rewarded Video: " + rewardedVideoAdUnit)) {				
+				GUILayout.BeginHorizontal ();
+
+				if (GUILayout.Button ("Request Rewarded Video: " + rewardedVideoAdUnit)) {
 					MoPub.requestRewardedVideo (rewardedVideoAdUnit, mediationSettings, "rewarded, video, mopub", 37.7833, 122.4167, "customer101");
 					Debug.Log ("requesting rewarded video with AdUnit: " + rewardedVideoAdUnit + " and mediation settings: " + MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings));
 				}
-							
-				if (GUILayout.Button ("Show Rewarded Video: " + rewardedVideoAdUnit)) {
+
+				if (GUILayout.Button ("Show Rewarded Video")) {
 					MoPub.showRewardedVideo (rewardedVideoAdUnit);
 				}
+
+				GUILayout.EndHorizontal ();
 			}
 		} else {
-			GUILayout.Label ("No rewarded video ad unit for this network");
+			GUILayout.Label ("No rewarded video AdUnits for this network");
 		}
+
+
+		// Report App Open
+		GUILayout.Space (sectionMargin);
+		GUILayout.Label ("Report App Open:");
+		if (GUILayout.Button ("Report App Open")) {
+			MoPub.reportApplicationOpen ();
+		}
+
+
+		// Enable Location Support
+		GUILayout.Space (sectionMargin);
+		GUILayout.Label ("Enable Location Support:");
+		if (GUILayout.Button ("Enable Location Support")) {
+			MoPub.enableLocationSupport (true);
+		}
+
 
 		GUILayout.EndVertical ();
 		GUILayout.EndArea ();
 
 
-//		GUI.changed = true;
 		_selectedToggleIndex = GUI.Toolbar (new Rect (0, Screen.height - GUI.skin.button.fixedHeight, Screen.width, GUI.skin.button.fixedHeight), _selectedToggleIndex, _networkList);
-//		if (GUI.changed) {
-			string network = _networkList [_selectedToggleIndex];
-
-			_bannerAdUnits = _bannerDict.ContainsKey (network) ? _bannerDict [network] : null;
-			_interstitialAdUnits = _interstitialDict.ContainsKey (network) ? _interstitialDict [network] : null;
-			_rewardedVideoAdUnits = _rewardedVideoDict.ContainsKey (network) ? _rewardedVideoDict [network] : null;
-//		}
-	}		
+		string network = _networkList [_selectedToggleIndex];
+		_bannerAdUnits = _bannerDict.ContainsKey (network) ? _bannerDict [network] : null;
+		_interstitialAdUnits = _interstitialDict.ContainsKey (network) ? _interstitialDict [network] : null;
+		_rewardedVideoAdUnits = _rewardedVideoDict.ContainsKey (network) ? _rewardedVideoDict [network] : null;
+	}
 	#endif
 }

@@ -7,10 +7,8 @@ using System.Collections.Generic;
 
 #if UNITY_IPHONE
 	using MP = MoPubBinding;
-
-
 #elif UNITY_ANDROID
-using MP = MoPubAndroid;
+	using MP = MoPubAndroid;
 #endif
 
 
@@ -21,6 +19,7 @@ public class MoPubMediationSetting : Dictionary<string,object>
 		this.Add ("adVendor", adVendor);
 	}
 }
+
 
 public static class MoPub
 {
@@ -33,7 +32,7 @@ public static class MoPub
 	// Construct a plugin for each adUnit
 	public static void loadPluginsForAdUnits (string[] adUnitIds)
 	{
-		Debug.Log (adUnitIds.Length + " AdUnits loaded for plugins:\n" + string.Join(", ", adUnitIds));		
+		Debug.Log (adUnitIds.Length + " AdUnits loaded for plugins:\n" + string.Join (", ", adUnitIds));
 		foreach (string adUnitId in adUnitIds) {
 			_pluginsDict.Add (adUnitId, new MP (adUnitId));
 		}
@@ -52,13 +51,11 @@ public static class MoPub
 
 
 	// Creates a banner of the given type at the given position. bannerType is iOS only.
-	#if UNITY_IPHONE
+#if UNITY_IPHONE
 	public static void createBanner( string adUnitId, MoPubAdPosition position, MoPubBannerType bannerType = MoPubBannerType.Size320x50 )
 	{
 		MoPubBinding.createBanner( bannerType, position, adUnitId );
 	}
-
-
 #elif UNITY_ANDROID
 	public static void createBanner (string adUnitId, MoPubAdPosition position)
 	{
@@ -69,7 +66,7 @@ public static class MoPub
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
 	}
-	#endif
+#endif
 
 
 	// Destroys the banner and removes it from view
@@ -139,11 +136,11 @@ public static class MoPub
 
 
 	// Starts loading a rewarded video ad
-	public static void requestRewardedVideo (string adUnitId, 
-	                                         List<MoPubMediationSetting> mediationSettings = null, 
-	                                         string keywords = null, 
-	                                         double latitude = LAT_LONG_SENTINEL, 
-	                                         double longitude = LAT_LONG_SENTINEL, 
+	public static void requestRewardedVideo (string adUnitId,
+	                                         List<MoPubMediationSetting> mediationSettings = null,
+	                                         string keywords = null,
+	                                         double latitude = LAT_LONG_SENTINEL,
+	                                         double longitude = LAT_LONG_SENTINEL,
 	                                         string customerId = null)
 	{
 		MP plugin;
@@ -165,7 +162,6 @@ public static class MoPub
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
 	}
-
 }
 
 #endif
