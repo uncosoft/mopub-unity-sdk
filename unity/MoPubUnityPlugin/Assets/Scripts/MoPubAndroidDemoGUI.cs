@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-public class MoPubAndroidPrivateGUI : MonoBehaviour
+public class MoPubAndroidDemoGUI : MonoBehaviour
 {
 	#if UNITY_ANDROID
 
