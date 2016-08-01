@@ -11,34 +11,34 @@ public class MoPubManager : MonoBehaviour
 	public static event Action<float> onAdLoadedEvent;
 
 	// Fired when an ad fails to load for the banner
-	public static event Action onAdFailedEvent;
+	public static event Action<string> onAdFailedEvent;
 
 	// Android only. Fired when a banner ad is clicked
-	public static event Action onAdClickedEvent;
+	public static event Action<string> onAdClickedEvent;
 
 	// Android only. Fired when a banner ad expands to encompass a greater portion of the screen
-	public static event Action onAdExpandedEvent;
+	public static event Action<string> onAdExpandedEvent;
 
 	// Android only. Fired when a banner ad collapses back to its initial size
-	public static event Action onAdCollapsedEvent;
+	public static event Action<string> onAdCollapsedEvent;
 
 	// Fired when an interstitial ad is loaded and ready to be shown
-	public static event Action onInterstitialLoadedEvent;
+	public static event Action<string> onInterstitialLoadedEvent;
 
 	// Fired when an interstitial ad fails to load
-	public static event Action onInterstitialFailedEvent;
+	public static event Action<string> onInterstitialFailedEvent;
 
 	// Fired when an interstitial ad is dismissed
-	public static event Action onInterstitialDismissedEvent;
+	public static event Action<string> onInterstitialDismissedEvent;
 
 	// iOS only. Fired when an interstitial ad expires
-	public static event Action onInterstitialExpiredEvent;
+	public static event Action<string> onInterstitialExpiredEvent;
 
 	// Android only. Fired when an interstitial ad is displayed
-	public static event Action onInterstitialShownEvent;
+	public static event Action<string> onInterstitialShownEvent;
 
 	// Android only. Fired when an interstitial ad is clicked
-	public static event Action onInterstitialClickedEvent;
+	public static event Action<string> onInterstitialClickedEvent;
 
 	// Fired when a rewarded video finishes loading and is ready to be displayed
 	public static event Action<string> onRewardedVideoLoadedEvent;
@@ -117,6 +117,7 @@ public class MoPubManager : MonoBehaviour
 	}
 
 
+	// Banner Listeners
 
 	void onAdLoaded (string height)
 	{
@@ -125,77 +126,79 @@ public class MoPubManager : MonoBehaviour
 	}
 
 
-	void onAdFailed (string empty)
+	void onAdFailed (string errorMsg)
 	{
 		if (onAdFailedEvent != null)
-			onAdFailedEvent ();
+			onAdFailedEvent (errorMsg);
 	}
 
 
-	void onAdClicked (string empty)
+	void onAdClicked (string adUnitId)
 	{
 		if (onAdClickedEvent != null)
-			onAdClickedEvent ();
+			onAdClickedEvent (adUnitId);
 	}
 
 
-	void onAdExpanded (string empty)
+	void onAdExpanded (string adUnitId)
 	{
 		if (onAdExpandedEvent != null)
-			onAdExpandedEvent ();
+			onAdExpandedEvent (adUnitId);
 	}
 
 
-	void onAdCollapsed (string empty)
+	void onAdCollapsed (string adUnitId)
 	{
 		if (onAdCollapsedEvent != null)
-			onAdCollapsedEvent ();
+			onAdCollapsedEvent (adUnitId);
 	}
 
 
-	void onInterstitialLoaded (string empty)
+	// Interstitial Listeners
+
+	void onInterstitialLoaded (string adUnitId)
 	{
 		if (onInterstitialLoadedEvent != null)
-			onInterstitialLoadedEvent ();
+			onInterstitialLoadedEvent (adUnitId);
 	}
 
 
-	void onInterstitialFailed (string adUnitId)
+	void onInterstitialFailed (string errorMsg)
 	{
 		if (onInterstitialFailedEvent != null)
-			onInterstitialFailedEvent ();
+			onInterstitialFailedEvent (errorMsg);
 	}
 
 
 	void onInterstitialDismissed (string adUnitId)
 	{
 		if (onInterstitialDismissedEvent != null)
-			onInterstitialDismissedEvent ();
+			onInterstitialDismissedEvent (adUnitId);
 	}
 
 
 	void interstitialDidExpire (string adUnitId)
 	{
 		if (onInterstitialExpiredEvent != null)
-			onInterstitialExpiredEvent ();
+			onInterstitialExpiredEvent (adUnitId);
 	}
 
 
-	void onInterstitialShown (string empty)
+	void onInterstitialShown (string adUnitId)
 	{
 		if (onInterstitialShownEvent != null)
-			onInterstitialShownEvent ();
+			onInterstitialShownEvent (adUnitId);
 	}
 
 
-	void onInterstitialClicked (string empty)
+	void onInterstitialClicked (string adUnitId)
 	{
 		if (onInterstitialClickedEvent != null)
-			onInterstitialClickedEvent ();
+			onInterstitialClickedEvent (adUnitId);
 	}
 
 
-	#region Rewarded Videos
+	// Rewarded Video Listeners
 
 	void onRewardedVideoLoaded (string adUnitId)
 	{
@@ -204,10 +207,10 @@ public class MoPubManager : MonoBehaviour
 	}
 
 
-	void onRewardedVideoFailed (string adUnitId)
+	void onRewardedVideoFailed (string errorMsg)
 	{
 		if (onRewardedVideoFailedEvent != null)
-			onRewardedVideoFailedEvent (adUnitId);
+			onRewardedVideoFailedEvent (errorMsg);
 	}
 
 
@@ -251,9 +254,5 @@ public class MoPubManager : MonoBehaviour
 		if (onRewardedVideoLeavingApplicationEvent != null)
 			onRewardedVideoLeavingApplicationEvent (adUnitId);
 	}
-
-	#endregion
-
-
 }
 #endif

@@ -452,23 +452,25 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 
     @Override
     public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-        Log.i(TAG, "onAdFailed: " + errorCode);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onAdFailed", "");
+        String errorMsg =
+                String.format("adUnitId = %s, errorCode = %s", mAdUnitId, errorCode.toString());
+        Log.i(TAG, "onAdFailed: " + errorMsg);
+        UnityPlayer.UnitySendMessage("MoPubManager", "onAdFailed", errorMsg);
     }
 
     @Override
     public void onBannerClicked(MoPubView banner) {
-        UnityPlayer.UnitySendMessage("MoPubManager", "onAdClicked", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onAdClicked", mAdUnitId);
     }
 
     @Override
     public void onBannerExpanded(MoPubView banner) {
-        UnityPlayer.UnitySendMessage("MoPubManager", "onAdExpanded", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onAdExpanded", mAdUnitId);
     }
 
     @Override
     public void onBannerCollapsed(MoPubView banner) {
-        UnityPlayer.UnitySendMessage("MoPubManager", "onAdCollapsed", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onAdCollapsed", mAdUnitId);
     }
 
 
@@ -478,30 +480,32 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
     @Override
     public void onInterstitialLoaded(MoPubInterstitial interstitial) {
         Log.i(TAG, "onInterstitialLoaded: " + interstitial);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialLoaded", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialLoaded", mAdUnitId);
     }
 
     @Override
     public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-        Log.i(TAG, "onInterstitialFailed: " + errorCode);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialFailed", errorCode.toString());
+        String errorMsg =
+                String.format("adUnitId = %s, errorCode = %s", mAdUnitId, errorCode.toString());
+        Log.i(TAG, "onInterstitialFailed: " + errorMsg);
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialFailed", errorMsg);
     }
 
     @Override
     public void onInterstitialShown(MoPubInterstitial interstitial) {
         Log.i(TAG, "onInterstitialShown: " + interstitial);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialShown", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialShown", mAdUnitId);
     }
 
     @Override
     public void onInterstitialClicked(MoPubInterstitial interstitial) {
         Log.i(TAG, "onInterstitialClicked: " + interstitial);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialClicked", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialClicked", mAdUnitId);
     }
 
     @Override
     public void onInterstitialDismissed(MoPubInterstitial interstitial) {
         Log.i(TAG, "onInterstitialDismissed: " + interstitial);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialDismissed", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialDismissed", mAdUnitId);
     }
 }

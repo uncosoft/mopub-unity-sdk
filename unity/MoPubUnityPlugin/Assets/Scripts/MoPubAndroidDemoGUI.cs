@@ -87,10 +87,19 @@ public class MoPubAndroidDemoGUI : MonoBehaviour
 		var buttonStyle = GUI.skin.GetStyle ("button");
 		buttonStyle.fontSize = 20;
 
+		// Set button margins and section margins
 		GUI.skin.button.margin = new RectOffset (0, 0, 10, 0);
 		GUI.skin.button.stretchWidth = true;
 		GUI.skin.button.fixedHeight = (Screen.width >= 960 || Screen.height >= 960) ? 100 : 50;
 		var sectionMargin = 40;
+
+		// Tabs for networks
+		_selectedToggleIndex = GUI.Toolbar (new Rect (0, Screen.height - GUI.skin.button.fixedHeight, Screen.width, GUI.skin.button.fixedHeight), _selectedToggleIndex, _networkList);
+		string network = _networkList [_selectedToggleIndex];
+		_bannerAdUnits = _bannerDict.ContainsKey (network) ? _bannerDict [network] : null;
+		_interstitialAdUnits = _interstitialDict.ContainsKey (network) ? _interstitialDict [network] : null;
+		_rewardedVideoAdUnits = _rewardedVideoDict.ContainsKey (network) ? _rewardedVideoDict [network] : null;
+
 
 		GUILayout.BeginArea (new Rect (0, 0, Screen.width, Screen.height));
 		GUILayout.BeginVertical ();
@@ -123,7 +132,7 @@ public class MoPubAndroidDemoGUI : MonoBehaviour
 				GUILayout.EndHorizontal ();
 			}
 		} else {
-			GUILayout.Label ("No banner AdUnits for this network");
+			GUILayout.Label ("No banner AdUnits for " + network);
 		}
 
 
@@ -146,7 +155,7 @@ public class MoPubAndroidDemoGUI : MonoBehaviour
 				GUILayout.EndHorizontal ();
 			}
 		} else {
-			GUILayout.Label ("No interstitial AdUnits for this network");
+			GUILayout.Label ("No interstitial AdUnits for " + network);
 		}
 
 
@@ -189,7 +198,7 @@ public class MoPubAndroidDemoGUI : MonoBehaviour
 				GUILayout.EndHorizontal ();
 			}
 		} else {
-			GUILayout.Label ("No rewarded video AdUnits for this network");
+			GUILayout.Label ("No rewarded video AdUnits for " + network);
 		}
 
 
@@ -211,13 +220,6 @@ public class MoPubAndroidDemoGUI : MonoBehaviour
 
 		GUILayout.EndVertical ();
 		GUILayout.EndArea ();
-
-
-		_selectedToggleIndex = GUI.Toolbar (new Rect (0, Screen.height - GUI.skin.button.fixedHeight, Screen.width, GUI.skin.button.fixedHeight), _selectedToggleIndex, _networkList);
-		string network = _networkList [_selectedToggleIndex];
-		_bannerAdUnits = _bannerDict.ContainsKey (network) ? _bannerDict [network] : null;
-		_interstitialAdUnits = _interstitialDict.ContainsKey (network) ? _interstitialDict [network] : null;
-		_rewardedVideoAdUnits = _rewardedVideoDict.ContainsKey (network) ? _rewardedVideoDict [network] : null;
 	}
 	#endif
 }
