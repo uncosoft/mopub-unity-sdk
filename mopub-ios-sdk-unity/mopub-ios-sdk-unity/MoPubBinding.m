@@ -21,7 +21,7 @@ static double LAT_LONG_SENTINEL = 99999.0;
 
 void _moPubEnableLocationSupport(bool shouldUseLocation )
 {
-    [[MoPubManager sharedManager]  enableLocationSupport:shouldUseLocation];
+    [[MoPubManager sharedManager] enableLocationSupport:shouldUseLocation];
 }
 
 
@@ -71,7 +71,7 @@ void _moPubShowInterstitialAd( const char * adUnitId )
 }
 
 
-void _moPubReportApplicationOpen(const char * iTunesAppId )
+void _moPubReportApplicationOpen( const char * iTunesAppId )
 {
     [[MoPubManager sharedManager] reportApplicationOpen:GetStringParam( iTunesAppId )];
 }
