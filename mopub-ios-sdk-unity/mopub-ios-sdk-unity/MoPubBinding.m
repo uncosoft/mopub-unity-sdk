@@ -18,9 +18,10 @@
 
 static double LAT_LONG_SENTINEL = 99999.0;
 
-void _moPubEnableLocationSupport( bool shouldUseLocation )
+
+void _moPubEnableLocationSupport(bool shouldUseLocation )
 {
-    [[MoPubManager sharedManager] enableLocationSupport:shouldUseLocation];
+    [[MoPubManager sharedManager]  enableLocationSupport:shouldUseLocation];
 }
 
 
@@ -29,29 +30,29 @@ void _moPubCreateBanner( int bannerType, int bannerPosition, const char * adUnit
     MoPubBannerType type = (MoPubBannerType)bannerType;
     MoPubAdPosition position = (MoPubAdPosition)bannerPosition;
 
-    [[MoPubManager sharedManager] createBanner:type atPosition:position adUnitId:GetStringParam( adUnitId )];
+    [[MoPubManager managerForAdunit:GetStringParam( adUnitId )] createBanner:type atPosition:position];
 }
 
 
-void _moPubDestroyBanner()
+void _moPubDestroyBanner(const char * adUnitId)
 {
-    [[MoPubManager sharedManager] destroyBanner];
+    [[MoPubManager managerForAdunit:GetStringParam( adUnitId )] destroyBanner];
 }
 
 
-void _moPubShowBanner( bool shouldShow )
+void _moPubShowBanner( const char * adUnitId, bool shouldShow )
 {
     if( shouldShow )
-        [[MoPubManager sharedManager] showBanner];
+        [[MoPubManager managerForAdunit:GetStringParam( adUnitId )] showBanner];
     else
-        [[MoPubManager sharedManager] hideBanner:NO];
+        [[MoPubManager managerForAdunit:GetStringParam( adUnitId )] hideBanner:NO];
 }
 
 
-void _moPubRefreshAd( const char * keywords )
+void _moPubRefreshAd( const char * adUnitId, const char * keywords )
 {
     NSString *keys = keywords != NULL ? GetStringParam( keywords ) : nil;
-    [[MoPubManager sharedManager] refreshAd:keys];
+    [[MoPubManager managerForAdunit:GetStringParam( adUnitId )] refreshAd:keys];
 }
 
 
@@ -60,17 +61,17 @@ void _moPubRefreshAd( const char * keywords )
 
 void _moPubRequestInterstitialAd( const char * adUnitId, const char * keywords )
 {
-    [[MoPubManager sharedManager] requestInterstitialAd:GetStringParam( adUnitId ) keywords:GetStringParam( keywords )];
+    [[MoPubManager managerForAdunit:GetStringParam( adUnitId )] requestInterstitialAd:GetStringParam( keywords )];
 }
 
 
 void _moPubShowInterstitialAd( const char * adUnitId )
 {
-    [[MoPubManager sharedManager] showInterstitialAd:GetStringParam( adUnitId )];
+    [[MoPubManager managerForAdunit:GetStringParam( adUnitId )] showInterstitialAd];
 }
 
 
-void _moPubReportApplicationOpen( const char * iTunesAppId )
+void _moPubReportApplicationOpen(const char * iTunesAppId )
 {
     [[MoPubManager sharedManager] reportApplicationOpen:GetStringParam( iTunesAppId )];
 }

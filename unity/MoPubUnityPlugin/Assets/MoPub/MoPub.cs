@@ -6,7 +6,7 @@ using System.Collections.Generic;
 #if UNITY_IPHONE || UNITY_ANDROID
 
 #if UNITY_IPHONE
-	using MP = MoPubBinding;
+using MP = MoPubBinding;
 #elif UNITY_ANDROID
 	using MP = MoPubAndroid;
 #endif
@@ -43,18 +43,22 @@ public static class MoPub
 	public static void enableLocationSupport (bool shouldUseLocation)
 	{
 #if UNITY_IPHONE
-		MoPubBinding.enableLocationSupport( true );
+		MoPubBinding.enableLocationSupport (true);
 #elif UNITY_ANDROID
 		MoPubAndroid.setLocationAwareness (MoPubLocationAwareness.NORMAL);
 #endif
 	}
 
 
-	// Creates a banner of the given type at the given position. bannerType is iOS only.
 #if UNITY_IPHONE
-	public static void createBanner( string adUnitId, MoPubAdPosition position, MoPubBannerType bannerType = MoPubBannerType.Size320x50 )
+	public static void createBanner (string adUnitId, MoPubAdPosition position, MoPubBannerType bannerType = MoPubBannerType.Size320x50)
 	{
-		MoPubBinding.createBanner( bannerType, position, adUnitId );
+		MP plugin;
+		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
+			plugin.createBanner (bannerType, position);
+		} else {
+			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
+		}
 	}
 #elif UNITY_ANDROID
 	public static void createBanner (string adUnitId, MoPubAdPosition position)
@@ -121,7 +125,7 @@ public static class MoPub
 	public static void reportApplicationOpen (string iTunesAppId = null)
 	{
 #if UNITY_IPHONE
-		MoPubBinding.reportApplicationOpen( iTunesAppId );
+		MoPubBinding.reportApplicationOpen (iTunesAppId);
 #elif UNITY_ANDROID
 		MoPubAndroid.reportApplicationOpen ();
 #endif

@@ -42,14 +42,33 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark NSObject
 
+// Manager to be used for methods that do not require a specific adunit to operate on.
 + (MoPubManager*)sharedManager
 {
-	static MoPubManager *sharedManager = nil;
+    static MoPubManager *sharedManager = nil;
+
+    if( !sharedManager )
+        sharedManager = [[MoPubManager alloc] init];
+
+    return sharedManager;
+}
+
+// Manager to be used for adunit specific methods
++ (MoPubManager*)managerForAdunit:(NSString *)adUnitId
+{
+	static NSMutableDictionary *managerDict = nil;
 	
-	if( !sharedManager )
-		sharedManager = [[MoPubManager alloc] init];
-	
-	return sharedManager;
+    if ( !managerDict ) {
+		managerDict = [[NSMutableDictionary alloc] init];
+    }
+
+    MoPubManager *manager = [managerDict valueForKey:adUnitId];
+    if ( !manager ) {
+        manager = [[MoPubManager alloc] initWithAdUnit:adUnitId];
+        managerDict[adUnitId] = manager;
+    }
+
+    return manager;
 }
 
 
@@ -115,12 +134,21 @@ extern "C" {
 	}
 	
 	_adView.frame = origFrame;
-	NSLog( @"setting adView frame: %@", NSStringFromCGRect( origFrame ) );
+    NSLog( @"setting adView frame: %@", NSStringFromCGRect( origFrame ) );
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Public
+
+- (id)initWithAdUnit:(NSString *)adUnitId
+{
+    self = [super init];
+    if (self) {
+        self->_adUnitId = adUnitId;
+    }
+    return self;
+}
 
 - (void)enableLocationSupport:(BOOL)shouldEnable
 {
@@ -133,10 +161,10 @@ extern "C" {
 	if( _locationEnabled )
 	{
 		// autorelease and retain just in case we have an old one to avoid leaking
-		self.locationManager = [[CLLocationManager alloc] init];
-		self.locationManager.delegate = self;
-		self.locationManager.distanceFilter = 100;
-		self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.delegate = self;
+        self.locationManager.distanceFilter = 100;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 		
 		// Make sure the user has location on in settings
 		if( [CLLocationManager locationServicesEnabled] )
@@ -165,7 +193,7 @@ extern "C" {
 }
 
 
-- (void)createBanner:(MoPubBannerType)bannerType atPosition:(MoPubAdPosition)position adUnitId:(NSString*)adUnitId
+- (void)createBanner:(MoPubBannerType)bannerType atPosition:(MoPubAdPosition)position
 {
 	// kill the current adView if we have one
 	if( _adView )
@@ -177,24 +205,24 @@ extern "C" {
 	{
 		case MoPubBannerType_320x50:
 		{
-			_adView = [[MPAdView alloc] initWithAdUnitId:adUnitId size:MOPUB_BANNER_SIZE];
+			_adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:MOPUB_BANNER_SIZE];
 			[_adView lockNativeAdsToOrientation:MPNativeAdOrientationPortrait];
 			break;
 		}
 		case MoPubBannerType_728x90:
 		{
-			_adView = [[MPAdView alloc] initWithAdUnitId:adUnitId size:MOPUB_LEADERBOARD_SIZE];
+			_adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:MOPUB_LEADERBOARD_SIZE];
 			[_adView lockNativeAdsToOrientation:MPNativeAdOrientationPortrait];
 			break;
 		}
 		case MoPubBannerType_160x600:
 		{
-			_adView = [[MPAdView alloc] initWithAdUnitId:adUnitId size:MOPUB_WIDE_SKYSCRAPER_SIZE];
+			_adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:MOPUB_WIDE_SKYSCRAPER_SIZE];
 			break;
 		}
 		case MoPubBannerType_300x250:
 		{
-			_adView = [[MPAdView alloc] initWithAdUnitId:adUnitId size:MOPUB_MEDIUM_RECT_SIZE];
+			_adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:MOPUB_MEDIUM_RECT_SIZE];
 			break;
 		}
 	}
@@ -248,10 +276,10 @@ extern "C" {
 }
 
 
-- (void)requestInterstitialAd:(NSString*)adUnitId keywords:(NSString*)keywords
+- (void)requestInterstitialAd:(NSString*)keywords
 {
 	// this will return nil if there is already a load in progress
-	MPInterstitialAdController *interstitial = [MPInterstitialAdController interstitialAdControllerForAdUnitId:adUnitId];
+	MPInterstitialAdController *interstitial = [MPInterstitialAdController interstitialAdControllerForAdUnitId:_adUnitId];
 	
 	if( _locationEnabled && _lastKnownLocation )
 		interstitial.location = _lastKnownLocation;
@@ -262,9 +290,9 @@ extern "C" {
 }
 
 
-- (void)showInterstitialAd:(NSString*)adUnitId
+- (void)showInterstitialAd
 {
-	MPInterstitialAdController *interstitial = [MPInterstitialAdController interstitialAdControllerForAdUnitId:adUnitId];
+	MPInterstitialAdController *interstitial = [MPInterstitialAdController interstitialAdControllerForAdUnitId:_adUnitId];
 	interstitial.delegate = self;
 	if( !interstitial.ready )
 	{
