@@ -51,6 +51,7 @@
      <Compile Include="Assets\MoPub\MoPubManager.cs" />
      <Compile Include="Assets\MoPub\ThirdParty\MiniJSON.cs" />
      <Compile Include="Assets\Scripts\MoPubAndroidDemoGUI.cs" />
+     <Compile Include="Assets\Scripts\MoPubDemoGUI.cs" />
      <Compile Include="Assets\Scripts\MoPubEventListener.cs" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-ka-rGE\location_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-lv\common_strings.xml" />
