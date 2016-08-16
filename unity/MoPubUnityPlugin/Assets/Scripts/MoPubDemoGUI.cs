@@ -23,29 +23,29 @@ public class MoPubDemoGUI : MonoBehaviour
 
 	#if UNITY_ANDROID
 	private Dictionary<string, string[]> _bannerDict = new Dictionary<string, string[]> () {
-	{ "AdMob", new string[] { "173f4589c04a43b1b2e2e49d05f58e80" } },
-	{ "Facebook", new string[] { "b40a96dd275e4ce5be2cdf5faa92007d" } },
-	{ "Millennial", new string[] { "1aa442709c9f11e281c11231392559e4" } },
-	{ "MoPub", new string[] { "23b49916add211e281c11231392559e4" } },
+		{ "AdMob", new string[] { "173f4589c04a43b1b2e2e49d05f58e80" } },
+		{ "Facebook", new string[] { "b40a96dd275e4ce5be2cdf5faa92007d" } },
+		{ "Millennial", new string[] { "1aa442709c9f11e281c11231392559e4" } },
+		{ "MoPub", new string[] { "23b49916add211e281c11231392559e4" } },
 	};
 
 	private Dictionary<string, string[]> _interstitialDict = new Dictionary<string, string[]> () {
-	{ "AdColony", new string[] { "3aa79f11389540db8e250a80e4d16a46" } },
-	{ "AdMob", new string[] { "554e8baff8d84137941b5a55354105fc" } },
-	{ "Chartboost", new string[] { "376366b49d324dedae3d5edb360c27b4" } },
-	{ "Facebook", new string[] { "9792d876011f4359887d2d26380e8a84" } },
-	{ "Millennial", new string[] { "c6566f7bd85c40afb7afc4232a1cd463" } },
-	{ "MoPub", new string[] { "3aba0056add211e281c11231392559e4" } },
-	{ "Unity Ads", new string[] { "079f9caa99eb429588c2c3633e1ce3e3" } },
-	{ "Vungle", new string[] { "4f5e1e97f87c406cb7878b9eff1d2a77" } }
+		{ "AdColony", new string[] { "3aa79f11389540db8e250a80e4d16a46" } },
+		{ "AdMob", new string[] { "554e8baff8d84137941b5a55354105fc" } },
+		{ "Chartboost", new string[] { "376366b49d324dedae3d5edb360c27b4" } },
+		{ "Facebook", new string[] { "9792d876011f4359887d2d26380e8a84" } },
+		{ "Millennial", new string[] { "c6566f7bd85c40afb7afc4232a1cd463" } },
+		{ "MoPub", new string[] { "3aba0056add211e281c11231392559e4" } },
+		{ "Unity Ads", new string[] { "079f9caa99eb429588c2c3633e1ce3e3" } },
+		{ "Vungle", new string[] { "4f5e1e97f87c406cb7878b9eff1d2a77" } }
 	};
 
 	private Dictionary<string, string[]> _rewardedVideoDict = new Dictionary<string, string[]> () {
-	{ "AdColony", new string[] { "e258c916e659447d9d98256a3ab2979e" } },
-	{ "Chartboost", new string[] { "df605ab15b56400285c99e521ecc2cb1" } },
-	{ "MoPub", new string[] { "db2ef0eb1600433a8cdc31c75549c6b1" } },
-	{ "Unity Ads", new string[] { "4302e96be4584fa6b653a0668a845407" } },
-	{ "Vungle", new string[] { "2d38f4e6881341369e9fc2c2d01ddc9d" } }
+		{ "AdColony", new string[] { "e258c916e659447d9d98256a3ab2979e" } },
+		{ "Chartboost", new string[] { "df605ab15b56400285c99e521ecc2cb1" } },
+		{ "MoPub", new string[] { "db2ef0eb1600433a8cdc31c75549c6b1" } },
+		{ "Unity Ads", new string[] { "4302e96be4584fa6b653a0668a845407" } },
+		{ "Vungle", new string[] { "2d38f4e6881341369e9fc2c2d01ddc9d" } }
 	};
 
 	#elif UNITY_IPHONE
@@ -143,7 +143,7 @@ public class MoPubDemoGUI : MonoBehaviour
 			foreach (string bannerAdUnit in _bannerAdUnits) {
 				GUILayout.BeginHorizontal ();
 
-				if (GUILayout.Button ("Create: " + bannerAdUnit.Substring(0, 6) + "...")) {
+				if (GUILayout.Button ("Create: " + bannerAdUnit.Substring (0, 6) + "...")) {
 					MoPub.createBanner (bannerAdUnit, MoPubAdPosition.BottomRight);
 					Debug.Log ("requesting banner with AdUnit: " + bannerAdUnit);
 				}
@@ -174,7 +174,7 @@ public class MoPubDemoGUI : MonoBehaviour
 			foreach (string interstitialAdUnit in _interstitialAdUnits) {
 				GUILayout.BeginHorizontal ();
 
-				if (GUILayout.Button ("Request: " + interstitialAdUnit.Substring(0, 6) + "...")) {
+				if (GUILayout.Button ("Request: " + interstitialAdUnit.Substring (0, 6) + "...")) {
 					MoPub.requestInterstitialAd (interstitialAdUnit);
 					Debug.Log ("requesting interstitial with AdUnit: " + interstitialAdUnit);
 				}
@@ -230,7 +230,7 @@ public class MoPubDemoGUI : MonoBehaviour
 			foreach (string rewardedVideoAdUnit in _rewardedVideoAdUnits) {
 				GUILayout.BeginHorizontal ();
 
-				if (GUILayout.Button ("Request: " + rewardedVideoAdUnit.Substring(0,6) + "...")) {
+				if (GUILayout.Button ("Request: " + rewardedVideoAdUnit.Substring (0, 6) + "...")) {
 					MoPub.requestRewardedVideo (rewardedVideoAdUnit, mediationSettings, "rewarded, video, mopub", 37.7833, 122.4167, "customer101");
 					Debug.Log ("requesting rewarded video with AdUnit: " + rewardedVideoAdUnit + " and mediation settings: " + MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings));
 				}
