@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
 # Current SDK version
-SDK_VERSION=4.7.1
+SDK_VERSION=4.8.0
 
 # Append "+unity" suffix to SDK_VERSION in MoPub.java
-sed -i.bak 's/^\(.*public static final String SDK_VERSION\)\(.*\)"/\1\2+unity"/' mopub-android-sdk/mopub-sdk/src/main/java/com/mopub/common/MoPub.java
+sed -i.bak 's/^\(.*public static final String SDK_VERSION\)\(.*\)"/\1\2+unity"/' mopub-android-sdk/mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java
 
 # Build mopub-android-sdk-unity project
 cd mopub-android-sdk-unity
 ./gradlew clean
-./gradlew assembleRelease -x javadoc
+./gradlew assembleRelease
 cd ..
 
 # Undo +unity suffix after build
 cd mopub-android-sdk
-git checkout mopub-sdk/src/main/java/com/mopub/common/MoPub.java
-rm -f mopub-sdk/src/main/java/com/mopub/common/MoPub.java.bak
+git checkout mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java
+rm -f mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java.bak
 cd ..
 
 if [[ $? -ne 0 ]]; then
