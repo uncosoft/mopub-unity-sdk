@@ -23,11 +23,15 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Copy the generated jars into the unity package. There are two jars:
-#   * mopub-sdk.jar - the unchanged mopub android sdk
+# Copy the generated jars into the unity package:
 #   * mopub.jar - all unity specific components as well as all third party network adapters
+#   * mopub-sdk*.jar - modularized SDK jars
 cp mopub-android-sdk-unity/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk.jar
+cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-base/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-base.jar
+cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-banner/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-banner.jar
+cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-interstitial/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-interstitial.jar
+cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-rewardedvideo/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-rewardedvideo.jar
 
 # Copy MoPub SDK dependency jars
 cp ~/Library/Android/sdk/extras/android/support/v4/android-support-v4.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
