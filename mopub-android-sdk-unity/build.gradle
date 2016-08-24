@@ -31,13 +31,13 @@ task clean(type: Delete) {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 42
-        versionName "4.7.1"
+        versionCode 43
+        versionName '4.8.0'
         consumerProguardFiles 'proguard.txt'
     }
 

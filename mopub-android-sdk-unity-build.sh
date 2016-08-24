@@ -24,8 +24,8 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Copy the generated jars into the unity package:
-#   * mopub.jar - all unity specific components as well as all third party network adapters
-#   * mopub-sdk*.jar - modularized SDK jars
+#   * mopub.jar - all unity specific components as well as all third party network adapters (excluding native)
+#   * mopub-sdk*.jar - modularized SDK jars (excluding native-static and native-video)
 cp mopub-android-sdk-unity/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-base/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-base.jar
