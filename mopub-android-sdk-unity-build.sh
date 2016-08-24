@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 
 # Current SDK version
-SDK_VERSION=4.7.1
+SDK_VERSION=4.8.0
 
 # Append "+unity" suffix to SDK_VERSION in MoPub.java
-sed -i.bak 's/^\(.*public static final String SDK_VERSION\)\(.*\)"/\1\2+unity"/' mopub-android-sdk/mopub-sdk/src/main/java/com/mopub/common/MoPub.java
+sed -i.bak 's/^\(.*public static final String SDK_VERSION\)\(.*\)"/\1\2+unity"/' mopub-android-sdk/mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java
 
 # Build mopub-android-sdk-unity project
 cd mopub-android-sdk-unity
 ./gradlew clean
-./gradlew assembleRelease -x javadoc
+./gradlew assembleRelease
 cd ..
 
 # Undo +unity suffix after build
 cd mopub-android-sdk
-git checkout mopub-sdk/src/main/java/com/mopub/common/MoPub.java
-rm -f mopub-sdk/src/main/java/com/mopub/common/MoPub.java.bak
+git checkout mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java
+rm -f mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java.bak
 cd ..
 
 if [[ $? -ne 0 ]]; then
@@ -23,11 +23,15 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Copy the generated jars into the unity package. There are two jars:
-#   * mopub-sdk.jar - the unchanged mopub android sdk
-#   * mopub.jar - all unity specific components as well as all third party network adapters
+# Copy the generated jars into the unity package:
+#   * mopub.jar - all unity specific components as well as all third party network adapters (excluding native)
+#   * mopub-sdk*.jar - modularized SDK jars (excluding native-static and native-video)
 cp mopub-android-sdk-unity/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk.jar
+cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-base/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-base.jar
+cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-banner/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-banner.jar
+cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-interstitial/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-interstitial.jar
+cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-rewardedvideo/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-rewardedvideo.jar
 
 # Copy MoPub SDK dependency jars
 cp ~/Library/Android/sdk/extras/android/support/v4/android-support-v4.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
