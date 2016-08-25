@@ -17,6 +17,7 @@ import com.mopub.mobileads.MoPubConversionTracker;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubRewardedVideoManager;
+import com.mopub.mobileads.MoPubRewardedVideos;
 import com.mopub.mobileads.MoPubView;
 import com.unity3d.player.UnityPlayer;
 
@@ -390,8 +391,9 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
     public static void initializeRewardedVideo() {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                MoPub.initializeRewardedVideo(getActivity());
-                MoPub.setRewardedVideoListener(sRewardedVideoListener);
+                MoPubRewardedVideos.initializeRewardedVideo(getActivity());
+                MoPubRewardedVideos.setRewardedVideoListener(sRewardedVideoListener);
+
             }
         });
     }
@@ -408,24 +410,24 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
                         new MoPubRewardedVideoManager.RequestParameters(keywords, location, customerId);
 
                 if (json != null) {
-                    MoPub.loadRewardedVideo(
+                    MoPubRewardedVideos.loadRewardedVideo(
                             mAdUnitId, requestParameters, extractMediationSettingsFromJson(json));
                 } else {
-                    MoPub.loadRewardedVideo(mAdUnitId, requestParameters);
+                    MoPubRewardedVideos.loadRewardedVideo(mAdUnitId, requestParameters);
                 }
             }
         });
     }
 
     public void showRewardedVideo() {
-        if (!MoPub.hasRewardedVideo(mAdUnitId)) {
+        if (!MoPubRewardedVideos.hasRewardedVideo(mAdUnitId)) {
             Log.i(TAG, "no rewarded video is available at this time");
             return;
         }
 
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                MoPub.showRewardedVideo(mAdUnitId);
+                MoPubRewardedVideos.showRewardedVideo(mAdUnitId);
             }
         });
     }
