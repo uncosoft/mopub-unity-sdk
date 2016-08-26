@@ -228,10 +228,10 @@ public class MoPubManager : MonoBehaviour
 	}
 
 
-	void onRewardedVideoFailedToPlay (string adUnitId)
+	void onRewardedVideoFailedToPlay (string errorMsg)
 	{
 		if (onRewardedVideoFailedToPlayEvent != null)
-			onRewardedVideoFailedToPlayEvent (adUnitId);
+			onRewardedVideoFailedToPlayEvent (errorMsg);
 	}
 
 

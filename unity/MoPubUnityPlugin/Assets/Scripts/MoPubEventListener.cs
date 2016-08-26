@@ -145,9 +145,9 @@ public class MoPubEventListener : MonoBehaviour
 		Debug.Log ("onRewardedVideoShownEvent: " + adUnitId);
 	}
 
-	void onRewardedVideoFailedToPlayEvent (string adUnitId)
+	void onRewardedVideoFailedToPlayEvent (string errorMsg)
 	{
-		Debug.Log ("onRewardedVideoFailedToPlayEvent: " + adUnitId);
+		Debug.Log ("onRewardedVideoFailedToPlayEvent: " + errorMsg);
 	}
 
 	void onRewardedVideoReceivedRewardEvent (MoPubManager.RewardedVideoData rewardedVideoData)

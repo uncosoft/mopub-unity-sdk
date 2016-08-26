@@ -46,7 +46,10 @@ public class MoPubUnityRewardedVideoListener implements MoPubRewardedVideoListen
 
     @Override
     public void onRewardedVideoPlaybackError(String adUnitId, MoPubErrorCode errorCode) {
-        UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailedToPlay", adUnitId);
+        String errorMsg =
+                String.format("adUnitId = %s, errorCode = %s", adUnitId, errorCode.toString());
+        Log.i(TAG, "onRewardedVideoFailedToPlay: " + errorMsg);
+        UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailedToPlay", errorMsg);
     }
 
     @Override
