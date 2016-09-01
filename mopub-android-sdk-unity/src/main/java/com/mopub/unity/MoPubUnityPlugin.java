@@ -13,9 +13,11 @@ import android.widget.RelativeLayout;
 
 import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPub;
+import com.mopub.common.MoPubReward;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
+import com.mopub.mobileads.MoPubRewardedVideoListener;
 import com.mopub.mobileads.MoPubRewardedVideoManager;
 import com.mopub.mobileads.MoPubRewardedVideos;
 import com.mopub.mobileads.MoPubView;
@@ -31,13 +33,14 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Set;
 
 import static com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
 import static com.mopub.mobileads.MoPubView.BannerAdListener;
 
 
-public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListener {
-    private static MoPubUnityRewardedVideoListener sRewardedVideoListener = MoPubUnityRewardedVideoListener.getInstance();
+public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListener, MoPubRewardedVideoListener {
+    private static boolean sRewardedVideoInitialized;
     private static String TAG = "MoPub";
     private final String mAdUnitId;
 
@@ -391,9 +394,10 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
     public static void initializeRewardedVideo() {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                MoPubRewardedVideos.initializeRewardedVideo(getActivity());
-                MoPubRewardedVideos.setRewardedVideoListener(sRewardedVideoListener);
-
+                if (!sRewardedVideoInitialized) {
+                    MoPubRewardedVideos.initializeRewardedVideo(getActivity());
+                    sRewardedVideoInitialized = true;
+                }
             }
         });
     }
@@ -408,6 +412,8 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 
                 MoPubRewardedVideoManager.RequestParameters requestParameters =
                         new MoPubRewardedVideoManager.RequestParameters(keywords, location, customerId);
+
+                MoPubRewardedVideos.setRewardedVideoListener(MoPubUnityPlugin.this);
 
                 if (json != null) {
                     MoPubRewardedVideos.loadRewardedVideo(
@@ -427,6 +433,7 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
 
         runSafelyOnUiThread(new Runnable() {
             public void run() {
+                MoPubRewardedVideos.setRewardedVideoListener(MoPubUnityPlugin.this);
                 MoPubRewardedVideos.showRewardedVideo(mAdUnitId);
             }
         });
@@ -509,5 +516,72 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
     public void onInterstitialDismissed(MoPubInterstitial interstitial) {
         Log.i(TAG, "onInterstitialDismissed: " + interstitial);
         UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialDismissed", mAdUnitId);
+    }
+
+
+    /* ***** ***** ***** ***** ***** ***** ***** *****
+     * RewardedVideoListener implementation
+     */
+    @Override
+    public void onRewardedVideoLoadSuccess(String adUnitId) {
+        if (mAdUnitId.equals(adUnitId)) {
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoLoaded", adUnitId);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoLoadFailure(String adUnitId, MoPubErrorCode errorCode) {
+        if (mAdUnitId.equals(adUnitId)) {
+            String errorMsg =
+                    String.format("adUnitId = %s, errorCode = %s", adUnitId, errorCode.toString());
+            Log.i(TAG, "onRewardedVideoLoadFailure: " + errorMsg);
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailed", errorMsg);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoStarted(String adUnitId) {
+        if (mAdUnitId.equals(adUnitId)) {
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoShown", adUnitId);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoPlaybackError(String adUnitId, MoPubErrorCode errorCode) {
+        if (mAdUnitId.equals(adUnitId)) {
+            String errorMsg =
+                    String.format("adUnitId = %s, errorCode = %s", adUnitId, errorCode.toString());
+            Log.i(TAG, "onRewardedVideoPlaybackError: " + errorMsg);
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailedToPlay", errorMsg);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoClosed(String adUnitId) {
+        if (mAdUnitId.equals(adUnitId)) {
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoClosed", adUnitId);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoCompleted(Set<String> adUnitIds, MoPubReward reward) {
+        if (adUnitIds.size() == 0 || reward == null) {
+            Log.i(TAG, "onRewardedVideoCompleted with no adUnitId and/or reward. Bailing out.");
+            return;
+        }
+
+        String adUnitId = adUnitIds.toArray()[0].toString();
+        if (mAdUnitId.equals(adUnitId)) {
+            try {
+                JSONObject json = new JSONObject();
+                json.put("adUnitId", adUnitId);
+                json.put("currencyType", "");
+                json.put("amount", reward.getAmount());
+
+                UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoReceivedReward", json.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
