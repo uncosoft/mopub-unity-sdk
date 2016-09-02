@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 public class MoPubEventListener : MonoBehaviour
 {
-#if UNITY_ANDROID || UNITY_IPHONE
+	#if UNITY_ANDROID || UNITY_IPHONE
 
-	void OnEnable()
+	void OnEnable ()
 	{
 		// Listen to all events for illustration purposes
 		MoPubManager.onAdLoadedEvent += onAdLoadedEvent;
@@ -35,7 +35,7 @@ public class MoPubEventListener : MonoBehaviour
 	}
 
 
-	void OnDisable()
+	void OnDisable ()
 	{
 		// Remove all event handlers
 		MoPubManager.onAdLoadedEvent -= onAdLoadedEvent;
@@ -62,121 +62,110 @@ public class MoPubEventListener : MonoBehaviour
 	}
 
 
+	// Banner Events
 
-	void onAdLoadedEvent( float height )
+	void onAdLoadedEvent (float height)
 	{
-		Debug.Log( "onAdLoadedEvent. height: " + height );
+		Debug.Log ("onAdLoadedEvent. height: " + height);
+	}
+
+	void onAdFailedEvent (string errorMsg)
+	{
+		Debug.Log ("onAdFailedEvent: " + errorMsg);
+	}
+
+	void onAdClickedEvent (string adUnitId)
+	{
+		Debug.Log ("onAdClickedEvent: " + adUnitId);
+	}
+
+	void onAdExpandedEvent (string adUnitId)
+	{
+		Debug.Log ("onAdExpandedEvent: " + adUnitId);
+	}
+
+	void onAdCollapsedEvent (string adUnitId)
+	{
+		Debug.Log ("onAdCollapsedEvent: " + adUnitId);
 	}
 
 
-	void onAdFailedEvent()
+	// Interstitial Events
+
+	void onInterstitialLoadedEvent (string adUnitId)
 	{
-		Debug.Log( "onAdFailedEvent" );
+		Debug.Log ("onInterstitialLoadedEvent: " + adUnitId);
+	}
+
+	void onInterstitialFailedEvent (string errorMsg)
+	{
+		Debug.Log ("onInterstitialFailedEvent: " + errorMsg);
+	}
+
+	void onInterstitialShownEvent (string adUnitId)
+	{
+		Debug.Log ("onInterstitialShownEvent: " + adUnitId);
+	}
+
+	void onInterstitialClickedEvent (string adUnitId)
+	{
+		Debug.Log ("onInterstitialClickedEvent: " + adUnitId);
+	}
+
+	void onInterstitialDismissedEvent (string adUnitId)
+	{
+		Debug.Log ("onInterstitialDismissedEvent: " + adUnitId);
+	}
+
+	void onInterstitialExpiredEvent (string adUnitId)
+	{
+		Debug.Log ("onInterstitialExpiredEvent: " + adUnitId);
 	}
 
 
-	void onAdClickedEvent()
+	// Rewarded Video Events
+
+	void onRewardedVideoLoadedEvent (string adUnitId)
 	{
-		Debug.Log( "onAdClickedEvent" );
+		Debug.Log ("onRewardedVideoLoadedEvent: " + adUnitId);
 	}
 
-
-	void onAdExpandedEvent()
+	void onRewardedVideoFailedEvent (string errorMsg)
 	{
-		Debug.Log( "onAdExpandedEvent" );
+		Debug.Log ("onRewardedVideoFailedEvent: " + errorMsg);
 	}
 
-
-	void onAdCollapsedEvent()
+	void onRewardedVideoExpiredEvent (string adUnitId)
 	{
-		Debug.Log( "onAdCollapsedEvent" );
+		Debug.Log ("onRewardedVideoExpiredEvent: " + adUnitId);
 	}
 
-
-	void onInterstitialLoadedEvent()
+	void onRewardedVideoShownEvent (string adUnitId)
 	{
-		Debug.Log( "onInterstitialLoadedEvent" );
+		Debug.Log ("onRewardedVideoShownEvent: " + adUnitId);
 	}
 
-
-	void onInterstitialFailedEvent()
+	void onRewardedVideoFailedToPlayEvent (string errorMsg)
 	{
-		Debug.Log( "onInterstitialFailedEvent" );
+		Debug.Log ("onRewardedVideoFailedToPlayEvent: " + errorMsg);
 	}
 
-
-	void onInterstitialShownEvent()
+	void onRewardedVideoReceivedRewardEvent (MoPubManager.RewardedVideoData rewardedVideoData)
 	{
-		Debug.Log( "onInterstitialShownEvent" );
+		Debug.Log ("onRewardedVideoReceivedRewardEvent: " + rewardedVideoData);
 	}
 
-
-	void onInterstitialClickedEvent()
+	void onRewardedVideoClosedEvent (string adUnitId)
 	{
-		Debug.Log( "onInterstitialClickedEvent" );
+		Debug.Log ("onRewardedVideoClosedEvent: " + adUnitId);
 	}
 
-
-	void onInterstitialDismissedEvent()
+	void onRewardedVideoLeavingApplicationEvent (string adUnitId)
 	{
-		Debug.Log( "onInterstitialDismissedEvent" );
+		Debug.Log ("onRewardedVideoLeavingApplicationEvent: " + adUnitId);
 	}
 
-
-	void onInterstitialExpiredEvent()
-	{
-		Debug.Log( "onInterstitialExpiredEvent" );
-	}
-
-
-	void onRewardedVideoLoadedEvent( string adUnitId )
-	{
-		Debug.Log( "onRewardedVideoLoadedEvent: " + adUnitId );
-	}
-
-
-	void onRewardedVideoFailedEvent( string adUnitId )
-	{
-		Debug.Log( "onRewardedVideoFailedEvent: " + adUnitId );
-	}
-
-
-	void onRewardedVideoExpiredEvent( string adUnitId )
-	{
-		Debug.Log( "onRewardedVideoExpiredEvent: " + adUnitId );
-	}
-
-
-	void onRewardedVideoShownEvent( string adUnitId )
-	{
-		Debug.Log( "onRewardedVideoShownEvent: " + adUnitId );
-	}
-
-
-	void onRewardedVideoFailedToPlayEvent( string adUnitId )
-	{
-		Debug.Log( "onRewardedVideoFailedToPlayEvent: " + adUnitId );
-	}
-
-
-	void onRewardedVideoReceivedRewardEvent( MoPubManager.RewardedVideoData rewardedVideoData )
-	{
-		Debug.Log( "onRewardedVideoReceivedRewardEvent: " + rewardedVideoData );
-	}
-
-
-	void onRewardedVideoClosedEvent( string adUnitId )
-	{
-		Debug.Log( "onRewardedVideoClosedEvent: " + adUnitId );
-	}
-
-
-	void onRewardedVideoLeavingApplicationEvent( string adUnitId )
-	{
-		Debug.Log( "onRewardedVideoLeavingApplicationEvent: " + adUnitId );
-	}
-
-#endif
+	#endif
 }
 
 

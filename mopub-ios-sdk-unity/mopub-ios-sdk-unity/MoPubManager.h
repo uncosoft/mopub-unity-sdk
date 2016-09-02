@@ -35,7 +35,8 @@ typedef enum
 @interface MoPubManager : NSObject <MPAdViewDelegate, MPInterstitialAdControllerDelegate, CLLocationManagerDelegate, MPRewardedVideoDelegate>
 {
 @private
-	BOOL _locationEnabled;
+    BOOL _locationEnabled;
+    NSString *_adUnitId;
 }
 @property (nonatomic, retain) MPAdView *adView;
 @property (nonatomic, retain) CLLocationManager *locationManager;
@@ -45,14 +46,17 @@ typedef enum
 
 + (MoPubManager*)sharedManager;
 
++ (MoPubManager*)managerForAdunit:(NSString*)adUnitId;
+
 + (UIViewController*)unityViewController;
 
+- (id)initWithAdUnit:(NSString*)adUnitId;
 
 - (void)enableLocationSupport:(BOOL)shouldEnable;
 
 - (void)reportApplicationOpen:(NSString*)iTunesId;
 
-- (void)createBanner:(MoPubBannerType)bannerType atPosition:(MoPubAdPosition)position adUnitId:(NSString*)adUnitId;
+- (void)createBanner:(MoPubBannerType)bannerType atPosition:(MoPubAdPosition)position;
 
 - (void)destroyBanner;
 
@@ -62,9 +66,9 @@ typedef enum
 
 - (void)refreshAd:(NSString*)keywords;
 
-- (void)requestInterstitialAd:(NSString*)adUnitId keywords:(NSString*)keywords;
+- (void)requestInterstitialAd:(NSString*)keywords;
 
-- (void)showInterstitialAd:(NSString*)adUnitId;
+- (void)showInterstitialAd;
 
 
 

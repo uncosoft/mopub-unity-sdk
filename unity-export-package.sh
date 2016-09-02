@@ -13,7 +13,7 @@ mkdir -p $OUT_DIR
 
 echo "Attempting to export the main package..."
 
-# Programatically export MaPub.unitypackage. This will export all folders under Assets/MoPub and Assets/Plugins, including
+# Programatically export MoPub.unitypackage. This will export all folders under Assets/MoPub and Assets/Plugins, including
 # all third-party network adapters. This is ok, in the next step, we remove those folders.
 
 $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $EXPORT_FOLDERS_MAIN $DEST_PACKAGE

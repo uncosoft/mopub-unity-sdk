@@ -19,6 +19,7 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubRewardedVideoListener;
 import com.mopub.mobileads.MoPubRewardedVideoManager;
+import com.mopub.mobileads.MoPubRewardedVideos;
 import com.mopub.mobileads.MoPubView;
 import com.unity3d.player.UnityPlayer;
 
@@ -39,45 +40,47 @@ import static com.mopub.mobileads.MoPubView.BannerAdListener;
 
 
 public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListener, MoPubRewardedVideoListener {
-    private static MoPubUnityPlugin sInstance;
-
-    // used for testing directly in Eclipse
-    public Activity mActivity;
-
+    private static boolean sRewardedVideoInitialized;
     private static String TAG = "MoPub";
+    private final String mAdUnitId;
+
     private MoPubInterstitial mMoPubInterstitial;
     private MoPubView mMoPubView;
     private RelativeLayout mLayout;
 
 
-    public static MoPubUnityPlugin instance() {
-        if (sInstance == null)
-            sInstance = new MoPubUnityPlugin();
-        return sInstance;
+    public MoPubUnityPlugin(final String adUnitId) {
+        mAdUnitId = adUnitId;
     }
 
 
     /* ***** ***** ***** ***** ***** ***** ***** *****
      * Private API
      */
-    private Activity getActivity() {
-        if (mActivity != null)
-            return mActivity;
-
+    private static Activity getActivity() {
         return UnityPlayer.currentActivity;
     }
 
-
-    private void UnitySendMessage(String go, String m, String p) {
-        if (mActivity != null) {
-            Log.i(TAG, "UnitySendMessage: " + go + ", " + m + ", " + p);
-        } else {
-            UnityPlayer.UnitySendMessage(go, m, p);
-        }
+    private static void runSafelyOnUiThread(final Runnable runner) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    runner.run();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
+    private static void printExceptionStackTrace(Exception e) {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        Log.i(TAG, sw.toString());
+    }
 
-    private float getScreenDensity() {
+    private static float getScreenDensity() {
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
@@ -85,6 +88,58 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
     }
 
 
+    /* ***** ***** ***** ***** ***** ***** ***** *****
+     * Test Settings API
+     */
+    public static void addFacebookTestDeviceId(String hashedDeviceId) {
+        try {
+            Class<?> cls = Class.forName("com.facebook.ads.AdSettings");
+            Method method = cls.getMethod("addTestDevice", new Class[]{String.class});
+            method.invoke(cls, hashedDeviceId);
+            Log.i(TAG, "successfully added Facebook test device: " + hashedDeviceId);
+        } catch (ClassNotFoundException e) {
+            Log.i(TAG, "could not find Facebook AdSettings class. Did you add the Audience Network SDK to your Android folder?");
+        }
+        //AdSettings.addtestdevice
+        catch (NoSuchMethodException e) {
+            Log.i(TAG, "could not find Facebook AdSettings.addTestDevice method. Did you add the Audience Network SDK to your Android folder?");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /* ***** ***** ***** ***** ***** ***** ***** *****
+     * App Open API
+     */
+    public static void reportApplicationOpen() {
+        runSafelyOnUiThread(new Runnable() {
+            public void run() {
+                new MoPubConversionTracker().reportAppOpen(getActivity());
+            }
+        });
+    }
+
+
+    /* ***** ***** ***** ***** ***** ***** ***** *****
+     * Location Awareness API
+     */
+    public static void setLocationAwareness(final String locationAwareness) {
+        runSafelyOnUiThread(new Runnable() {
+            public void run() {
+                MoPub.setLocationAwareness(MoPub.LocationAwareness.valueOf(locationAwareness));
+            }
+        });
+    }
+
+
+    /* ***** ***** ***** ***** ***** ***** ***** *****
+     * Banners API
+     */
     private void prepLayout(int alignment) {
         // create a RelativeLayout and add the ad view to it
         if (mLayout == null) {
@@ -125,85 +180,14 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
         mLayout.setGravity(gravity);
     }
 
-
-    private void runSafelyOnUiThread(final Runnable runner) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    runner.run();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private static void printExceptionStackTrace(Exception e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        Log.i(TAG, sw.toString());
-    }
-
-
-    /* ***** ***** ***** ***** ***** ***** ***** *****
-     * Test Settings API
-     */
-    public void addFacebookTestDeviceId(String hashedDeviceId) {
-        try {
-            Class<?> cls = Class.forName("com.facebook.ads.AdSettings");
-            Method method = cls.getMethod("addTestDevice", new Class[]{String.class});
-            method.invoke(cls, hashedDeviceId);
-            Log.i(TAG, "successfully added Facebook test device: " + hashedDeviceId);
-        } catch (ClassNotFoundException e) {
-            Log.i(TAG, "could not find Facebook AdSettings class. Did you add the Audience Network SDK to your Android folder?");
-        }
-        //AdSettings.addtestdevice
-        catch (NoSuchMethodException e) {
-            Log.i(TAG, "could not find Facebook AdSettings.addTestDevice method. Did you add the Audience Network SDK to your Android folder?");
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void addAdMobTestDeviceId(String deviceId) {
-        try {
-            //com.mopub.mobileads.GooglePlayServicesBanner.testDeviceIds.add( deviceId );
-            //com.mopub.mobileads.GooglePlayServicesInterstitial.testDeviceIds.add( deviceId );
-
-            //Log.i( TAG, "successfully added AdMob test device: " + deviceId );
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i(TAG, "could not add AdMob test device");
-        }
-    }
-
-
-    public void setLocationAwareness(final String locationAwareness) {
-        runSafelyOnUiThread(new Runnable() {
-            public void run() {
-                MoPub.setLocationAwareness(MoPub.LocationAwareness.valueOf(locationAwareness));
-            }
-        });
-    }
-
-
-    /* ***** ***** ***** ***** ***** ***** ***** *****
-     * Banners API
-     */
-    public void createBanner(final String adUnitId, final int alignment) {
+    public void createBanner(final int alignment) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 if (mMoPubView != null)
                     return;
 
                 mMoPubView = new MoPubView(getActivity());
-                mMoPubView.setAdUnitId(adUnitId);
+                mMoPubView.setAdUnitId(mAdUnitId);
                 mMoPubView.setBannerAdListener(MoPubUnityPlugin.this);
                 mMoPubView.loadAd();
 
@@ -216,7 +200,6 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
             }
         });
     }
-
 
     public void hideBanner(final boolean shouldHide) {
         if (mMoPubView == null)
@@ -233,7 +216,6 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
         });
     }
 
-
     public void setBannerKeywords(final String keywords) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
@@ -245,7 +227,6 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
             }
         });
     }
-
 
     public void destroyBanner() {
         runSafelyOnUiThread(new Runnable() {
@@ -265,10 +246,10 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
     /* ***** ***** ***** ***** ***** ***** ***** *****
      * Interstitials API
      */
-    public void requestInterstitialAd(final String adUnitId, final String keywords) {
+    public void requestInterstitialAd(final String keywords) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                mMoPubInterstitial = new MoPubInterstitial(getActivity(), adUnitId);
+                mMoPubInterstitial = new MoPubInterstitial(getActivity(), mAdUnitId);
                 mMoPubInterstitial.setInterstitialAdListener(MoPubUnityPlugin.this);
 
                 if (keywords != null && keywords.length() > 0)
@@ -279,20 +260,10 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
         });
     }
 
-
     public void showInterstitialAd() {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 mMoPubInterstitial.show();
-            }
-        });
-    }
-
-
-    public void reportApplicationOpen() {
-        runSafelyOnUiThread(new Runnable() {
-            public void run() {
-                new MoPubConversionTracker().reportAppOpen(getActivity());
             }
         });
     }
@@ -420,18 +391,19 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
         return settings.toArray(new MediationSettings[settings.size()]);
     }
 
-
-    public void initializeRewardedVideo() {
+    public static void initializeRewardedVideo() {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                MoPub.initializeRewardedVideo(getActivity());
-                MoPub.setRewardedVideoListener(MoPubUnityPlugin.this);
+                if (!sRewardedVideoInitialized) {
+                    MoPubRewardedVideos.initializeRewardedVideo(getActivity());
+                    sRewardedVideoInitialized = true;
+                }
             }
         });
     }
 
-    public void requestRewardedVideo(final String adUnitId, final String json,
-            final String keywords, final double latitude, final double longitude, final String customerId) {
+    public void requestRewardedVideo(final String json, final String keywords,
+            final double latitude, final double longitude, final String customerId) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 Location location = new Location("");
@@ -441,26 +413,28 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
                 MoPubRewardedVideoManager.RequestParameters requestParameters =
                         new MoPubRewardedVideoManager.RequestParameters(keywords, location, customerId);
 
+                MoPubRewardedVideos.setRewardedVideoListener(MoPubUnityPlugin.this);
+
                 if (json != null) {
-                    MoPub.loadRewardedVideo(
-                            adUnitId, requestParameters, extractMediationSettingsFromJson(json));
+                    MoPubRewardedVideos.loadRewardedVideo(
+                            mAdUnitId, requestParameters, extractMediationSettingsFromJson(json));
                 } else {
-                    MoPub.loadRewardedVideo(adUnitId, requestParameters);
+                    MoPubRewardedVideos.loadRewardedVideo(mAdUnitId, requestParameters);
                 }
             }
         });
     }
 
-
-    public void showRewardedVideo(final String adUnitId) {
-        if (!MoPub.hasRewardedVideo(adUnitId)) {
+    public void showRewardedVideo() {
+        if (!MoPubRewardedVideos.hasRewardedVideo(mAdUnitId)) {
             Log.i(TAG, "no rewarded video is available at this time");
             return;
         }
 
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                MoPub.showRewardedVideo(adUnitId);
+                MoPubRewardedVideos.setRewardedVideoListener(MoPubUnityPlugin.this);
+                MoPubRewardedVideos.showRewardedVideo(mAdUnitId);
             }
         });
     }
@@ -471,7 +445,7 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
      */
     @Override
     public void onBannerLoaded(MoPubView banner) {
-        UnitySendMessage("MoPubManager", "onAdLoaded", String.valueOf(banner.getAdHeight()));
+        UnityPlayer.UnitySendMessage("MoPubManager", "onAdLoaded", String.valueOf(banner.getAdHeight()));
 
         // re-center the ad
         int height = mMoPubView.getAdHeight();
@@ -485,29 +459,27 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
         mMoPubView.setLayoutParams(params);
     }
 
-
     @Override
     public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-        Log.i(TAG, "onAdFailed: " + errorCode);
-        UnitySendMessage("MoPubManager", "onAdFailed", "");
+        String errorMsg =
+                String.format("adUnitId = %s, errorCode = %s", mAdUnitId, errorCode.toString());
+        Log.i(TAG, "onAdFailed: " + errorMsg);
+        UnityPlayer.UnitySendMessage("MoPubManager", "onAdFailed", errorMsg);
     }
-
 
     @Override
     public void onBannerClicked(MoPubView banner) {
-        UnitySendMessage("MoPubManager", "onAdClicked", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onAdClicked", mAdUnitId);
     }
-
 
     @Override
     public void onBannerExpanded(MoPubView banner) {
-        UnitySendMessage("MoPubManager", "onAdExpanded", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onAdExpanded", mAdUnitId);
     }
-
 
     @Override
     public void onBannerCollapsed(MoPubView banner) {
-        UnitySendMessage("MoPubManager", "onAdCollapsed", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onAdCollapsed", mAdUnitId);
     }
 
 
@@ -517,35 +489,33 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
     @Override
     public void onInterstitialLoaded(MoPubInterstitial interstitial) {
         Log.i(TAG, "onInterstitialLoaded: " + interstitial);
-        UnitySendMessage("MoPubManager", "onInterstitialLoaded", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialLoaded", mAdUnitId);
     }
-
 
     @Override
     public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-        Log.i(TAG, "onInterstitialFailed: " + errorCode);
-        UnitySendMessage("MoPubManager", "onInterstitialFailed", errorCode.toString());
+        String errorMsg =
+                String.format("adUnitId = %s, errorCode = %s", mAdUnitId, errorCode.toString());
+        Log.i(TAG, "onInterstitialFailed: " + errorMsg);
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialFailed", errorMsg);
     }
-
 
     @Override
     public void onInterstitialShown(MoPubInterstitial interstitial) {
         Log.i(TAG, "onInterstitialShown: " + interstitial);
-        UnitySendMessage("MoPubManager", "onInterstitialShown", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialShown", mAdUnitId);
     }
-
 
     @Override
     public void onInterstitialClicked(MoPubInterstitial interstitial) {
         Log.i(TAG, "onInterstitialClicked: " + interstitial);
-        UnitySendMessage("MoPubManager", "onInterstitialClicked", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialClicked", mAdUnitId);
     }
-
 
     @Override
     public void onInterstitialDismissed(MoPubInterstitial interstitial) {
         Log.i(TAG, "onInterstitialDismissed: " + interstitial);
-        UnitySendMessage("MoPubManager", "onInterstitialDismissed", "");
+        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialDismissed", mAdUnitId);
     }
 
 
@@ -554,34 +524,44 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
      */
     @Override
     public void onRewardedVideoLoadSuccess(String adUnitId) {
-        UnitySendMessage("MoPubManager", "onRewardedVideoLoaded", adUnitId);
+        if (mAdUnitId.equals(adUnitId)) {
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoLoaded", adUnitId);
+        }
     }
-
 
     @Override
     public void onRewardedVideoLoadFailure(String adUnitId, MoPubErrorCode errorCode) {
-        Log.i(TAG, "onRewardedVideoFailed: " + errorCode);
-        UnitySendMessage("MoPubManager", "onRewardedVideoFailed", errorCode.toString());
+        if (mAdUnitId.equals(adUnitId)) {
+            String errorMsg =
+                    String.format("adUnitId = %s, errorCode = %s", adUnitId, errorCode.toString());
+            Log.i(TAG, "onRewardedVideoLoadFailure: " + errorMsg);
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailed", errorMsg);
+        }
     }
-
 
     @Override
     public void onRewardedVideoStarted(String adUnitId) {
-        UnitySendMessage("MoPubManager", "onRewardedVideoShown", adUnitId);
+        if (mAdUnitId.equals(adUnitId)) {
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoShown", adUnitId);
+        }
     }
-
 
     @Override
     public void onRewardedVideoPlaybackError(String adUnitId, MoPubErrorCode errorCode) {
-        UnitySendMessage("MoPubManager", "onRewardedVideoFailedToPlay", adUnitId);
+        if (mAdUnitId.equals(adUnitId)) {
+            String errorMsg =
+                    String.format("adUnitId = %s, errorCode = %s", adUnitId, errorCode.toString());
+            Log.i(TAG, "onRewardedVideoPlaybackError: " + errorMsg);
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailedToPlay", errorMsg);
+        }
     }
-
 
     @Override
     public void onRewardedVideoClosed(String adUnitId) {
-        UnitySendMessage("MoPubManager", "onRewardedVideoClosed", adUnitId);
+        if (mAdUnitId.equals(adUnitId)) {
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoClosed", adUnitId);
+        }
     }
-
 
     @Override
     public void onRewardedVideoCompleted(Set<String> adUnitIds, MoPubReward reward) {
@@ -590,15 +570,18 @@ public class MoPubUnityPlugin implements BannerAdListener, InterstitialAdListene
             return;
         }
 
-        try {
-            JSONObject json = new JSONObject();
-            json.put("adUnitId", adUnitIds.toArray()[0].toString());
-            json.put("currencyType", "");
-            json.put("amount", reward.getAmount());
+        String adUnitId = adUnitIds.toArray()[0].toString();
+        if (mAdUnitId.equals(adUnitId)) {
+            try {
+                JSONObject json = new JSONObject();
+                json.put("adUnitId", adUnitId);
+                json.put("currencyType", "");
+                json.put("amount", reward.getAmount());
 
-            UnitySendMessage("MoPubManager", "onRewardedVideoReceivedReward", json.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
+                UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoReceivedReward", json.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
