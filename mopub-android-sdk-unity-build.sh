@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Current SDK version
-SDK_VERSION=4.8.0
+SDK_VERSION=4.9.0
 
 # Append "+unity" suffix to SDK_VERSION in MoPub.java
 sed -i.bak 's/^\(.*public static final String SDK_VERSION\)\(.*\)"/\1\2+unity"/' mopub-android-sdk/mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java
@@ -24,7 +24,7 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Copy the generated jars into the unity package:
-#   * mopub.jar - all unity specific components as well as all third party network adapters (excluding native)
+#   * mopub.jar - MoPubUnityPlugin
 #   * mopub-sdk*.jar - modularized SDK jars (excluding native-static and native-video)
 cp mopub-android-sdk-unity/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk.jar
