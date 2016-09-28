@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 #if UNITY_ANDROID
 
-public enum MoPubAdPosition
-{
-	TopLeft,
-	TopCenter,
-	TopRight,
-	Centered,
-	BottomLeft,
-	BottomCenter,
-	BottomRight
-}
+//public enum MoPubAdPosition
+//{
+//	TopLeft,
+//	TopCenter,
+//	TopRight,
+//	Centered,
+//	BottomLeft,
+//	BottomCenter,
+//	BottomRight
+//}
 
 
 public enum MoPubLocationAwareness
@@ -57,64 +57,64 @@ public class MoPubAndroid
 	}
 
 
-	// Creates a banner of the given type at the given position
-	public void createBanner (MoPubAdPosition position)
-	{
-		if (Application.platform != RuntimePlatform.Android)
-			return;
-
-		_plugin.Call ("createBanner", (int)position);
-	}
-
-
-	// Destroys the banner and removes it from view
-	public void destroyBanner ()
-	{
-		if (Application.platform != RuntimePlatform.Android)
-			return;
-
-		_plugin.Call ("destroyBanner");
-	}
-
-
-	// Shows/hides the banner
-	public void showBanner (bool shouldShow)
-	{
-		if (Application.platform != RuntimePlatform.Android)
-			return;
-
-		_plugin.Call ("hideBanner", !shouldShow);
-	}
-
-
-	// Sets the keywords for the current banner
-	public void setBannerKeywords (string keywords)
-	{
-		if (Application.platform != RuntimePlatform.Android)
-			return;
-
-		_plugin.Call ("setBannerKeywords", keywords);
-	}
-
-
-	// Starts loading an interstitial ad
-	public void requestInterstitialAd (string keywords = "")
-	{
-		if (Application.platform != RuntimePlatform.Android)
-			return;
-
-		_plugin.Call ("requestInterstitialAd", keywords);
-	}
+//	// Creates a banner of the given type at the given position
+//	public void createBanner (MoPubAdPosition position)
+//	{
+//		if (Application.platform != RuntimePlatform.Android)
+//			return;
+//
+//		_plugin.Call ("createBanner", (int)position);
+//	}
+//
+//
+//	// Destroys the banner and removes it from view
+//	public void destroyBanner ()
+//	{
+//		if (Application.platform != RuntimePlatform.Android)
+//			return;
+//
+//		_plugin.Call ("destroyBanner");
+//	}
+//
+//
+//	// Shows/hides the banner
+//	public void showBanner (bool shouldShow)
+//	{
+//		if (Application.platform != RuntimePlatform.Android)
+//			return;
+//
+//		_plugin.Call ("hideBanner", !shouldShow);
+//	}
+//
+//
+//	// Sets the keywords for the current banner
+//	public void setBannerKeywords (string keywords)
+//	{
+//		if (Application.platform != RuntimePlatform.Android)
+//			return;
+//
+//		_plugin.Call ("setBannerKeywords", keywords);
+//	}
 
 
-	// If an interstitial ad is loaded this will take over the screen and show the ad
-	public void showInterstitialAd ()
-	{
-		if (Application.platform != RuntimePlatform.Android)
-			return;
-
-		_plugin.Call ("showInterstitialAd");
-	}
+//	// Starts loading an interstitial ad
+//	public void requestInterstitialAd (string keywords = "")
+//	{
+//		if (Application.platform != RuntimePlatform.Android)
+//			return;
+//
+//		_plugin.Call ("requestInterstitialAd", keywords);
+//	}
+//
+//
+//	// If an interstitial ad is loaded this will take over the screen and show the ad
+//	public void showInterstitialAd ()
+//	{
+//		if (Application.platform != RuntimePlatform.Android)
+//			return;
+//
+//		_plugin.Call ("showInterstitialAd");
+//	}
 
 
 	// Reports an app download to MoPub

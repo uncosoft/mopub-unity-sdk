@@ -95,6 +95,29 @@ public class MoPubDemoGUI : MonoBehaviour
 
 	void Start ()
 	{
+		#if UNITY_ANDROID		
+
+		// load banner AdUnits, if any
+		var allBannerAdUnits = new string[0];
+
+		foreach (var bannerAdUnits in _bannerDict.Values) {
+			allBannerAdUnits = allBannerAdUnits.Union (bannerAdUnits).ToArray ();
+		}
+
+		MoPub.loadBannerPluginsForAdUnits(allBannerAdUnits);
+
+
+		// load interstitial AdUnits, if any
+		var allInterstitialAdUnits = new string[0];
+
+		foreach (var interstitialAdUnits in _interstitialDict.Values) {
+			allInterstitialAdUnits = allInterstitialAdUnits.Union (interstitialAdUnits).ToArray ();
+		}
+
+		MoPub.loadInterstitialPluginsForAdUnits(allInterstitialAdUnits);
+
+		#elif UNITY_IPHONE
+
 		var allAdUnits = new string[0];
 
 		foreach (var bannerAdUnits in _bannerDict.Values) {
@@ -109,8 +132,11 @@ public class MoPubDemoGUI : MonoBehaviour
 			allAdUnits = allAdUnits.Union (rewardedVideoAdUnits).ToArray ();
 		}
 
+
 		MoPub.loadPluginsForAdUnits (allAdUnits);
 		MoPub.initializeRewardedVideo ();
+
+		#endif
 	}
 
 
