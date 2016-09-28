@@ -48,6 +48,7 @@
      <Compile Include="Assets\MoPub\Internal\MoPubAndroid.cs" />
      <Compile Include="Assets\MoPub\Internal\MoPubAndroidBanner.cs" />
      <Compile Include="Assets\MoPub\Internal\MoPubAndroidInterstitial.cs" />
+     <Compile Include="Assets\MoPub\Internal\MoPubAndroidRewardedVideo.cs" />
      <Compile Include="Assets\MoPub\Internal\MoPubBinding.cs" />
      <Compile Include="Assets\MoPub\MoPub.cs" />
      <Compile Include="Assets\MoPub\MoPubManager.cs" />

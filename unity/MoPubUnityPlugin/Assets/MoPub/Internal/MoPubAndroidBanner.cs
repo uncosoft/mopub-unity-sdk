@@ -14,11 +14,10 @@ public enum MoPubAdPosition
 	BottomCenter,
 	BottomRight
 }
-	
+
 
 public class MoPubAndroidBanner
 {
-//	private static readonly AndroidJavaClass _bannerPluginClass = new AndroidJavaClass ("com.mopub.unity.MoPubBannerUnityPlugin");
 	private readonly AndroidJavaObject _bannerPlugin;
 
 	public MoPubAndroidBanner (string adUnitId)
@@ -27,7 +26,7 @@ public class MoPubAndroidBanner
 			return;
 
 		_bannerPlugin = new AndroidJavaObject ("com.mopub.unity.MoPubBannerUnityPlugin", adUnitId);
-	}		
+	}
 
 
 	// Creates a banner of the given type at the given position
@@ -69,5 +68,5 @@ public class MoPubAndroidBanner
 		_bannerPlugin.Call ("setBannerKeywords", keywords);
 	}
 }
-		
+
 #endif

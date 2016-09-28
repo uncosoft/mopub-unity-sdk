@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 public class MoPubAndroidInterstitial
 {
-	private static readonly AndroidJavaClass _interstitialPluginClass = new AndroidJavaClass ("com.mopub.unity.MoPubInterstitialUnityPlugin");
 	private readonly AndroidJavaObject _interstitialPlugin;
 
 	public MoPubAndroidInterstitial (string adUnitId)
@@ -16,7 +15,7 @@ public class MoPubAndroidInterstitial
 
 		_interstitialPlugin = new AndroidJavaObject ("com.mopub.unity.MoPubInterstitialUnityPlugin", adUnitId);
 	}
-		
+
 
 	// Starts loading an interstitial ad
 	public void requestInterstitialAd (string keywords = "")
@@ -35,7 +34,7 @@ public class MoPubAndroidInterstitial
 			return;
 
 		_interstitialPlugin.Call ("showInterstitialAd");
-	}		
+	}
 }
 
 #endif

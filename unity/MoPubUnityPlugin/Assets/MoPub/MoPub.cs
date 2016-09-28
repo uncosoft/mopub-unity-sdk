@@ -8,9 +8,9 @@ using System.Collections.Generic;
 #if UNITY_IPHONE
 using MP = MoPubBinding;
 #elif UNITY_ANDROID
-using MP = MoPubAndroid;
 using MPBanner = MoPubAndroidBanner;
 using MPInterstitial = MoPubAndroidInterstitial;
+using MPRewardedVideo = MoPubAndroidRewardedVideo;
 #endif
 
 
@@ -28,10 +28,9 @@ public static class MoPub
 	public const double LAT_LONG_SENTINEL = 99999.0;
 	public const string ADUNIT_NOT_FOUND_MSG = "AdUnit {0} not found: no plugin was initialized";
 
-
+	#if UNITY_IPHONE
 	private static Dictionary<string, MP> _pluginsDict = new Dictionary<string, MP> ();
 
-	// Construct a plugin for each adUnit
 	public static void loadPluginsForAdUnits (string[] adUnitIds)
 	{
 		Debug.Log (adUnitIds.Length + " AdUnits loaded for plugins:\n" + string.Join (", ", adUnitIds));
@@ -39,16 +38,16 @@ public static class MoPub
 			_pluginsDict.Add (adUnitId, new MP (adUnitId));
 		}
 	}
-
-#if UNITY_ANDROID
-	private static Dictionary<string, MPBanner> _bannerPluginsDict = new Dictionary<string, MPBanner> ();	
-	private static Dictionary<string, MPInterstitial> _interstitialPluginsDict = new Dictionary<string, MPInterstitial> ();	
+	#elif UNITY_ANDROID
+	private static Dictionary<string, MPBanner> _bannerPluginsDict = new Dictionary<string, MPBanner> ();
+	private static Dictionary<string, MPInterstitial> _interstitialPluginsDict = new Dictionary<string, MPInterstitial> ();
+	private static Dictionary<string, MPRewardedVideo> _rewardedVideoPluginsDict = new Dictionary<string, MPRewardedVideo> ();
 
 	public static void loadBannerPluginsForAdUnits (string[] bannerAdUnitIds)
 	{
 		Debug.Log (bannerAdUnitIds.Length + " banner AdUnits loaded for plugins:\n" + string.Join (", ", bannerAdUnitIds));
 		foreach (string bannerAdUnitId in bannerAdUnitIds) {
-			_bannerPluginsDict.Add (bannerAdUnitId, new MPBanner (bannerAdUnitId));			
+			_bannerPluginsDict.Add (bannerAdUnitId, new MPBanner (bannerAdUnitId));
 		}
 	}
 
@@ -56,26 +55,49 @@ public static class MoPub
 	{
 		Debug.Log (interstitialAdUnitIds.Length + " interstitial AdUnits loaded for plugins:\n" + string.Join (", ", interstitialAdUnitIds));
 		foreach (string interstitialAdUnitId in interstitialAdUnitIds) {
-			_interstitialPluginsDict.Add (interstitialAdUnitId, new MPInterstitial (interstitialAdUnitId));			
+			_interstitialPluginsDict.Add (interstitialAdUnitId, new MPInterstitial (interstitialAdUnitId));
 		}
 	}
 
+	public static void loadRewardedVideoPluginsForAdUnits (string[] rewardedVideoAdUnitIds)
+	{
+		Debug.Log (rewardedVideoAdUnitIds.Length + " rewarded video AdUnits loaded for plugins:\n" + string.Join (", ", rewardedVideoAdUnitIds));
+		foreach (string rewardedVideoAdUnitId in rewardedVideoAdUnitIds) {
+			_rewardedVideoPluginsDict.Add (rewardedVideoAdUnitId, new MPRewardedVideo (rewardedVideoAdUnitId));
+		}
+	}
+	#endif
 
-#endif
-	
 
 	// Enables/disables location support for banners and interstitials
 	public static void enableLocationSupport (bool shouldUseLocation)
 	{
-#if UNITY_IPHONE
+		#if UNITY_IPHONE
 		MoPubBinding.enableLocationSupport (true);
-#elif UNITY_ANDROID
+		#elif UNITY_ANDROID
 		MoPubAndroid.setLocationAwareness (MoPubLocationAwareness.NORMAL);
-#endif
+		#endif
 	}
 
 
-#if UNITY_IPHONE
+	// Reports an app download to MoPub. iTunesAppId is iOS only.
+	public static void reportApplicationOpen (string iTunesAppId = null)
+	{
+		#if UNITY_IPHONE
+		MoPubBinding.reportApplicationOpen (iTunesAppId);
+		#elif UNITY_ANDROID
+		MoPubAndroid.reportApplicationOpen ();
+		#endif
+	}
+
+
+
+	/*
+	 * Banner API
+	 */
+
+
+	#if UNITY_IPHONE
 	public static void createBanner (string adUnitId, MoPubAdPosition position, MoPubBannerType bannerType = MoPubBannerType.Size320x50)
 	{
 		MP plugin;
@@ -85,7 +107,7 @@ public static class MoPub
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
 	}
-#elif UNITY_ANDROID
+	#elif UNITY_ANDROID
 	public static void createBanner (string adUnitId, MoPubAdPosition position)
 	{
 		MPBanner plugin;
@@ -95,108 +117,113 @@ public static class MoPub
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
 	}
-#endif
+	#endif
 
 
 	// Destroys the banner and removes it from view
 	public static void destroyBanner (string adUnitId)
 	{
-#if UNITY_IPHONE
+		#if UNITY_IPHONE
 		MP plugin;
 		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.destroyBanner ();
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
-#elif UNITY_ANDROID
+		#elif UNITY_ANDROID
 		MPBanner plugin;
 		if (_bannerPluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.destroyBanner ();
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
-#endif		
+		#endif
 	}
 
 
 	// Shows/hides the banner
 	public static void showBanner (string adUnitId, bool shouldShow)
 	{
-#if UNITY_IPHONE
+		#if UNITY_IPHONE
 		MP plugin;
 		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.showBanner (shouldShow);
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
-#elif UNITY_ANDROID
+		#elif UNITY_ANDROID
 		MPBanner plugin;
 		if (_bannerPluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.showBanner (shouldShow);
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
-#endif		
+		#endif
 	}
+
+
+
+	/*
+	 * Interstitial API
+	 */
 
 
 	// Starts loading an interstitial ad
 	public static void requestInterstitialAd (string adUnitId, string keywords = "")
 	{
-#if UNITY_IPHONE
+		#if UNITY_IPHONE
 		MP plugin;
 		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.requestInterstitialAd (keywords);
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
-#elif UNITY_ANDROID
+		#elif UNITY_ANDROID
 		MPInterstitial plugin;
 		if (_interstitialPluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.requestInterstitialAd (keywords);
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
-#endif
+		#endif
 	}
 
 
 	// If an interstitial ad is loaded this will take over the screen and show the ad
 	public static void showInterstitialAd (string adUnitId)
 	{
-#if UNITY_IPHONE
+		#if UNITY_IPHONE
 		MP plugin;
 		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.showInterstitialAd ();
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
-#elif UNITY_ANDROID
+		#elif UNITY_ANDROID
 		MPInterstitial plugin;
 		if (_interstitialPluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.showInterstitialAd ();
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
-#endif
+		#endif
 	}
 
 
-	// Reports an app download to MoPub. iTunesAppId is iOS only.
-	public static void reportApplicationOpen (string iTunesAppId = null)
-	{
-#if UNITY_IPHONE
-		MoPubBinding.reportApplicationOpen (iTunesAppId);
-#elif UNITY_ANDROID
-		MoPubAndroid.reportApplicationOpen ();
-#endif
-	}
+
+	/*
+	 * Rewarded Video API
+	 */
 
 
 	// Initializes the rewarded video system
 	public static void initializeRewardedVideo ()
 	{
+		#if UNITY_IPHONE
 		MP.initializeRewardedVideo ();
+		#elif UNITY_ANDROID
+		MPRewardedVideo.initializeRewardedVideo ();
+		#endif
 	}
 
 
@@ -208,24 +235,42 @@ public static class MoPub
 	                                         double longitude = LAT_LONG_SENTINEL,
 	                                         string customerId = null)
 	{
+		#if UNITY_IPHONE
 		MP plugin;
 		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.requestRewardedVideo (mediationSettings, keywords, latitude, longitude, customerId);
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
+		#elif UNITY_ANDROID
+		MPRewardedVideo plugin;
+		if (_rewardedVideoPluginsDict.TryGetValue (adUnitId, out plugin)) {
+			plugin.requestRewardedVideo (mediationSettings, keywords, latitude, longitude, customerId);
+		} else {
+			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
+		}
+		#endif
 	}
 
 
 	// If a rewarded video ad is loaded this will take over the screen and show the ad
 	public static void showRewardedVideo (string adUnitId)
 	{
+		#if UNITY_IPHONE
 		MP plugin;
 		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.showRewardedVideo ();
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
+		#elif UNITY_ANDROID
+		MPRewardedVideo plugin;
+		if (_rewardedVideoPluginsDict.TryGetValue (adUnitId, out plugin)) {
+			plugin.showRewardedVideo ();
+		} else {
+			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
+		}
+		#endif
 	}
 }
 
