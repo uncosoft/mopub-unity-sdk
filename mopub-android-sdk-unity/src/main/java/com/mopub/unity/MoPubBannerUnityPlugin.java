@@ -86,7 +86,10 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
                 prepLayout(alignment);
 
                 mLayout.addView(mMoPubView);
-                getActivity().addContentView(mLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+                getActivity().addContentView(mLayout,
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.FILL_PARENT,
+                                LinearLayout.LayoutParams.FILL_PARENT));
 
                 mLayout.setVisibility(RelativeLayout.VISIBLE);
             }
@@ -140,14 +143,16 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
      */
     @Override
     public void onBannerLoaded(MoPubView banner) {
-        UnityPlayer.UnitySendMessage("MoPubManager", "onAdLoaded", String.valueOf(banner.getAdHeight()));
+        UnityPlayer.UnitySendMessage(
+                "MoPubManager", "onAdLoaded", String.valueOf(banner.getAdHeight()));
 
         // re-center the ad
         int height = mMoPubView.getAdHeight();
         int width = mMoPubView.getAdWidth();
         float density = getScreenDensity();
 
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mMoPubView.getLayoutParams();
+        RelativeLayout.LayoutParams params =
+                (RelativeLayout.LayoutParams) mMoPubView.getLayoutParams();
         params.width = (int) (width * density);
         params.height = (int) (height * density);
 

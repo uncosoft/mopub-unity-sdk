@@ -22,8 +22,18 @@ import java.util.ArrayList;
 import java.util.Set;
 
 
-public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin implements MoPubRewardedVideoListener {
+public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
+        implements MoPubRewardedVideoListener {
+
     private static boolean sRewardedVideoInitialized;
+
+    private static final String CHARTBOOST_MEDIATION_SETTINGS =
+            "com.mopub.mobileads.ChartboostRewardedVideo$ChartboostMediationSettings";
+    private static final String VUNGLE_MEDIATION_SETTINGS =
+            "com.mopub.mobileads.VungleRewardedVideo$VungleMediationSettings$Builder";
+    private static final String ADCOLONY_MEDIATION_SETTINGS =
+            "com.mopub.mobileads.AdColonyRewardedVideo$AdColonyInstanceMediationSettings";
+
 
     public MoPubRewardedVideoUnityPlugin(final String adUnitId) {
         super(adUnitId);
@@ -46,12 +56,17 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin implements M
                 if (adVendor.equalsIgnoreCase("chartboost")) {
                     if (jsonObj.has("customId")) {
                         try {
-                            Class<?> mediationSettingsClass = Class.forName("com.mopub.mobileads.ChartboostRewardedVideo$ChartboostMediationSettings");
-                            Constructor<?> mediationSettingsConstructor = mediationSettingsClass.getConstructor(String.class);
-                            MediationSettings s = (MediationSettings) mediationSettingsConstructor.newInstance(jsonObj.getString("customId"));
+                            Class<?> mediationSettingsClass =
+                                    Class.forName(CHARTBOOST_MEDIATION_SETTINGS);
+                            Constructor<?> mediationSettingsConstructor =
+                                    mediationSettingsClass.getConstructor(String.class);
+                            MediationSettings s =
+                                    (MediationSettings) mediationSettingsConstructor
+                                            .newInstance(jsonObj.getString("customId"));
                             settings.add(s);
                         } catch (ClassNotFoundException e) {
-                            Log.i(TAG, "could not find Chartboost ChartboostMediationSettings class. Did you add the Chartboost Network SDK to your Android folder?");
+                            Log.i(TAG, "could not find ChartboostMediationSettings class. " +
+                                    "Did you add Chartboost Network SDK to your Android folder?");
                             printExceptionStackTrace(e);
                         } catch (InstantiationException e) {
                             printExceptionStackTrace(e);
@@ -65,19 +80,30 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin implements M
                             printExceptionStackTrace(e);
                         }
                     } else {
-                        Log.i(TAG, "No customId key found in the settings object. Aborting adding Chartboost MediationSettings");
+                        Log.i(TAG, "No customId key found in the settings object. " +
+                                "Aborting adding Chartboost MediationSettings");
                     }
                 } else if (adVendor.equalsIgnoreCase("vungle")) {
                     try {
-                        Class<?> builderClass = Class.forName("com.mopub.mobileads.VungleRewardedVideo$VungleMediationSettings$Builder");
+                        Class<?> builderClass = Class.forName(VUNGLE_MEDIATION_SETTINGS);
                         Constructor<?> builderConstructor = builderClass.getConstructor();
                         Object b = builderConstructor.newInstance();
 
-                        Method withUserId = builderClass.getDeclaredMethod("withUserId", String.class);
-                        Method withCancelDialogBody = builderClass.getDeclaredMethod("withCancelDialogBody", String.class);
-                        Method withCancelDialogCloseButton = builderClass.getDeclaredMethod("withCancelDialogCloseButton", String.class);
-                        Method withCancelDialogKeepWatchingButton = builderClass.getDeclaredMethod("withCancelDialogKeepWatchingButton", String.class);
-                        Method withCancelDialogTitle = builderClass.getDeclaredMethod("withCancelDialogTitle", String.class);
+                        Method withUserId =
+                                builderClass.getDeclaredMethod("withUserId",
+                                        String.class);
+                        Method withCancelDialogBody =
+                                builderClass.getDeclaredMethod("withCancelDialogBody",
+                                        String.class);
+                        Method withCancelDialogCloseButton =
+                                builderClass.getDeclaredMethod("withCancelDialogCloseButton",
+                                        String.class);
+                        Method withCancelDialogKeepWatchingButton =
+                                builderClass.getDeclaredMethod("withCancelDialogKeepWatchingButton",
+                                        String.class);
+                        Method withCancelDialogTitle =
+                                builderClass.getDeclaredMethod("withCancelDialogTitle",
+                                        String.class);
                         Method build = builderClass.getDeclaredMethod("build");
 
                         if (jsonObj.has("userId")) {
@@ -89,11 +115,13 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin implements M
                         }
 
                         if (jsonObj.has("cancelDialogCloseButton")) {
-                            withCancelDialogCloseButton.invoke(b, jsonObj.getString("cancelDialogCloseButton"));
+                            withCancelDialogCloseButton
+                                    .invoke(b, jsonObj.getString("cancelDialogCloseButton"));
                         }
 
                         if (jsonObj.has("cancelDialogKeepWatchingButton")) {
-                            withCancelDialogKeepWatchingButton.invoke(b, jsonObj.getString("cancelDialogKeepWatchingButton"));
+                            withCancelDialogKeepWatchingButton
+                                    .invoke(b, jsonObj.getString("cancelDialogKeepWatchingButton"));
                         }
 
                         if (jsonObj.has("cancelDialogTitle")) {
@@ -103,7 +131,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin implements M
                         settings.add((MediationSettings) build.invoke(b));
 
                     } catch (ClassNotFoundException e) {
-                        Log.i(TAG, "could not find Vungle VungleMediationSettings class. Did you add the Vungle Network SDK to your Android folder?");
+                        Log.i(TAG, "could not find VungleMediationSettings class. " +
+                                "Did you add Vungle Network SDK to your Android folder?");
                         printExceptionStackTrace(e);
                     } catch (InstantiationException e) {
                         printExceptionStackTrace(e);
@@ -118,16 +147,24 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin implements M
                     }
                 } else if (adVendor.equalsIgnoreCase("adcolony")) {
                     if (jsonObj.has("withConfirmationDialog") && jsonObj.has("withResultsDialog")) {
-                        boolean withConfirmationDialog = jsonObj.getBoolean("withConfirmationDialog");
-                        boolean withResultsDialog = jsonObj.getBoolean("withResultsDialog");
+                        boolean withConfirmationDialog =
+                                jsonObj.getBoolean("withConfirmationDialog");
+                        boolean withResultsDialog =
+                                jsonObj.getBoolean("withResultsDialog");
 
                         try {
-                            Class<?> mediationSettingsClass = Class.forName("com.mopub.mobileads.AdColonyRewardedVideo$AdColonyInstanceMediationSettings");
-                            Constructor<?> mediationSettingsConstructor = mediationSettingsClass.getConstructor(boolean.class, boolean.class);
-                            MediationSettings s = (MediationSettings) mediationSettingsConstructor.newInstance(withConfirmationDialog, withResultsDialog);
+                            Class<?> mediationSettingsClass =
+                                    Class.forName(ADCOLONY_MEDIATION_SETTINGS);
+                            Constructor<?> mediationSettingsConstructor =
+                                    mediationSettingsClass
+                                            .getConstructor(boolean.class, boolean.class);
+                            MediationSettings s =
+                                    (MediationSettings) mediationSettingsConstructor
+                                            .newInstance(withConfirmationDialog, withResultsDialog);
                             settings.add(s);
                         } catch (ClassNotFoundException e) {
-                            Log.i(TAG, "could not find AdColony AdColonyInstanceMediationSettings class. Did you add the AdColony Network SDK to your Android folder?");
+                            Log.i(TAG, "could not find AdColonyInstanceMediationSettings class. " +
+                                    "Did you add AdColony Network SDK to your Android folder?");
                             printExceptionStackTrace(e);
                         } catch (InstantiationException e) {
                             printExceptionStackTrace(e);
@@ -142,7 +179,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin implements M
                         }
                     }
                 } else {
-                    Log.e(TAG, "adVendor not available for custom mediation settings: [" + adVendor + "]");
+                    Log.e(TAG, "adVendor not available for custom mediation settings: " +
+                            "[" + adVendor + "]");
                 }
             }
         } catch (JSONException e) {
@@ -172,7 +210,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin implements M
                 location.setLongitude(longitude);
 
                 MoPubRewardedVideoManager.RequestParameters requestParameters =
-                        new MoPubRewardedVideoManager.RequestParameters(keywords, location, customerId);
+                        new MoPubRewardedVideoManager.RequestParameters(
+                                keywords, location, customerId);
 
                 MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPlugin.this);
 
@@ -260,7 +299,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin implements M
                 json.put("currencyType", "");
                 json.put("amount", reward.getAmount());
 
-                UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoReceivedReward", json.toString());
+                UnityPlayer.UnitySendMessage(
+                        "MoPubManager", "onRewardedVideoReceivedReward", json.toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }

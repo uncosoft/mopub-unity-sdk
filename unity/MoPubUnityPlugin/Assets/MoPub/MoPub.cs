@@ -33,38 +33,44 @@ public static class MoPub
 
 	public static void loadPluginsForAdUnits (string[] adUnitIds)
 	{
-		Debug.Log (adUnitIds.Length + " AdUnits loaded for plugins:\n" + string.Join (", ", adUnitIds));
 		foreach (string adUnitId in adUnitIds) {
 			_pluginsDict.Add (adUnitId, new MP (adUnitId));
 		}
+		Debug.Log (adUnitIds.Length + " AdUnits loaded for plugins:\n" + string.Join (", ", adUnitIds));
 	}
 	#elif UNITY_ANDROID
-	private static Dictionary<string, MPBanner> _bannerPluginsDict = new Dictionary<string, MPBanner> ();
-	private static Dictionary<string, MPInterstitial> _interstitialPluginsDict = new Dictionary<string, MPInterstitial> ();
-	private static Dictionary<string, MPRewardedVideo> _rewardedVideoPluginsDict = new Dictionary<string, MPRewardedVideo> ();
+	private static Dictionary<string, MPBanner> _bannerPluginsDict =
+		new Dictionary<string, MPBanner> ();
+	private static Dictionary<string, MPInterstitial> _interstitialPluginsDict =
+		new Dictionary<string, MPInterstitial> ();
+	private static Dictionary<string, MPRewardedVideo> _rewardedVideoPluginsDict =
+		new Dictionary<string, MPRewardedVideo> ();
 
 	public static void loadBannerPluginsForAdUnits (string[] bannerAdUnitIds)
 	{
-		Debug.Log (bannerAdUnitIds.Length + " banner AdUnits loaded for plugins:\n" + string.Join (", ", bannerAdUnitIds));
 		foreach (string bannerAdUnitId in bannerAdUnitIds) {
 			_bannerPluginsDict.Add (bannerAdUnitId, new MPBanner (bannerAdUnitId));
 		}
+		Debug.Log (bannerAdUnitIds.Length + " banner AdUnits loaded for plugins:\n" +
+			string.Join (", ", bannerAdUnitIds));
 	}
 
 	public static void loadInterstitialPluginsForAdUnits (string[] interstitialAdUnitIds)
 	{
-		Debug.Log (interstitialAdUnitIds.Length + " interstitial AdUnits loaded for plugins:\n" + string.Join (", ", interstitialAdUnitIds));
 		foreach (string interstitialAdUnitId in interstitialAdUnitIds) {
 			_interstitialPluginsDict.Add (interstitialAdUnitId, new MPInterstitial (interstitialAdUnitId));
 		}
+		Debug.Log (interstitialAdUnitIds.Length + " interstitial AdUnits loaded for plugins:\n" +
+			string.Join (", ", interstitialAdUnitIds));
 	}
 
 	public static void loadRewardedVideoPluginsForAdUnits (string[] rewardedVideoAdUnitIds)
 	{
-		Debug.Log (rewardedVideoAdUnitIds.Length + " rewarded video AdUnits loaded for plugins:\n" + string.Join (", ", rewardedVideoAdUnitIds));
 		foreach (string rewardedVideoAdUnitId in rewardedVideoAdUnitIds) {
 			_rewardedVideoPluginsDict.Add (rewardedVideoAdUnitId, new MPRewardedVideo (rewardedVideoAdUnitId));
 		}
+		Debug.Log (rewardedVideoAdUnitIds.Length + " rewarded video AdUnits loaded for plugins:\n" +
+			string.Join (", ", rewardedVideoAdUnitIds));
 	}
 	#endif
 
@@ -98,7 +104,8 @@ public static class MoPub
 
 
 	#if UNITY_IPHONE
-	public static void createBanner (string adUnitId, MoPubAdPosition position, MoPubBannerType bannerType = MoPubBannerType.Size320x50)
+	public static void createBanner (string adUnitId, MoPubAdPosition position,
+		MoPubBannerType bannerType = MoPubBannerType.Size320x50)
 	{
 		MP plugin;
 		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {

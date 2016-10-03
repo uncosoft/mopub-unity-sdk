@@ -145,7 +145,10 @@ public class MoPubDemoGUI : MonoBehaviour
 		var sectionMargin = 20;
 
 		// Tabs for networks
-		_selectedToggleIndex = GUI.Toolbar (new Rect (0, Screen.height - GUI.skin.button.fixedHeight, Screen.width, GUI.skin.button.fixedHeight), _selectedToggleIndex, _networkList);
+		_selectedToggleIndex = GUI.Toolbar (
+			new Rect (0, Screen.height - GUI.skin.button.fixedHeight, Screen.width, GUI.skin.button.fixedHeight),
+			_selectedToggleIndex,
+			_networkList);
 		string network = _networkList [_selectedToggleIndex];
 		_bannerAdUnits = _bannerDict.ContainsKey (network) ? _bannerDict [network] : null;
 		_interstitialAdUnits = _interstitialDict.ContainsKey (network) ? _interstitialDict [network] : null;
@@ -164,8 +167,8 @@ public class MoPubDemoGUI : MonoBehaviour
 				GUILayout.BeginHorizontal ();
 
 				if (GUILayout.Button ("Create: " + bannerAdUnit.Substring (0, 6) + "...")) {
-					MoPub.createBanner (bannerAdUnit, MoPubAdPosition.BottomRight);
 					Debug.Log ("requesting banner with AdUnit: " + bannerAdUnit);
+					MoPub.createBanner (bannerAdUnit, MoPubAdPosition.BottomRight);
 				}
 
 				if (GUILayout.Button ("Destroy")) {
@@ -195,8 +198,8 @@ public class MoPubDemoGUI : MonoBehaviour
 				GUILayout.BeginHorizontal ();
 
 				if (GUILayout.Button ("Request: " + interstitialAdUnit.Substring (0, 6) + "...")) {
-					MoPub.requestInterstitialAd (interstitialAdUnit);
 					Debug.Log ("requesting interstitial with AdUnit: " + interstitialAdUnit);
+					MoPub.requestInterstitialAd (interstitialAdUnit);
 				}
 
 				if (GUILayout.Button ("Show")) {
@@ -251,8 +254,16 @@ public class MoPubDemoGUI : MonoBehaviour
 				GUILayout.BeginHorizontal ();
 
 				if (GUILayout.Button ("Request: " + rewardedVideoAdUnit.Substring (0, 6) + "...")) {
-					MoPub.requestRewardedVideo (rewardedVideoAdUnit, mediationSettings, "rewarded, video, mopub", 37.7833, 122.4167, "customer101");
-					Debug.Log ("requesting rewarded video with AdUnit: " + rewardedVideoAdUnit + " and mediation settings: " + MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings));
+					Debug.Log ("requesting rewarded video with AdUnit: " +
+						rewardedVideoAdUnit +
+						" and mediation settings: " +
+						MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings));
+					MoPub.requestRewardedVideo (rewardedVideoAdUnit,
+						mediationSettings,
+						"rewarded, video, mopub",
+						37.7833,
+						122.4167,
+						"customer101");
 				}
 
 				if (GUILayout.Button ("Show")) {

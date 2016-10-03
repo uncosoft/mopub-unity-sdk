@@ -6,10 +6,10 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.unity3d.player.UnityPlayer;
 
-import static com.mopub.mobileads.MoPubInterstitial.InterstitialAdListener;
 
+public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin
+        implements MoPubInterstitial.InterstitialAdListener {
 
-public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin implements InterstitialAdListener {
     private MoPubInterstitial mMoPubInterstitial;
 
     public MoPubInterstitialUnityPlugin(final String adUnitId) {

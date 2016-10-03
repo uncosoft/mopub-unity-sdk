@@ -6,7 +6,8 @@ using System.Collections.Generic;
 
 public class MoPubAndroidRewardedVideo
 {
-	private static readonly AndroidJavaClass _pluginClass = new AndroidJavaClass ("com.mopub.unity.MoPubRewardedVideoUnityPlugin");
+	private static readonly AndroidJavaClass _pluginClass =
+		new AndroidJavaClass ("com.mopub.unity.MoPubRewardedVideoUnityPlugin");
 	private readonly AndroidJavaObject _plugin;
 
 	public MoPubAndroidRewardedVideo (string adUnitId)
@@ -38,7 +39,9 @@ public class MoPubAndroidRewardedVideo
 		if (Application.platform != RuntimePlatform.Android)
 			return;
 
-		var json = mediationSettings == null ? null : MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings);
+		var json = (mediationSettings == null) ?
+			null :
+			MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings);
 		_plugin.Call ("requestRewardedVideo", json, keywords, latitude, longitude, customerId);
 	}
 

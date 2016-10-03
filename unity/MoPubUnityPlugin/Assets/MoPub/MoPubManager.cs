@@ -112,7 +112,8 @@ public class MoPubManager : MonoBehaviour
 			managerGO.AddComponent (type);
 			DontDestroyOnLoad (managerGO);
 		} catch (UnityException) {
-			Debug.LogWarning ("It looks like you have the " + type + " on a GameObject in your scene. Please remove the script from your scene.");
+			Debug.LogWarning ("It looks like you have the " + type +
+				" on a GameObject in your scene. Please remove the script from your scene.");
 		}
 	}
 
