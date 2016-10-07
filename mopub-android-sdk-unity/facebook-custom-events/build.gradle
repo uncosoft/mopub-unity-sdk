@@ -19,6 +19,6 @@ repositories {
 }
 
 dependencies {
-    compile name: 'AudienceNetwork-4.8.1'
+    compile name: 'AudienceNetwork-4.15.0'
     compile project(':mopub-sdk')
 }
