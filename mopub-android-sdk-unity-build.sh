@@ -36,6 +36,13 @@ cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-
 cp ~/Library/Android/sdk/extras/android/support/v4/android-support-v4.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-recyclerview-v7-23.1.1.jar
 
+# Copy Millennial Media SDK
+MM_SDK_VERSION=mm-ad-sdk-6.3.0
+cp mopub-android-sdk-unity/millennial-custom-events/build/intermediates/exploded-aar/$MM_SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mm-ad-sdk/libs/$MM_SDK_VERSION.jar
+cp mopub-android-sdk-unity/millennial-custom-events/build/intermediates/exploded-aar/$MM_SDK_VERSION/AndroidManifest.xml unity/MoPubUnityPlugin/Assets/Plugins/Android/mm-ad-sdk/
+cp -r mopub-android-sdk-unity/millennial-custom-events/build/intermediates/exploded-aar/$MM_SDK_VERSION/assets unity/MoPubUnityPlugin/Assets/Plugins/Android/mm-ad-sdk/
+cp -r mopub-android-sdk-unity/millennial-custom-events/build/intermediates/exploded-aar/$MM_SDK_VERSION/res unity/MoPubUnityPlugin/Assets/Plugins/Android/mm-ad-sdk/
+
 # Copy MoPub Custom Events jars
 cp mopub-android-sdk-unity/adcolony-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/AdColony/mopub-adcolony-custom-events.jar
 cp mopub-android-sdk-unity/admob-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/AdMob/mopub-admob-custom-events.jar
