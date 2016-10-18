@@ -19,6 +19,6 @@ repositories {
 }
 
 dependencies {
-    compile name: 'chartboost-6.4.1'
+    compile name: 'chartboost-6.5.1'
     compile project(':mopub-sdk')
 }
