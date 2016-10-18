@@ -1,5 +1,5 @@
-/*! Ad-SDK-JS-Bridge - 1.0.0 - 1580ec2 - 2015-06-15 */
-(function(window) {
+/*! Ad-SDK-JS-Bridge - 1.2.0 - 3c886dc - 2016-06-13 */
+(function(window, document) {
     var GENERIC_NAMESPACE = null;
     function capitalizeFirstLetter(string) {
         if (string) {
@@ -15,17 +15,6 @@
         });
         return newObject;
     }
-    var getIframe = function() {
-        var iframe;
-        return function() {
-            if (!iframe) {
-                iframe = document.createElement("iframe");
-                iframe.style.display = "none";
-                document.body.appendChild(iframe);
-            }
-            return iframe;
-        };
-    }();
     function callNativeLayer(apiModule, action, parameters) {
         log.debug("Calling into the native layer with apiModule %s, action %s, and parameters %s", apiModule, action, parameters);
         var i;
@@ -68,7 +57,7 @@
                     }
                 }
             }
-            iframe = document.createElement("iframe");
+            var iframe = document.createElement("iframe");
             iframe.style.display = "none";
             iframe.src = url;
             document.body.appendChild(iframe);
@@ -233,39 +222,71 @@
         return param !== undefined && param !== null && param !== "";
     }
     var ListenerManager = function() {
-        this._listeners = {};
+        var that = this;
+        that._listeners = {};
+        that._queue = [];
+        that._inProgress = false;
     };
     ListenerManager.prototype = {
         constructor: ListenerManager,
+        _enqueue: function(funcToExecute) {
+            this._queue.push(funcToExecute);
+        },
+        _flushQueue: function() {
+            var that = this;
+            if (that._inProgress) {
+                return;
+            }
+            that._inProgress = true;
+            while (that._queue.length) {
+                try {
+                    var funcToExecute = that._queue.shift();
+                    funcToExecute.call(that);
+                } catch (err) {
+                    log.error("Error executing listener. %s", err);
+                }
+            }
+            that._inProgress = false;
+        },
         addEventListener: function(event, listener) {
             var that = this;
-            if (!that._listeners[event]) {
-                that._listeners[event] = [];
-            }
-            if (that._listeners[event].indexOf(listener) < 0) {
-                that._listeners[event].push(listener);
-            }
+            that._enqueue(function() {
+                if (!that._listeners[event]) {
+                    that._listeners[event] = [];
+                }
+                if (that._listeners[event].indexOf(listener) < 0) {
+                    that._listeners[event].push(listener);
+                }
+            });
+            that._flushQueue();
         },
         removeEventListener: function(event, listener) {
             var that = this;
-            if (!that._listeners[event]) {
-                return;
-            }
-            if (!defined(listener)) {
-                delete that._listeners[event];
-                return;
-            }
-            var index = that._listeners[event].indexOf(listener);
-            if (index >= 0) {
-                that._listeners[event].splice(index, 1);
-            }
+            that._enqueue(function() {
+                if (!that._listeners[event]) {
+                    return;
+                }
+                if (!defined(listener)) {
+                    delete that._listeners[event];
+                    return;
+                }
+                var index = that._listeners[event].indexOf(listener);
+                if (index >= 0) {
+                    that._listeners[event].splice(index, 1);
+                }
+            });
+            that._flushQueue();
         },
         callListeners: function(event, args) {
-            if (this._listeners[event]) {
-                this._listeners[event].forEach(function(listener) {
-                    listener.apply(null, args);
-                });
-            }
+            var that = this;
+            that._enqueue(function() {
+                if (that._listeners[event]) {
+                    that._listeners[event].forEach(function(listener) {
+                        listener.apply(null, args);
+                    });
+                }
+            });
+            that._flushQueue();
         }
     };
     (function() {
@@ -274,7 +295,7 @@
             for (var i = 0; i < namespaces.length; i++) {
                 context = context[namespaces[i]];
             }
-            return context.apply(this, args);
+            return context.apply(window, args);
         }
         if (window.MmInjectedFunctions && MmInjectedFunctions.useActionsQueue && MmInjectedFunctions.useActionsQueue()) {
             setInterval(function() {
@@ -291,4 +312,4 @@
         }
     })();
     callNativeLayer(GENERIC_NAMESPACE, "fileLoaded", [ generateParameterObject("filename", "actionsQueue.js") ]);
-})(window);
+})(window, document);

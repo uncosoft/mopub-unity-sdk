@@ -123,7 +123,6 @@
      <None Include="Assets\Plugins\Android\google-play-services\res\values-in\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values\location_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-te-rIN\common_strings.xml" />
-     <None Include="Assets\Plugins\Android\mm-activity\res\drawable\inline_video_progress_bar.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\drawable\common_google_signin_btn_icon_dark.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-ky-rKG\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-nb\common_strings.xml" />
@@ -137,7 +136,6 @@
      <None Include="Assets\Plugins\Android\google-play-services\res\layout\place_autocomplete_progress.xml" />
      <None Include="Assets\Plugins\Android\mm-activity\res\values\values.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-lo-rLA\location_strings.xml" />
-     <None Include="Assets\Plugins\Android\mm-activity\res\drawable\play_pause.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-bg\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-ka-rGE\base_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-gu-rIN\location_strings.xml" />
@@ -206,9 +204,9 @@
      <None Include="Assets\Plugins\Android\google-play-services\res\values-sl\wallet_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-lt\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\AndroidManifest.xml" />
+     <None Include="Assets\Plugins\Android\mm-activity\res\drawable\mmadsdk_play_pause.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-ja\wallet_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-iw\wallet_strings.xml" />
-     <None Include="Assets\Plugins\Android\mm-activity\res\drawable\expand_collapse.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-zu\base_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-kk-rKZ\location_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-uz-rUZ\base_strings.xml" />
@@ -227,6 +225,7 @@
      <None Include="Assets\Plugins\Android\google-play-services\res\values-mk-rMK\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-ru\base_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-fa\base_strings.xml" />
+     <None Include="Assets\Plugins\Android\mm-activity\res\drawable\mmadsdk_expand_collapse.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-sr\base_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-ka-rGE\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-en-rIN\base_strings.xml" />
@@ -250,7 +249,7 @@
      <None Include="Assets\Plugins\Android\google-play-services\res\values-de\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-zh-rTW\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-nl\common_strings.xml" />
-     <None Include="Assets\Plugins\Android\mm-activity\res\drawable\mute_unmute.xml" />
+     <None Include="Assets\Plugins\Android\mm-activity\res\drawable\mmadsdk_mute_unmute.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-vi\location_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-sw\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-km-rKH\base_strings.xml" />
@@ -304,6 +303,7 @@
      <None Include="Assets\Plugins\Android\google-play-services\res\values\base_colors.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-pt-rPT\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values\location_dimens.xml" />
+     <None Include="Assets\Plugins\Android\mm-activity\res\values-large\values-large.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-sl\base_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-tl\wallet_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-tl\base_strings.xml" />
@@ -312,25 +312,22 @@
      <None Include="Assets\Plugins\Android\google-play-services\res\values-fa\location_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-hy-rAM\base_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-hy-rAM\location_strings.xml" />
-     <None Include="Assets\Plugins\Android\mm-activity\res\values-large-v4\values.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-sr\common_strings.xml" />
-     <None Include="Assets\Plugins\Android\mm-activity\res\values-xlarge-v4\values.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values\admob_iap_style.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-hi\common_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-af\base_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-fi\wallet_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-af\location_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-zh-rTW\wallet_strings.xml" />
-     <None Include="Assets\Plugins\Android\mm-activity\bin\AndroidManifest.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-am\location_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-el\base_strings.xml" />
-     <None Include="Assets\Plugins\Android\mm-activity\bin\R.txt" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-el\wallet_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\color\common_google_signin_btn_text_dark.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-en-rAU\wallet_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values\base_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\drawable\common_google_signin_btn_text_dark.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-my-rMM\base_strings.xml" />
+     <None Include="Assets\Plugins\Android\mm-activity\res\values-xlarge\values-xlarge.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-pt\wallet_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-in\base_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-mk-rMK\location_strings.xml" />
@@ -350,6 +347,7 @@
      <None Include="Assets\Plugins\Android\google-play-services\res\values-lv\wallet_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-my-rMM\location_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-iw\common_strings.xml" />
+     <None Include="Assets\Plugins\Android\mm-activity\res\drawable\mmadsdk_inline_video_progress_bar.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-ta-rIN\location_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-da\wallet_strings.xml" />
      <None Include="Assets\Plugins\Android\google-play-services\res\values-bn-rBD\location_strings.xml" />
