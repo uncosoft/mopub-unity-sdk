@@ -487,9 +487,9 @@ extern "C" {
 
 //- (void)rewardedVideoAdDidAppearForAdUnitID:(NSString *)adUnitID;
 
-- (void)rewardedVideoAdWillDisappearForAdUnitID:(NSString *)adUnitID
+- (void)rewardedVideoAdDidDisappearForAdUnitID:(NSString *)adUnitID
 {
-	NSLog( @"rewardedVideoAdWillDisappearForAdUnitID" );
+    NSLog( @"rewardedVideoAdDidDisappearForAdUnitID" );
 	UnityPause( false );
 	UnitySendMessage( "MoPubManager", "onRewardedVideoClosed", adUnitID.UTF8String );
 }
