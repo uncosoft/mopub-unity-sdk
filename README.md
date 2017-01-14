@@ -1,3 +1,10 @@
+### Cloning the project
+```
+git clone https://github.com/mopub/unity-mopub
+git submodule init
+git submodule update
+```
+
 ### The structure of this directory is as follows:
 
 ```
