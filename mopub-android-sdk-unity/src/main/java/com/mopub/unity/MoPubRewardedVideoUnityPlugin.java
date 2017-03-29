@@ -67,7 +67,6 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                         } catch (ClassNotFoundException e) {
                             Log.i(TAG, "could not find ChartboostMediationSettings class. " +
                                     "Did you add Chartboost Network SDK to your Android folder?");
-                            printExceptionStackTrace(e);
                         } catch (InstantiationException e) {
                             printExceptionStackTrace(e);
                         } catch (NoSuchMethodException e) {
@@ -133,7 +132,6 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                     } catch (ClassNotFoundException e) {
                         Log.i(TAG, "could not find VungleMediationSettings class. " +
                                 "Did you add Vungle Network SDK to your Android folder?");
-                        printExceptionStackTrace(e);
                     } catch (InstantiationException e) {
                         printExceptionStackTrace(e);
                     } catch (NoSuchMethodException e) {
@@ -165,7 +163,6 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                         } catch (ClassNotFoundException e) {
                             Log.i(TAG, "could not find AdColonyInstanceMediationSettings class. " +
                                     "Did you add AdColony Network SDK to your Android folder?");
-                            printExceptionStackTrace(e);
                         } catch (InstantiationException e) {
                             printExceptionStackTrace(e);
                         } catch (NoSuchMethodException e) {

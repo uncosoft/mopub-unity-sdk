@@ -19,6 +19,6 @@ repositories {
 }
 
 dependencies {
-    compile name: 'unity-ads-1.4.7'
+    compile (name: 'unity-ads-2.0.7', ext: 'aar')
     compile project(':mopub-sdk')
 }

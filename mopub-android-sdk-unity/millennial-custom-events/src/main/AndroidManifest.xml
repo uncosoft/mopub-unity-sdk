@@ -7,6 +7,6 @@
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="23"
-        tools:overrideLibrary="com.millennialmedia"/>/>
+        tools:overrideLibrary="com.millennialmedia"/>
     <application/>
 </manifest>

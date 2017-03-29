@@ -19,6 +19,6 @@ repositories {
 }
 
 dependencies {
-    compile name: 'adcolony-2.0.3'
+    compile (name: 'adcolony-3.1.0-unity', ext: 'aar')
     compile project(':mopub-sdk')
 }
