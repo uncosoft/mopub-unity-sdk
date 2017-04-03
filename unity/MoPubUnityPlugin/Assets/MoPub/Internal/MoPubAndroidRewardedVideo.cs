@@ -1,14 +1,47 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 
 #if UNITY_ANDROID
 
+public class MoPubReward 
+{
+	private readonly string _label;
+	private readonly int _amount;
+
+	public MoPubReward (string label, int amount)
+	{
+		this._label = label;
+		this._amount = amount;
+	}
+
+	public string Label
+	{
+		get { return _label; }
+	}
+
+	public int Amount
+	{
+		get { return _amount; }
+	}		
+
+	public override string ToString ()
+	{
+		return string.Format ("[MoPubReward: {0} {1}]", Amount, Label);
+	}
+}
+	
 public class MoPubAndroidRewardedVideo
 {
 	private static readonly AndroidJavaClass _pluginClass =
 		new AndroidJavaClass ("com.mopub.unity.MoPubRewardedVideoUnityPlugin");
+//	private static readonly AndroidJavaClass _rewardClass = 
+//		new AndroidJavaClass ("com.mopub.common.MoPubReward");
 	private readonly AndroidJavaObject _plugin;
+	private Dictionary<MoPubReward, AndroidJavaObject> _rewardsDict = new Dictionary<MoPubReward, AndroidJavaObject>();
+	private MoPubReward _selectedReward;
+
 
 	public MoPubAndroidRewardedVideo (string adUnitId)
 	{
@@ -43,6 +76,11 @@ public class MoPubAndroidRewardedVideo
 			null :
 			MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings);
 		_plugin.Call ("requestRewardedVideo", json, keywords, latitude, longitude, customerId);
+
+		 List<MoPubReward> rewardsList = getAVailableRewards ();
+		foreach (MoPubReward r in rewardsList) {
+			Debug.LogWarning (String.Format ("Unity {0}: {1} {2}", r, r.Amount, r.Label));
+		}
 	}
 
 
@@ -53,6 +91,47 @@ public class MoPubAndroidRewardedVideo
 			return;
 
 		_plugin.Call ("showRewardedVideo");
+	}
+
+	public List<MoPubReward> getAVailableRewards()
+	{
+		if (Application.platform != RuntimePlatform.Android)
+			return null;
+
+		using (AndroidJavaObject obj = _plugin.Call<AndroidJavaObject> ("getAvailableRewards")) {
+//			Debug.LogWarning (String.Format ("{0} objects in array", obj.GetRawObject ().ToInt32 ()));
+			//			if (obj.GetRawObject ().ToInt32 () != 0) {}
+				
+			AndroidJavaObject[] rewardsJavaObjArray = 
+					AndroidJNIHelper.ConvertFromJNIArray<AndroidJavaObject[]> (obj.GetRawObject ());
+
+			Debug.LogWarning (String.Format ("fetched {0} available rewards.", rewardsJavaObjArray.Length));
+
+			if (rewardsJavaObjArray.Length > 1) {
+				foreach (AndroidJavaObject r in rewardsJavaObjArray) {
+					string label = r.Call<string> ("getLabel");
+					int amount = r.Call<int> ("getAmount");
+					_rewardsDict.Add (new MoPubReward (label, amount), r);
+
+					Debug.LogWarning (String.Format ("{0} {1}", amount, label));
+				}
+			}
+		}
+
+		return new List<MoPubReward> (_rewardsDict.Keys);
+	}	
+
+	public void selectReward(MoPubReward selectedReward) 
+	{
+		if (Application.platform != RuntimePlatform.Android)
+			return;
+
+		AndroidJavaObject rewardJavaObj;
+		if (_rewardsDict.TryGetValue(selectedReward, out rewardJavaObj)) {
+			_plugin.Call ("selectReward", rewardJavaObj);
+		} else {
+			Debug.LogWarning (String.Format ("Selected reward {0} is not available.", selectedReward));
+		}
 	}
 }
 

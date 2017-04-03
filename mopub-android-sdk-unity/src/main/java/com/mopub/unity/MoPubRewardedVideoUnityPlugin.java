@@ -236,6 +236,20 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
         });
     }
 
+    public MoPubReward[] getAvailableRewards() {
+        MoPubReward[] rewardsArray = {MoPubReward.success("gold coins", 10), MoPubReward.success("stars", 20)};
+        return rewardsArray;
+
+//        return new MoPubReward[0];
+
+//        Set<MoPubReward> rewardsSet = MoPubRewardedVideos.getAvailableRewards(mAdUnitId);
+//        return rewardsSet.toArray(new MoPubReward[rewardsSet.size()]);
+    }
+
+    public void selectReward(MoPubReward selectedReward) {
+        MoPubRewardedVideos.selectReward(mAdUnitId, selectedReward);
+    }
+
 
     /* ***** ***** ***** ***** ***** ***** ***** *****
      * RewardedVideoListener implementation

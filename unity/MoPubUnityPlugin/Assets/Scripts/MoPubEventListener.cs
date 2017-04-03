@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using System;
 using System.Collections;
@@ -128,6 +129,9 @@ public class MoPubEventListener : MonoBehaviour
 	void onRewardedVideoLoadedEvent (string adUnitId)
 	{
 		Debug.Log ("onRewardedVideoLoadedEvent: " + adUnitId);
+
+		string[] strArray = { "a", "b", "cd" };
+		EditorGUILayout.Popup("Available Rewards:", 0, strArray);
 	}
 
 	void onRewardedVideoFailedEvent (string errorMsg)
