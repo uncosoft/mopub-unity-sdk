@@ -15,7 +15,7 @@
 /*
  * Maps all Chartboost locations for both interstitial and rewarded video ads to their
  * corresponding custom event objects. Also acts as primary Chartboost delegate and distributes
- * callbacks to their appropriate custom events. 
+ * callbacks to their appropriate custom events.
  */
 @interface MPChartboostRouter : NSObject <ChartboostDelegate>
 

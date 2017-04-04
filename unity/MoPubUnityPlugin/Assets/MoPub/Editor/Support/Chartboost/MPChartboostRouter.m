@@ -40,7 +40,7 @@
     if (self) {
         self.interstitialEvents = [NSMutableDictionary dictionary];
         self.rewardedVideoEvents = [NSMutableDictionary dictionary];
-        
+
         /*
          * We need the active locations set to keep track of locations that are currently being
          * cached/ready to show/visible on screen for interstitial ads.
@@ -74,12 +74,12 @@
         [event didFailToLoadInterstitial:location withError:CBLoadErrorInternal];
         return;
     }
-    
+
     if ([appId length] > 0 && [appSignature length] > 0) {
         [self setInterstitialEvent:event forLocation:location];
-        
+
         [self startWithAppId:appId appSignature:appSignature];
-        
+
         if ([self hasCachedInterstitialForLocation:location]) {
             [self didCacheInterstitial:location];
         } else {
@@ -130,9 +130,9 @@
 {
     if ([appId length] > 0 && [appSignature length] > 0) {
         [self setRewardedVideoEvent:event forLocation:location];
-        
+
         [self startWithAppId:appId appSignature:appSignature];
-        
+
         if ([self hasCachedRewardedVideoForLocation:location]) {
             [self didCacheRewardedVideo:location];
         } else {

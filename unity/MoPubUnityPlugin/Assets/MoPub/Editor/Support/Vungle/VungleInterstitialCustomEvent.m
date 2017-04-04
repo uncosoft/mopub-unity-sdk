@@ -76,7 +76,7 @@
 - (void)vungleAdWillAppear
 {
     MPLogInfo(@"Vungle video interstitial will appear");
-    
+
     [self.delegate interstitialCustomEventWillAppear:self];
     [self.delegate interstitialCustomEventDidAppear:self];
 }

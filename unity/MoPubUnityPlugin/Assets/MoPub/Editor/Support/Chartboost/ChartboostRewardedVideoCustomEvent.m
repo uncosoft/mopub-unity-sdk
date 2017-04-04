@@ -26,7 +26,7 @@
 
     NSString *location = [info objectForKey:@"location"];
     self.location = location ? location : CBLocationDefault;
-    
+
     MPLogInfo(@"Requesting Chartboost rewarded video.");
     [[MPChartboostRouter sharedRouter] cacheRewardedAdWithAppId:appId appSignature:appSignature location:self.location forChartboostRewardedVideoCustomEvent:self];
 }
@@ -35,7 +35,7 @@
 {
     if ([[MPChartboostRouter sharedRouter] hasCachedRewardedVideoForLocation:self.location]) {
         MPLogInfo(@"Chartboost rewarded video will be shown.");
-        
+
         [[MPChartboostRouter sharedRouter] showRewardedVideoForLocation:self.location];
     } else {
         MPLogInfo(@"Failed to show Chartboost rewarded video.");
