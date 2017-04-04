@@ -230,8 +230,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
 
     public void showRewardedVideo() {
         if (!MoPubRewardedVideos.hasRewardedVideo(mAdUnitId)) {
-            logToast(getActivity(), String.format(Locale.US,
-                    "No rewarded video is available at this time."));
+            Log.i(TAG, String.format(Locale.US, "No rewarded video is available at this time."));
             return;
         }
 
@@ -246,8 +245,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     public MoPubReward[] getAvailableRewards() {
         Set<MoPubReward> rewardsSet = MoPubRewardedVideos.getAvailableRewards(mAdUnitId);
 
-        logToast(getActivity(), String.format(Locale.US, "%d rewards available",
-                rewardsSet.size()));
+        Log.i(TAG, String.format(Locale.US, "%d rewards available", rewardsSet.size()));
 
         return rewardsSet.toArray(new MoPubReward[rewardsSet.size()]);
     }
@@ -255,7 +253,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     public void selectReward(MoPubReward selectedReward) {
         Preconditions.checkNotNull(selectedReward);
 
-        logToast(getActivity(), String.format(Locale.US, "Selected reward \"%d %s\"",
+        Log.i(TAG, String.format(Locale.US, "Selected reward \"%d %s\"",
                 selectedReward.getAmount(),
                 selectedReward.getLabel()));
 
@@ -269,7 +267,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     @Override
     public void onRewardedVideoLoadSuccess(String adUnitId) {
         if (mAdUnitId.equals(adUnitId)) {
-            logToast(getActivity(), "Rewarded video loaded.");
+            Log.i(TAG, "Rewarded video loaded.");
             UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoLoaded", adUnitId);
         }
     }
@@ -282,7 +280,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                     adUnitId,
                     errorCode.toString());
 
-            logToast(getActivity(), errorMsg);
+            Log.e(TAG, errorMsg);
             UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailed", errorMsg);
         }
     }
@@ -290,7 +288,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     @Override
     public void onRewardedVideoStarted(String adUnitId) {
         if (mAdUnitId.equals(adUnitId)) {
-            logToast(getActivity(), "Rewarded video started.");
+            Log.i(TAG, "Rewarded video started.");
             UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoShown", adUnitId);
         }
     }
@@ -303,7 +301,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                     adUnitId,
                     errorCode.toString());
 
-            logToast(getActivity(), errorMsg);
+            Log.e(TAG, errorMsg);
             UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailedToPlay", errorMsg);
         }
     }
@@ -311,7 +309,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     @Override
     public void onRewardedVideoClosed(String adUnitId) {
         if (mAdUnitId.equals(adUnitId)) {
-            logToast(getActivity(), "Rewarded video closed.");
+            Log.i(TAG, "Rewarded video closed.");
             UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoClosed", adUnitId);
         }
     }
@@ -319,7 +317,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     @Override
     public void onRewardedVideoCompleted(Set<String> adUnitIds, MoPubReward reward) {
         if (adUnitIds.size() == 0 || reward == null) {
-            logToast(getActivity(), String.format(Locale.US,
+            Log.e(TAG, String.format(Locale.US,
                     "Rewarded video completed without adUnitId and/or reward."));
             return;
         }
@@ -327,7 +325,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
         String adUnitId = adUnitIds.toArray()[0].toString();
         if (mAdUnitId.equals(adUnitId)) {
             try {
-                logToast(getActivity(), String.format(Locale.US,
+                Log.i(TAG, String.format(Locale.US,
                         "Rewarded video completed with reward  \"%d %s\"",
                         reward.getAmount(),
                         reward.getLabel()));

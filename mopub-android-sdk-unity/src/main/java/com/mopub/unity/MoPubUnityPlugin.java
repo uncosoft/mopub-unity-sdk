@@ -1,9 +1,7 @@
 package com.mopub.unity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.mopub.common.MoPub;
 import com.mopub.mobileads.MoPubConversionTracker;
@@ -47,15 +45,7 @@ public class MoPubUnityPlugin {
     protected static void printExceptionStackTrace(Exception e) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
-        Log.i(TAG, sw.toString());
-    }
-
-    protected static void logToast(Context context, String message) {
-        Log.i(TAG, message);
-
-        if (context != null) {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-        }
+        Log.e(TAG, sw.toString());
     }
 
 

@@ -14,7 +14,7 @@ public class MoPubEventListener : MonoBehaviour
 	{
 		var type = typeof(MoPubDemoGUI);
 		try {
-			// first we see if we already exist in the scene
+			// first we see if the Demo GUI already exist in the scene
 			_demoGUI = FindObjectOfType (type) as MoPubDemoGUI;
 			if (_demoGUI == null) {
 				Debug.LogWarning("MoPubDemoGUI not initialized.");
@@ -142,7 +142,7 @@ public class MoPubEventListener : MonoBehaviour
 	{
 		Debug.Log ("onRewardedVideoLoadedEvent: " + adUnitId);
 
-		List<MoPubReward> availableRewards = MoPub.getAVailableRewards (adUnitId);
+		List<MoPubManager.MoPubReward> availableRewards = MoPub.getAVailableRewards (adUnitId);
 		_demoGUI.loadAvailableRewards (adUnitId, availableRewards);
 	}
 
@@ -183,5 +183,3 @@ public class MoPubEventListener : MonoBehaviour
 
 	#endif
 }
-
-

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+using MoPubReward = MoPubManager.MoPubReward;
+
 public class MoPubDemoGUI : MonoBehaviour
 {
 	private int _selectedToggleIndex;
 	private string[] _bannerAdUnits;
 	private string[] _interstitialAdUnits;
 	private string[] _rewardedVideoAdUnits;
-//	private bool _hasMultipleRewardsAvailable;
 	private Dictionary<string, List<MoPubReward>> _adUnitToRewardsMapping =
 		new Dictionary<string, List<MoPubReward>>();
 
@@ -106,7 +107,6 @@ public class MoPubDemoGUI : MonoBehaviour
 		// If only one reward is available, no need to update mapping to show reward on demo GUI
 		if (availableRewards != null && availableRewards.Count > 1) {
 			_adUnitToRewardsMapping [adUnitId] = availableRewards;
-			Debug.Log (String.Format ("{0} rewards mapped to adunit {1}", _adUnitToRewardsMapping [adUnitId].Count, adUnitId));
 		}
 	}
 
@@ -155,20 +155,6 @@ public class MoPubDemoGUI : MonoBehaviour
 		GUI.skin.button.stretchWidth = true;
 		GUI.skin.button.fixedHeight = (Screen.width >= 960 || Screen.height >= 960) ? 75 : 50;
 		GUI.skin.button.fontSize = 28;
-
-//		var rewardButtonStyle = new GUIStyle (GUI.skin.button);
-//		rewardButtonStyle.margin = new RectOffset (0, 0, 10, 0);
-////		rewardButtonStyle.stretchWidth = true;
-//		rewardButtonStyle.fixedHeight = (Screen.width >= 960 || Screen.height >= 960) ? 75 : 50;
-//		rewardButtonStyle.fontSize = 30;
-//		rewardButtonStyle.onActive.textColor = Color.green;
-//		rewardButtonStyle.onNormal.textColor = Color.red;
-
-//		// Set default toggle style
-//		GUI.skin.toggle.margin = new RectOffset (0, 0, 10, 0);
-//		GUI.skin.toggle.stretchWidth = true;
-//		GUI.skin.toggle.fixedHeight = (Screen.width >= 960 || Screen.height >= 960) ? 75 : 50;
-//		GUI.skin.toggle.fontSize = 30;
 
 		// Buffer space between sections
 		var sectionMargin = 36;
@@ -308,12 +294,7 @@ public class MoPubDemoGUI : MonoBehaviour
 					GUILayout.Label ("Select a reward:");
 
 					foreach (MoPubReward reward in _adUnitToRewardsMapping[rewardedVideoAdUnit]) {
-//						if (GUILayout.Toggle(false, reward.ToString())) {
-//							MoPub.selectReward(rewardedVideoAdUnit, reward);
-//						}
-
 						if (GUILayout.Button(reward.ToString())) {
-							Debug.Log ("Selecting reward: " + reward.ToString ());
 							MoPub.selectReward(rewardedVideoAdUnit, reward);
 						}
 					}
@@ -342,26 +323,6 @@ public class MoPubDemoGUI : MonoBehaviour
 			MoPub.enableLocationSupport (true);
 		}
 
-
-//		// Multiple rewards, if available
-//		GUILayout.Space (sectionMargin);
-//		if (_hasMultipleRewardsAvailable) {
-//			GUILayout.Label ("Select a reward:");
-//
-//			Vector2 scrollPosition = new Vector2(200, 100);
-//			string longString = "This is a long-ish string";
-//
-//			scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Width(100), GUILayout.Height(100));
-//			GUILayout.Label(longString);
-//			if (GUILayout.Button("Clear"))
-//				longString = "";
-//
-//			GUILayout.EndScrollView();
-//			if (GUILayout.Button("Add More Text"))
-//				longString += "\nHere is another line";
-//
-//
-//		}
 
 		GUILayout.EndVertical ();
 		GUILayout.EndArea ();

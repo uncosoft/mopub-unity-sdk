@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 
 #if UNITY_IPHONE || UNITY_ANDROID
-
+using MoPubReward = MoPubManager.MoPubReward;
 #if UNITY_IPHONE
 using MP = MoPubBinding;
 #elif UNITY_ANDROID

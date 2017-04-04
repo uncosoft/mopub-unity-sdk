@@ -98,6 +98,35 @@ public class MoPubManager : MonoBehaviour
 
 
 
+	public class MoPubReward
+	{
+		private readonly string _label;
+		private readonly int _amount;
+
+		public MoPubReward (string label, int amount)
+		{
+			this._label = label;
+			this._amount = amount;
+		}
+
+		public string Label
+		{
+			get { return _label; }
+		}
+
+		public int Amount
+		{
+			get { return _amount; }
+		}
+
+		public override string ToString ()
+		{
+			return string.Format ("\"{0} {1}\"", Amount, Label);
+		}
+	}
+
+
+
 	static MoPubManager ()
 	{
 		var type = typeof(MoPubManager);

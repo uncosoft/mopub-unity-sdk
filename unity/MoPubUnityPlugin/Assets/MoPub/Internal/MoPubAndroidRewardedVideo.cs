@@ -2,35 +2,9 @@
 using System;
 using System.Collections.Generic;
 
+using MoPubReward = MoPubManager.MoPubReward;
 
 #if UNITY_ANDROID
-
-public class MoPubReward
-{
-	private readonly string _label;
-	private readonly int _amount;
-
-	public MoPubReward (string label, int amount)
-	{
-		this._label = label;
-		this._amount = amount;
-	}
-
-	public string Label
-	{
-		get { return _label; }
-	}
-
-	public int Amount
-	{
-		get { return _amount; }
-	}
-
-	public override string ToString ()
-	{
-		return string.Format ("{0} {1}", Amount, Label);
-	}
-}
 
 public class MoPubAndroidRewardedVideo
 {
@@ -100,15 +74,11 @@ public class MoPubAndroidRewardedVideo
 			AndroidJavaObject[] rewardsJavaObjArray =
 					AndroidJNIHelper.ConvertFromJNIArray<AndroidJavaObject[]> (obj.GetRawObject ());
 
-			Debug.LogWarning (String.Format ("fetched {0} available rewards:", rewardsJavaObjArray.Length));
-
 			if (rewardsJavaObjArray.Length > 1) {
 				foreach (AndroidJavaObject r in rewardsJavaObjArray) {
 					string label = r.Call<string> ("getLabel");
 					int amount = r.Call<int> ("getAmount");
 					_rewardsDict.Add (new MoPubReward (label, amount), r);
-
-					Debug.LogWarning (String.Format ("{0} {1}", amount, label));
 				}
 			}
 		}
@@ -125,7 +95,6 @@ public class MoPubAndroidRewardedVideo
 
 		AndroidJavaObject rewardJavaObj;
 		if (_rewardsDict.TryGetValue(selectedReward, out rewardJavaObj)) {
-			Debug.Log ("Calling selectReward() on Java side");
 			_plugin.Call ("selectReward", rewardJavaObj);
 		} else {
 			Debug.LogWarning (String.Format ("Selected reward {0} is not available.", selectedReward));
