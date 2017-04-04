@@ -279,7 +279,37 @@ public static class MoPub
 		}
 		#endif
 	}
-		
+
+
+	// Retrieves a list of available rewards for this AdUnit
+	public static List<MoPubReward> getAVailableRewards(string adUnitId)
+	{
+		#if UNITY_IPHONE
+		#elif UNITY_ANDROID
+		MPRewardedVideo plugin;
+		if (_rewardedVideoPluginsDict.TryGetValue (adUnitId, out plugin)) {
+			return plugin.getAVailableRewards();
+		} else {
+			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
+			return null;
+		}
+		#endif
+	}
+
+
+	// Selects the reward for this AdUnit
+	public static void selectReward(string adUnitId, MoPubReward selectedReward)
+	{
+		#if UNITY_IPHONE
+		#elif UNITY_ANDROID
+		MPRewardedVideo plugin;
+		if (_rewardedVideoPluginsDict.TryGetValue (adUnitId, out plugin)) {
+			plugin.selectReward(selectedReward);
+		} else {
+			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
+		}
+		#endif
+	}
 }
 
 #endif

@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 using System;
 using System.Collections;
@@ -9,8 +8,21 @@ public class MoPubEventListener : MonoBehaviour
 {
 	#if UNITY_ANDROID || UNITY_IPHONE
 
+	private MoPubDemoGUI _demoGUI;
+
 	void OnEnable ()
 	{
+		var type = typeof(MoPubDemoGUI);
+		try {
+			// first we see if we already exist in the scene
+			_demoGUI = FindObjectOfType (type) as MoPubDemoGUI;
+			if (_demoGUI == null) {
+				Debug.LogWarning("MoPubDemoGUI not initialized.");
+			}
+		} catch (UnityException e) {
+			Debug.LogException (e);
+		}
+
 		// Listen to all events for illustration purposes
 		MoPubManager.onAdLoadedEvent += onAdLoadedEvent;
 		MoPubManager.onAdFailedEvent += onAdFailedEvent;
@@ -130,8 +142,8 @@ public class MoPubEventListener : MonoBehaviour
 	{
 		Debug.Log ("onRewardedVideoLoadedEvent: " + adUnitId);
 
-		string[] strArray = { "a", "b", "cd" };
-		EditorGUILayout.Popup("Available Rewards:", 0, strArray);
+		List<MoPubReward> availableRewards = MoPub.getAVailableRewards (adUnitId);
+		_demoGUI.loadAvailableRewards (adUnitId, availableRewards);
 	}
 
 	void onRewardedVideoFailedEvent (string errorMsg)
