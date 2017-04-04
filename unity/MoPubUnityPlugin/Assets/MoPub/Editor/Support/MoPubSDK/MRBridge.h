@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MRConstants.h"
+#import "MPWebView.h"
 
 @class MRProperty;
 @protocol MRBridgeDelegate;
@@ -15,7 +16,7 @@
  * The `MRBridge` class is an intermediate object between native code and JavaScript for
  * MRAID ads. The MRAID web view communicates events to `MRBridge` which translates them
  * down to native code. Likewise, native code will communicate with `MRBridge` to execute
- * commands inside the JavaScript. `MRBridge` also inserts mraid.js into the web view when 
+ * commands inside the JavaScript. `MRBridge` also inserts mraid.js into the web view when
  * loading an ad's HTML.
  */
 @interface MRBridge : NSObject
@@ -23,7 +24,7 @@
 @property (nonatomic, assign) BOOL shouldHandleRequests;
 @property (nonatomic, weak) id<MRBridgeDelegate> delegate;
 
-- (instancetype)initWithWebView:(UIWebView *)webView;
+- (instancetype)initWithWebView:(MPWebView *)webView;
 
 - (void)loadHTMLString:(NSString *)HTML baseURL:(NSURL *)baseURL;
 
@@ -33,7 +34,7 @@
 - (void)fireErrorEventForAction:(NSString *)action withMessage:(NSString *)message;
 
 /*
- * fireSizeChangeEvent: will always execute the javascript to notify mraid bridge that the size of the ad may have 
+ * fireSizeChangeEvent: will always execute the javascript to notify mraid bridge that the size of the ad may have
  * changed. mraid.js will only fire the change event if the size has actually changed.
  */
 - (void)fireSizeChangeEvent:(CGSize)size;
@@ -63,8 +64,8 @@
 - (void)nativeCommandWillPresentModalView;
 - (void)nativeCommandDidDismissModalView;
 
-- (void)bridge:(MRBridge *)bridge didFinishLoadingWebView:(UIWebView *)webView;
-- (void)bridge:(MRBridge *)bridge didFailLoadingWebView:(UIWebView *)webView error:(NSError *)error;
+- (void)bridge:(MRBridge *)bridge didFinishLoadingWebView:(MPWebView *)webView;
+- (void)bridge:(MRBridge *)bridge didFailLoadingWebView:(MPWebView *)webView error:(NSError *)error;
 
 - (void)handleNativeCommandCloseWithBridge:(MRBridge *)bridge;
 - (void)bridge:(MRBridge *)bridge performActionForMoPubSpecificURL:(NSURL *)url;

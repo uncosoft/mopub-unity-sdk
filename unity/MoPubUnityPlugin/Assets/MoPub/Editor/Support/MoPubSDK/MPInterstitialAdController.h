@@ -222,7 +222,7 @@
 /**
  * Sent when a loaded interstitial ad is no longer eligible to be displayed.
  *
- * Interstitial ads from certain networks (such as iAd) may expire their content at any time,
+ * Interstitial ads from certain networks may expire their content at any time,
  * even if the content is currently on-screen. This method notifies you when the currently-
  * loaded interstitial has expired and is no longer eligible for display.
  *
@@ -236,7 +236,7 @@
 - (void)interstitialDidExpire:(MPInterstitialAdController *)interstitial;
 
 /**
- * Sent when the user taps the interstitial ad and the ad is about to perform its target action. 
+ * Sent when the user taps the interstitial ad and the ad is about to perform its target action.
  *
  * This action may include displaying a modal or leaving your application. Certain ad networks
  * may not expose a "tapped" callback so you should not rely on this callback to perform
