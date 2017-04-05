@@ -61,6 +61,16 @@ public class MoPubAndroidRewardedVideo
 	}
 
 
+	// Whether a rewarded video is ready to play
+	public bool hasRewardedVideo()
+	{
+		if (Application.platform != RuntimePlatform.Android)
+			return false;
+
+		return _plugin.Call<bool> ("hasRewardedVideo");
+	}
+
+
 	// Retrieves a list of available rewards for this AdUnit
 	public List<MoPubReward> getAVailableRewards()
 	{

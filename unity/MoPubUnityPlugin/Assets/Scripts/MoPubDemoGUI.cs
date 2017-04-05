@@ -50,7 +50,6 @@ public class MoPubDemoGUI : MonoBehaviour
 		{ "Chartboost", new string[] { "df605ab15b56400285c99e521ecc2cb1" } }, {
 			"MoPub",
 			new string[] {
-				"5105b4d93f4e4b489ecc517f1e967bd7",
 				"db2ef0eb1600433a8cdc31c75549c6b1",
 				"fdd35fb5d55b4ccf9ceb27c7a3926b7d",
 				"8f000bd5e00246de9c789eed39ff6096"
@@ -104,8 +103,7 @@ public class MoPubDemoGUI : MonoBehaviour
 		// Remove any existing available rewards associated with this AdUnit from previous ad requests
 		_adUnitToRewardsMapping.Remove (adUnitId);
 
-		// If only one reward is available, no need to update mapping to show reward on demo GUI
-		if (availableRewards != null && availableRewards.Count > 1) {
+		if (availableRewards != null) {
 			_adUnitToRewardsMapping [adUnitId] = availableRewards;
 		}
 	}
@@ -287,8 +285,11 @@ public class MoPubDemoGUI : MonoBehaviour
 
 				GUILayout.EndHorizontal ();
 
-				// Display multiple rewards if available
-				if (_adUnitToRewardsMapping.ContainsKey(rewardedVideoAdUnit)) {
+				// Display rewards if there's a rewarded video loaded and there are multiple rewards available
+				if (MoPub.hasRewardedVideo(rewardedVideoAdUnit) &&
+					_adUnitToRewardsMapping.ContainsKey(rewardedVideoAdUnit) &&
+					_adUnitToRewardsMapping[rewardedVideoAdUnit].Count > 1) {
+
 					GUILayout.BeginVertical();
 					GUILayout.Space (sectionMargin);
 					GUILayout.Label ("Select a reward:");

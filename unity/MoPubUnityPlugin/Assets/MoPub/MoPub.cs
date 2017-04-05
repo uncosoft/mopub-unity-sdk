@@ -281,6 +281,22 @@ public static class MoPub
 	}
 
 
+	// Whether a rewarded video is ready to play for this AdUnit
+	public static bool hasRewardedVideo(string adUnitId)
+	{
+		#if UNITY_IPHONE
+		#elif UNITY_ANDROID
+		MPRewardedVideo plugin;
+		if (_rewardedVideoPluginsDict.TryGetValue (adUnitId, out plugin)) {
+			return plugin.hasRewardedVideo();
+		} else {
+			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
+			return false;
+		}
+		#endif
+	}
+
+
 	// Retrieves a list of available rewards for this AdUnit
 	public static List<MoPubReward> getAVailableRewards(string adUnitId)
 	{

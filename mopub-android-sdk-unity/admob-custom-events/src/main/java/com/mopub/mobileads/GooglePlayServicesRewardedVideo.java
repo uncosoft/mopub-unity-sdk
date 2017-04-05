@@ -163,7 +163,7 @@ public class GooglePlayServicesRewardedVideo extends CustomEventRewardedVideo im
                     .onRewardedVideoLoadSuccess(GooglePlayServicesRewardedVideo.class, mAdUnitId);
         } else {
             mRewardedVideoAd
-                    .loadAd(mAdUnitId, new AdRequest.Builder().addTestDevice("41EF12D6AD3E9C50AD2A9C58E7C9CF6C").setRequestAgent("MoPub").build());
+                    .loadAd(mAdUnitId, new AdRequest.Builder().setRequestAgent("MoPub").build());
         }
     }
 
