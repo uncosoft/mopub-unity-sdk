@@ -17,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -69,15 +68,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                         } catch (ClassNotFoundException e) {
                             Log.i(TAG, "could not find ChartboostMediationSettings class. " +
                                     "Did you add Chartboost Network SDK to your Android folder?");
-                        } catch (InstantiationException e) {
-                            printExceptionStackTrace(e);
-                        } catch (NoSuchMethodException e) {
-                            printExceptionStackTrace(e);
-                        } catch (IllegalAccessException e) {
-                            printExceptionStackTrace(e);
-                        } catch (IllegalArgumentException e) {
-                            printExceptionStackTrace(e);
-                        } catch (InvocationTargetException e) {
+                        } catch (Exception e) {
                             printExceptionStackTrace(e);
                         }
                     } else {
@@ -134,15 +125,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                     } catch (ClassNotFoundException e) {
                         Log.i(TAG, "could not find VungleMediationSettings class. " +
                                 "Did you add Vungle Network SDK to your Android folder?");
-                    } catch (InstantiationException e) {
-                        printExceptionStackTrace(e);
-                    } catch (NoSuchMethodException e) {
-                        printExceptionStackTrace(e);
-                    } catch (IllegalAccessException e) {
-                        printExceptionStackTrace(e);
-                    } catch (IllegalArgumentException e) {
-                        printExceptionStackTrace(e);
-                    } catch (InvocationTargetException e) {
+                    } catch (Exception e) {
                         printExceptionStackTrace(e);
                     }
                 } else if (adVendor.equalsIgnoreCase("adcolony")) {
@@ -165,15 +148,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                         } catch (ClassNotFoundException e) {
                             Log.i(TAG, "could not find AdColonyInstanceMediationSettings class. " +
                                     "Did you add AdColony Network SDK to your Android folder?");
-                        } catch (InstantiationException e) {
-                            printExceptionStackTrace(e);
-                        } catch (NoSuchMethodException e) {
-                            printExceptionStackTrace(e);
-                        } catch (IllegalAccessException e) {
-                            printExceptionStackTrace(e);
-                        } catch (IllegalArgumentException e) {
-                            printExceptionStackTrace(e);
-                        } catch (InvocationTargetException e) {
+                        } catch (Exception e) {
                             printExceptionStackTrace(e);
                         }
                     }
@@ -245,7 +220,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     public MoPubReward[] getAvailableRewards() {
         Set<MoPubReward> rewardsSet = MoPubRewardedVideos.getAvailableRewards(mAdUnitId);
 
-        Log.i(TAG, String.format(Locale.US, "%d rewards available", rewardsSet.size()));
+        Log.i(TAG, String.format(Locale.US, "%d MoPub rewards available", rewardsSet.size()));
 
         return rewardsSet.toArray(new MoPubReward[rewardsSet.size()]);
     }

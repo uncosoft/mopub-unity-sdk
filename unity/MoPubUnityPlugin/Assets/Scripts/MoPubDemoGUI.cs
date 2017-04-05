@@ -34,18 +34,18 @@ public class MoPubDemoGUI : MonoBehaviour
 	};
 
 	private Dictionary<string, string[]> _interstitialDict = new Dictionary<string, string[]> () {
-		{ "AdColony", new string[] { "3aa79f11389540db8e250a80e4d16a46" } },
+		{ "AdColony", new string[] { "953d93d50ae343168ad44c3c536cdb1a" } },
 		{ "AdMob", new string[] { "554e8baff8d84137941b5a55354105fc" } },
 		{ "Chartboost", new string[] { "376366b49d324dedae3d5edb360c27b4" } },
 		{ "Facebook", new string[] { "9792d876011f4359887d2d26380e8a84" } },
 		{ "Millennial", new string[] { "c6566f7bd85c40afb7afc4232a1cd463" } },
 		{ "MoPub", new string[] { "3aba0056add211e281c11231392559e4", "b0482b17a8e64a2c842624d23539ced4" } },
-		{ "Unity Ads", new string[] { "079f9caa99eb429588c2c3633e1ce3e3" } },
+		{ "Unity Ads", new string[] { "6e442143d674437e9a417ae36aa93241" } },
 		{ "Vungle", new string[] { "4f5e1e97f87c406cb7878b9eff1d2a77" } }
 	};
 
 	private Dictionary<string, string[]> _rewardedVideoDict = new Dictionary<string, string[]> () {
-		{ "AdColony", new string[] { "e258c916e659447d9d98256a3ab2979e" } },
+		{ "AdColony", new string[] { "339929134a55413d9c0a85496b250057" } },
 		{ "AdMob", new string[] { "49a4a502ed2945fd92bc5798c9421a57" } },
 		{ "Chartboost", new string[] { "df605ab15b56400285c99e521ecc2cb1" } }, {
 			"MoPub",
@@ -55,7 +55,7 @@ public class MoPubDemoGUI : MonoBehaviour
 				"8f000bd5e00246de9c789eed39ff6096"
 			}
 		},
-		{ "Unity Ads", new string[] { "4302e96be4584fa6b653a0668a845407" } },
+		{ "Unity Ads", new string[] { "facae35b91a1451c87b2d6dcb9776873" } },
 		{ "Vungle", new string[] { "2d38f4e6881341369e9fc2c2d01ddc9d" } }
 	};
 
