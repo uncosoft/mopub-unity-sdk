@@ -92,7 +92,6 @@
 			AddBuildProperty (project, target, "OTHER_LDFLAGS", "-ObjC");
 			AddBuildProperty (project, target, "CLANG_ENABLE_MODULES", "YES");
 			AddBuildProperty (project, target, "ENABLE_BITCODE", "NO");
-			AddBuildProperty (project, target, "IPHONEOS_DEPLOYMENT_TARGET", "7.0");
 
 			File.WriteAllText (projPath, project.WriteToString());
 		}
