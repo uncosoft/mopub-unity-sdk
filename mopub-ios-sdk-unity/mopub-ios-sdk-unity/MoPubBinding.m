@@ -146,8 +146,39 @@ void _moPubRequestRewardedVideo( const char * adUnitId, const char * json, const
                                    mediationSettings:mediationSettings];
 }
 
+bool _mopubHasRewardedVideo( const char * adUnitId )
+{
+    NSString *adUnitString = GetStringParam( adUnitId );
+    return [MPRewardedVideo hasAdAvailableForAdUnitID:adUnitString];
+}
 
-void _moPubShowRewardedVideo( const char * adUnitId )
+const char * _mopubGetAvailableRewards( const char * adUnitId )
+{
+    NSString *adUnitString = GetStringParam( adUnitId );
+    NSArray * rewards = [MPRewardedVideo availableRewardsForAdUnitID:adUnitString];
+    if (rewards == nil || rewards.count == 0) {
+        return NULL;
+    }
+    
+    // Serialize the rewards array into an array of JSON which will be unpackaged
+    // in C#.
+    NSMutableArray * jsonRewards = [[NSMutableArray alloc] initWithCapacity:rewards.count];
+    [rewards enumerateObjectsUsingBlock:^(MPRewardedVideoReward * reward, NSUInteger idx, BOOL * _Nonnull stop) {
+        [jsonRewards addObject:@{ @"currencyType": reward.currencyType, @"amount": reward.amount }];
+    }];
+    
+    NSError * error = nil;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:jsonRewards options:0 error:&error];
+    if (!jsonData) {
+        NSLog( @"Failed to serialize available rewards into JSON: %@", error.localizedDescription );
+        return NULL;
+    }
+    
+    NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return [jsonString UTF8String];
+}
+
+void _moPubShowRewardedVideo( const char * adUnitId, const char * currencyName, int currencyAmount )
 {
     NSString *adUnitString = GetStringParam( adUnitId );
     if( ![MPRewardedVideo hasAdAvailableForAdUnitID:adUnitString] )
@@ -155,6 +186,18 @@ void _moPubShowRewardedVideo( const char * adUnitId )
         NSLog( @"bailing out on showing rewarded video since it has not been loaded yet." );
         //return; // removed return here
     }
+    
+    // Find the matching reward
+    NSString *currency = GetStringParam( currencyName );
+    __block MPRewardedVideoReward *selectedReward = nil;
+    
+    NSArray *rewards = [MPRewardedVideo availableRewardsForAdUnitID:adUnitString];
+    [rewards enumerateObjectsUsingBlock:^(MPRewardedVideoReward * reward, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([currency isEqualToString:reward.currencyType] && currencyAmount == [reward.amount intValue]) {
+            selectedReward = reward;
+            *stop = YES;
+        }
+    }];
 
-    [MPRewardedVideo presentRewardedVideoAdForAdUnitID:adUnitString fromViewController:[MoPubManager unityViewController]];
+    [MPRewardedVideo presentRewardedVideoAdForAdUnitID:adUnitString fromViewController:[MoPubManager unityViewController] withReward:selectedReward];
 }

@@ -32,10 +32,12 @@ public enum MoPubAdPosition
 public class MoPubBinding
 {
 	private string adUnitId;
+	public MoPubManager.MoPubReward selectedReward;
 
 	public MoPubBinding (string adUnitId)
 	{
 		this.adUnitId = adUnitId;
+		this.selectedReward = null;
 	}
 
 	[DllImport ("__Internal")]
@@ -149,15 +151,59 @@ public class MoPubBinding
 			_moPubRequestRewardedVideo (adUnitId, json, keywords, latitude, longitude, customerId);
 	}
 
+	[DllImport ("__Internal")]
+	private static extern bool _mopubHasRewardedVideo (string adUnitId);
+
+	// Queries if there is a rewarded video ad loaded for the given ad unit id.
+	public bool hasRewardedVideo ()
+	{
+		if (Application.platform == RuntimePlatform.IPhonePlayer)
+			return _mopubHasRewardedVideo (adUnitId);
+		else
+			return false;
+	}
 
 	[DllImport ("__Internal")]
-	private static extern void _moPubShowRewardedVideo (string adUnitId);
+	private static extern string _mopubGetAvailableRewards (string adUnitId);
+
+	// Queries all of the available rewards for the ad unit. This is only valid after
+	// a successful requestRewardedVideo() call.
+	public List<MoPubManager.MoPubReward> getAvailableRewards ()
+	{
+		List<MoPubManager.MoPubReward> rewards = new List<MoPubManager.MoPubReward> ();
+
+		if (Application.platform != RuntimePlatform.IPhonePlayer)
+			return rewards;
+
+		string json = _mopubGetAvailableRewards (adUnitId);
+		if (json == null)
+			return rewards;
+
+		var obj = MoPubInternal.ThirdParty.MiniJSON.Json.Deserialize (json) as List<Dictionary<string,object>>;
+		if (obj == null)
+			return rewards;
+
+		foreach (var rewardJson in obj) {
+			if (rewardJson.ContainsKey ("currencyType") && rewardJson.ContainsKey ("amount")) {
+				var reward = new MoPubManager.MoPubReward (rewardJson ["currencyType"].ToString (), int.Parse (rewardJson ["amount"].ToString ()));
+				rewards.Add (reward);
+			}
+		}
+
+		return rewards;
+	}
+
+	[DllImport ("__Internal")]
+	private static extern void _moPubShowRewardedVideo (string adUnitId, string currencyName, int currencyAmount);
 
 	// If a rewarded video ad is loaded this will take over the screen and show the ad
 	public void showRewardedVideo ()
 	{
-		if (Application.platform == RuntimePlatform.IPhonePlayer)
-			_moPubShowRewardedVideo (adUnitId);
+		if (Application.platform == RuntimePlatform.IPhonePlayer) {
+			string name = (this.selectedReward != null ? this.selectedReward.Label : null);
+			int amount = (this.selectedReward != null ? this.selectedReward.Amount : 0);
+			_moPubShowRewardedVideo (adUnitId, name, amount);
+		}
 	}
 }
 #endif

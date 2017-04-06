@@ -285,6 +285,13 @@ public static class MoPub
 	public static bool hasRewardedVideo(string adUnitId)
 	{
 		#if UNITY_IPHONE
+		MP plugin;
+		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
+			return plugin.hasRewardedVideo ();
+		} else {
+			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
+			return false;
+		}
 		#elif UNITY_ANDROID
 		MPRewardedVideo plugin;
 		if (_rewardedVideoPluginsDict.TryGetValue (adUnitId, out plugin)) {
@@ -301,6 +308,13 @@ public static class MoPub
 	public static List<MoPubReward> getAVailableRewards(string adUnitId)
 	{
 		#if UNITY_IPHONE
+		MP plugin;
+		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
+			return plugin.getAvailableRewards ();
+		} else {
+			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
+			return null;
+		}
 		#elif UNITY_ANDROID
 		MPRewardedVideo plugin;
 		if (_rewardedVideoPluginsDict.TryGetValue (adUnitId, out plugin)) {
@@ -317,6 +331,12 @@ public static class MoPub
 	public static void selectReward(string adUnitId, MoPubReward selectedReward)
 	{
 		#if UNITY_IPHONE
+		MP plugin;
+		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
+			plugin.selectedReward = selectedReward;
+		} else {
+			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
+		}
 		#elif UNITY_ANDROID
 		MPRewardedVideo plugin;
 		if (_rewardedVideoPluginsDict.TryGetValue (adUnitId, out plugin)) {
