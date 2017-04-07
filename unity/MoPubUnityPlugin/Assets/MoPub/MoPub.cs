@@ -310,7 +310,12 @@ public static class MoPub
 		#if UNITY_IPHONE
 		MP plugin;
 		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
-			return plugin.getAvailableRewards ();
+			List<MoPubReward> rewards = plugin.getAvailableRewards ();
+
+			// Logging
+			Debug.Log (String.Format ("getAVailableRewards found {0} rewards for ad unit {1}", rewards.Count, adUnitId));
+
+			return rewards;
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 			return null;

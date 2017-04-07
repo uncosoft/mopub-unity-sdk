@@ -172,22 +172,15 @@ const char * _mopubGetAvailableRewards( const char * adUnitId )
         return NULL;
     }
     
-    // Serialize the rewards array into an array of JSON which will be unpackaged
-    // in C#.
-    NSMutableArray * jsonRewards = [[NSMutableArray alloc] initWithCapacity:rewards.count];
+    // Serialize the rewards array into a comma-delimited string in the format:
+    // "currency_name:currency_amount,currency_name:currency_amount,..."
+    NSMutableArray * rewardStrings = [[NSMutableArray alloc] initWithCapacity:rewards.count];
     [rewards enumerateObjectsUsingBlock:^(MPRewardedVideoReward * reward, NSUInteger idx, BOOL * _Nonnull stop) {
-        [jsonRewards addObject:@{ @"currencyType": reward.currencyType, @"amount": reward.amount }];
+        [rewardStrings addObject:[NSString stringWithFormat:@"%@:%d", reward.currencyType, [reward.amount intValue]]];
     }];
     
-    NSError * error = nil;
-    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:jsonRewards options:0 error:&error];
-    if (!jsonData) {
-        NSLog( @"Failed to serialize available rewards into JSON: %@", error.localizedDescription );
-        return NULL;
-    }
-    
-    NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    return cStringCopy(jsonString);
+    NSString * rewardsString = [rewardStrings componentsJoinedByString:@","];
+    return cStringCopy(rewardsString);
 }
 
 void _moPubShowRewardedVideo( const char * adUnitId, const char * currencyName, int currencyAmount )

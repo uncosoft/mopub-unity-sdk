@@ -175,17 +175,15 @@ public class MoPubBinding
 		if (Application.platform != RuntimePlatform.IPhonePlayer)
 			return rewards;
 
-		string json = _mopubGetAvailableRewards (adUnitId);
-		if (json == null)
+		string rewardsString = _mopubGetAvailableRewards (adUnitId);
+		if (rewardsString == null)
 			return rewards;
 
-		var obj = MoPubInternal.ThirdParty.MiniJSON.Json.Deserialize (json) as List<Dictionary<string,object>>;
-		if (obj == null)
-			return rewards;
-
-		foreach (var rewardJson in obj) {
-			if (rewardJson.ContainsKey ("currencyType") && rewardJson.ContainsKey ("amount")) {
-				var reward = new MoPubManager.MoPubReward (rewardJson ["currencyType"].ToString (), int.Parse (rewardJson ["amount"].ToString ()));
+		string[] rewardsList = rewardsString.Split (',');
+		foreach (var rewardString in rewardsList) {
+			string[] rewardComponents = rewardString.Split (':');
+			if (rewardComponents.Length == 2) {
+				var reward = new MoPubManager.MoPubReward (rewardComponents[0], int.Parse (rewardComponents[1]));
 				rewards.Add (reward);
 			}
 		}
