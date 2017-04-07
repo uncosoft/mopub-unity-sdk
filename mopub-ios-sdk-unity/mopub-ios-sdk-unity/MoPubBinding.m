@@ -18,6 +18,18 @@
 
 static double LAT_LONG_SENTINEL = 99999.0;
 
+// Converts an NSString into a const char * ready to be sent to Unity
+char* cStringCopy(NSString* input)
+{
+    const char* string = [input UTF8String];
+    if (string == NULL)
+        return NULL;
+    
+    char* res = (char*)malloc(strlen(string) + 1);
+    strcpy(res, string);
+    
+    return res;
+}
 
 void _moPubEnableLocationSupport(bool shouldUseLocation )
 {
@@ -175,7 +187,7 @@ const char * _mopubGetAvailableRewards( const char * adUnitId )
     }
     
     NSString * jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    return [jsonString UTF8String];
+    return cStringCopy(jsonString);
 }
 
 void _moPubShowRewardedVideo( const char * adUnitId, const char * currencyName, int currencyAmount )
