@@ -41,6 +41,7 @@ public class MoPubEventListener : MonoBehaviour
 		MoPubManager.onRewardedVideoFailedEvent += onRewardedVideoFailedEvent;
 		MoPubManager.onRewardedVideoExpiredEvent += onRewardedVideoExpiredEvent;
 		MoPubManager.onRewardedVideoShownEvent += onRewardedVideoShownEvent;
+		MoPubManager.onRewardedVideoClickedEvent += onRewardedVideoClickedEvent;
 		MoPubManager.onRewardedVideoFailedToPlayEvent += onRewardedVideoFailedToPlayEvent;
 		MoPubManager.onRewardedVideoReceivedRewardEvent += onRewardedVideoReceivedRewardEvent;
 		MoPubManager.onRewardedVideoClosedEvent += onRewardedVideoClosedEvent;
@@ -159,6 +160,11 @@ public class MoPubEventListener : MonoBehaviour
 	void onRewardedVideoShownEvent (string adUnitId)
 	{
 		Debug.Log ("onRewardedVideoShownEvent: " + adUnitId);
+	}
+
+	void onRewardedVideoClickedEvent (string adUnitId)
+	{
+		Debug.Log ("onRewardedVideoClickedEvent: " + adUnitId);
 	}
 
 	void onRewardedVideoFailedToPlayEvent (string errorMsg)

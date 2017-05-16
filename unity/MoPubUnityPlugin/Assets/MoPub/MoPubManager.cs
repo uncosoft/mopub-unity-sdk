@@ -52,6 +52,9 @@ public class MoPubManager : MonoBehaviour
 	// Fired when an rewarded video is displayed
 	public static event Action<string> onRewardedVideoShownEvent;
 
+	// Fired when an rewarded video is clicked
+	public static event Action<string> onRewardedVideoClickedEvent;
+
 	// Fired when a rewarded video fails to play. Includes the error message.
 	public static event Action<string> onRewardedVideoFailedToPlayEvent;
 
@@ -255,6 +258,13 @@ public class MoPubManager : MonoBehaviour
 	{
 		if (onRewardedVideoShownEvent != null)
 			onRewardedVideoShownEvent (adUnitId);
+	}
+
+
+	void onRewardedVideoClicked (string adUnitId)
+	{
+		if (onRewardedVideoClickedEvent != null)
+			onRewardedVideoClickedEvent (adUnitId);
 	}
 
 

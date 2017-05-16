@@ -1,6 +1,7 @@
 package com.mopub.unity;
 
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mopub.common.MediationSettings;
@@ -265,6 +266,14 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
         if (mAdUnitId.equals(adUnitId)) {
             Log.i(TAG, "Rewarded video started.");
             UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoShown", adUnitId);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoClicked(@NonNull String adUnitId) {
+        if (mAdUnitId.equals(adUnitId)) {
+            Log.i(TAG, "Rewarded video clicked.");
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoClicked", adUnitId);
         }
     }
 

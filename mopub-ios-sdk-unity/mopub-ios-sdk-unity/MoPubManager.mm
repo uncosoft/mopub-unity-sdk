@@ -497,7 +497,11 @@ extern "C" {
 
 //- (void)rewardedVideoAdDidDisappearForAdUnitID:(NSString *)adUnitID;
 
-//- (void)rewardedVideoAdDidReceiveTapEventForAdUnitID:(NSString *)adUnitID;
+- (void)rewardedVideoAdDidReceiveTapEventForAdUnitID:(NSString *)adUnitID
+{
+    NSLog( @"rewardedVideoAdDidReceiveTapEventForAdUnitID" );
+    UnitySendMessage( "MoPubManager", "onRewardedVideoClickedEvent", adUnitID.UTF8String );
+}
 
 - (void)rewardedVideoAdWillLeaveApplicationForAdUnitID:(NSString *)adUnitID
 {
