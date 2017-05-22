@@ -29,9 +29,13 @@ config.status
 # emacs
 *~
 
+*.apk
 *.unitypackage
 Editor Default Resources/
 Editor Default Resources.meta
 *Package/Temp
 *Package/Library/
 *.csproj
+out/
+unity/MoPubUnityPlugin/ProjectSettings/
+*.zip
