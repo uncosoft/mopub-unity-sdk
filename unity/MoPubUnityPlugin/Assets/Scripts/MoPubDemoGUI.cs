@@ -13,6 +13,13 @@ public class MoPubDemoGUI : MonoBehaviour
 	private string[] _rewardedVideoAdUnits;
 	private Dictionary<string, List<MoPubReward>> _adUnitToRewardsMapping =
 		new Dictionary<string, List<MoPubReward>>();
+	private Dictionary<string, bool> _adUnitToLoadedMapping =
+		new Dictionary<string, bool>();
+	private Dictionary<string, bool> _bannerAdUnitToShownMapping =
+		new Dictionary<string, bool>();
+
+	// Workaround for lacking adUnit from onAdLoadedEvent for Banners
+	private Queue<string> _requestedBannerAdUnits = new Queue<string>();
 
 	private string[] _networkList = new string[] {
 		"MoPub",
@@ -99,6 +106,15 @@ public class MoPubDemoGUI : MonoBehaviour
 	}
 
 
+	private void addAdUnitsToStateMaps (string[] adUnits) {
+		foreach (string adUnit in adUnits) {
+			_adUnitToLoadedMapping.Add(adUnit, false);
+			// Only banners need this map, but init for all to keep it simple
+			_bannerAdUnitToShownMapping.Add(adUnit, false);
+		}
+	}
+
+
 	public void loadAvailableRewards(string adUnitId, List<MoPubReward> availableRewards) {
 		// Remove any existing available rewards associated with this AdUnit from previous ad requests
 		_adUnitToRewardsMapping.Remove (adUnitId);
@@ -106,6 +122,23 @@ public class MoPubDemoGUI : MonoBehaviour
 		if (availableRewards != null) {
 			_adUnitToRewardsMapping [adUnitId] = availableRewards;
 		}
+	}
+
+
+	public void bannerLoaded () {
+		string firstRequestedBannerAdUnit = _requestedBannerAdUnits.Dequeue();
+		_adUnitToLoadedMapping[firstRequestedBannerAdUnit] = true;
+		_bannerAdUnitToShownMapping[firstRequestedBannerAdUnit] = true;
+	}
+
+
+	public void adLoaded (string adUnit) {
+		_adUnitToLoadedMapping[adUnit] = true;
+	}
+
+
+	public void adDismissed (string adUnit) {
+		_adUnitToLoadedMapping[adUnit] = false;
 	}
 
 
@@ -126,6 +159,10 @@ public class MoPubDemoGUI : MonoBehaviour
 		foreach (var rewardedVideoAdUnits in _rewardedVideoDict.Values) {
 			allRewardedVideoAdUnits = allRewardedVideoAdUnits.Union(rewardedVideoAdUnits).ToArray();
 		}
+
+		addAdUnitsToStateMaps(allBannerAdUnits);
+		addAdUnitsToStateMaps(allInterstitialAdUnits);
+		addAdUnitsToStateMaps(allRewardedVideoAdUnits);
 
 		#if UNITY_ANDROID
 		MoPub.loadBannerPluginsForAdUnits(allBannerAdUnits);
@@ -179,22 +216,32 @@ public class MoPubDemoGUI : MonoBehaviour
 			foreach (string bannerAdUnit in _bannerAdUnits) {
 				GUILayout.BeginHorizontal ();
 
-				if (GUILayout.Button ("Create: " + bannerAdUnit.Substring (0, 6) + "...")) {
+				GUI.enabled = !_adUnitToLoadedMapping[bannerAdUnit];
+				if (GUILayout.Button ("Request: " + bannerAdUnit.Substring (0, 6) + "...")) {
 					Debug.Log ("requesting banner with AdUnit: " + bannerAdUnit);
 					MoPub.createBanner (bannerAdUnit, MoPubAdPosition.BottomRight);
+					_requestedBannerAdUnits.Enqueue(bannerAdUnit);
 				}
 
+				GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit];
 				if (GUILayout.Button ("Destroy")) {
 					MoPub.destroyBanner (bannerAdUnit);
+					_adUnitToLoadedMapping[bannerAdUnit] = false;
+					_bannerAdUnitToShownMapping[bannerAdUnit] = false;
 				}
 
+				GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit] && !_bannerAdUnitToShownMapping[bannerAdUnit];
 				if (GUILayout.Button ("Show")) {
 					MoPub.showBanner (bannerAdUnit, true);
+					_bannerAdUnitToShownMapping[bannerAdUnit] = true;
 				}
 
+				GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit] && _bannerAdUnitToShownMapping[bannerAdUnit];
 				if (GUILayout.Button ("Hide")) {
 					MoPub.showBanner (bannerAdUnit, false);
+					_bannerAdUnitToShownMapping[bannerAdUnit] = false;
 				}
+				GUI.enabled = true;
 
 				GUILayout.EndHorizontal ();
 			}
@@ -210,14 +257,17 @@ public class MoPubDemoGUI : MonoBehaviour
 			foreach (string interstitialAdUnit in _interstitialAdUnits) {
 				GUILayout.BeginHorizontal ();
 
+				GUI.enabled = !_adUnitToLoadedMapping[interstitialAdUnit];
 				if (GUILayout.Button ("Request: " + interstitialAdUnit.Substring (0, 6) + "...")) {
 					Debug.Log ("requesting interstitial with AdUnit: " + interstitialAdUnit);
 					MoPub.requestInterstitialAd (interstitialAdUnit);
 				}
 
+				GUI.enabled = _adUnitToLoadedMapping[interstitialAdUnit];
 				if (GUILayout.Button ("Show")) {
 					MoPub.showInterstitialAd (interstitialAdUnit);
 				}
+				GUI.enabled = true;
 
 				GUILayout.EndHorizontal ();
 			}
@@ -266,6 +316,7 @@ public class MoPubDemoGUI : MonoBehaviour
 			foreach (string rewardedVideoAdUnit in _rewardedVideoAdUnits) {
 				GUILayout.BeginHorizontal ();
 
+				GUI.enabled = !_adUnitToLoadedMapping[rewardedVideoAdUnit];
 				if (GUILayout.Button ("Request: " + rewardedVideoAdUnit.Substring (0, 6) + "...")) {
 					Debug.Log ("requesting rewarded video with AdUnit: " +
 						rewardedVideoAdUnit +
@@ -279,9 +330,11 @@ public class MoPubDemoGUI : MonoBehaviour
 						"customer101");
 				}
 
+				GUI.enabled = _adUnitToLoadedMapping[rewardedVideoAdUnit];
 				if (GUILayout.Button ("Show")) {
 					MoPub.showRewardedVideo (rewardedVideoAdUnit);
 				}
+				GUI.enabled = true;
 
 				GUILayout.EndHorizontal ();
 

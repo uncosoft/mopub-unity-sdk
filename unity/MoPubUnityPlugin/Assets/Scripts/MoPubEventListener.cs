@@ -81,6 +81,7 @@ public class MoPubEventListener : MonoBehaviour
 	void onAdLoadedEvent (float height)
 	{
 		Debug.Log ("onAdLoadedEvent. height: " + height);
+		_demoGUI.bannerLoaded ();
 	}
 
 	void onAdFailedEvent (string errorMsg)
@@ -109,6 +110,7 @@ public class MoPubEventListener : MonoBehaviour
 	void onInterstitialLoadedEvent (string adUnitId)
 	{
 		Debug.Log ("onInterstitialLoadedEvent: " + adUnitId);
+		_demoGUI.adLoaded (adUnitId);
 	}
 
 	void onInterstitialFailedEvent (string errorMsg)
@@ -129,6 +131,7 @@ public class MoPubEventListener : MonoBehaviour
 	void onInterstitialDismissedEvent (string adUnitId)
 	{
 		Debug.Log ("onInterstitialDismissedEvent: " + adUnitId);
+		_demoGUI.adDismissed (adUnitId);
 	}
 
 	void onInterstitialExpiredEvent (string adUnitId)
@@ -144,6 +147,7 @@ public class MoPubEventListener : MonoBehaviour
 		Debug.Log ("onRewardedVideoLoadedEvent: " + adUnitId);
 
 		List<MoPubManager.MoPubReward> availableRewards = MoPub.getAVailableRewards (adUnitId);
+		_demoGUI.adLoaded (adUnitId);
 		_demoGUI.loadAvailableRewards (adUnitId, availableRewards);
 	}
 
@@ -180,6 +184,7 @@ public class MoPubEventListener : MonoBehaviour
 	void onRewardedVideoClosedEvent (string adUnitId)
 	{
 		Debug.Log ("onRewardedVideoClosedEvent: " + adUnitId);
+		_demoGUI.adDismissed (adUnitId);
 	}
 
 	void onRewardedVideoLeavingApplicationEvent (string adUnitId)
