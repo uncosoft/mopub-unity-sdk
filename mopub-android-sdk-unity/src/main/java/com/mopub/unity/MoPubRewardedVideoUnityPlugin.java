@@ -205,13 +205,13 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     }
 
     public void showRewardedVideo() {
-        if (!MoPubRewardedVideos.hasRewardedVideo(mAdUnitId)) {
-            Log.i(TAG, String.format(Locale.US, "No rewarded video is available at this time."));
-            return;
-        }
-
         runSafelyOnUiThread(new Runnable() {
             public void run() {
+                if (!MoPubRewardedVideos.hasRewardedVideo(mAdUnitId)) {
+                    Log.i(TAG, String.format(Locale.US, "No rewarded video is available at this time."));
+                    return;
+                }
+
                 MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPlugin.this);
                 MoPubRewardedVideos.showRewardedVideo(mAdUnitId);
             }

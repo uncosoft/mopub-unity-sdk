@@ -49,7 +49,7 @@ find . -name pathname -print0 | xargs -0 awk '{print $1, FILENAME}' | while read
 
     # Remove third-party network adapters and dependencies for Android.
 
-    if [[ $pathname == *"google-play-services"* ]] || [[ $pathname == *"mopub-support/libs"* ]] || [[ $pathname == *"mm-ad-sdk"* ]] || [[ $pathname == *".aar"* ]]; then
+    if [[ $pathname == *"mopub-support/libs"* ]] || [[ $pathname == *"mm-ad-sdk"* ]] || [[ $pathname == *".aar"* ]]; then
 	echo "Removing $filename ($pathname), and parent dir $parent from main package"
 	rm -rf $filename
 	rm -rf $parent

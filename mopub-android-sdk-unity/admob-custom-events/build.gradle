@@ -16,6 +16,6 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services-ads:9.4.0'
+    compile 'com.google.android.gms:play-services-ads:10.2.0'
     compile project(':mopub-sdk')
 }
