@@ -61,9 +61,7 @@ public class MoPubUnityPlugin {
         } catch (ClassNotFoundException e) {
             Log.i(TAG, "could not find Facebook AdSettings class. " +
                     "Did you add the Audience Network SDK to your Android folder?");
-        }
-        //AdSettings.addtestdevice
-        catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             Log.i(TAG, "could not find Facebook AdSettings.addTestDevice method. " +
                     "Did you add the Audience Network SDK to your Android folder?");
         } catch (IllegalAccessException e) {
