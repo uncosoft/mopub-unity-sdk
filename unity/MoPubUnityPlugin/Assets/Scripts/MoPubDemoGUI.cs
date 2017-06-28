@@ -62,6 +62,7 @@ public class MoPubDemoGUI : MonoBehaviour
 				"8f000bd5e00246de9c789eed39ff6096"
 			}
 		},
+		{ "Facebook", new string[] { "a8d5f5fff87c49b2a60c5df86ab4f447" } },
 		{ "Unity Ads", new string[] { "facae35b91a1451c87b2d6dcb9776873" } },
 		{ "Vungle", new string[] { "2d38f4e6881341369e9fc2c2d01ddc9d" } }
 	};
