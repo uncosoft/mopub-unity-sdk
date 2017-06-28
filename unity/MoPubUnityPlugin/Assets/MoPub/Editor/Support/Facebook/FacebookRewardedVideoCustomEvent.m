@@ -2,7 +2,6 @@
 //  FacebookRewardedVideoCustomEvent.m
 //
 //  Created by Mopub on 4/12/17.
-//  Copyright © 2017 Pooja Shashidhar. All rights reserved.
 //
 
 

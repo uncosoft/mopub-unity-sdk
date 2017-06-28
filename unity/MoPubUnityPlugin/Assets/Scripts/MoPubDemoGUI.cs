@@ -93,6 +93,7 @@ public class MoPubDemoGUI : MonoBehaviour
 	private Dictionary<string, string[]> _rewardedVideoDict = new Dictionary<string, string[]> () {
 		{ "AdColony", new string[] { "52aa460767374250a5aa5174c2345be3" } },
 		{ "Chartboost", new string[] { "2942576082c24e0f80c6172703572870" } },
+		{ "Facebook", new string[] { "9204bbf695b24f26a9a8b7066e712c10" } },
 		{ "MoPub", new string[] { "fdd35fb5d55b4ccf9ceb27c7a3926b7d",
 				"8f000bd5e00246de9c789eed39ff6096" } },
 		{ "Unity Ads", new string[] { "676a0fa97aca48cbbe489de5b2fa4cd1" } },

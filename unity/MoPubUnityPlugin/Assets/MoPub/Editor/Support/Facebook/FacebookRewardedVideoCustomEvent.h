@@ -1,8 +1,7 @@
 //
 //  FacebookRewardedVideoCustomEvent.h
 //
-//  Created by Pooja Shashidhar on 4/12/17.
-//  Copyright © 2017 Pooja Shashidhar. All rights reserved.
+//  Certified with Facebook Audience Network 4.23
 //
 
 
