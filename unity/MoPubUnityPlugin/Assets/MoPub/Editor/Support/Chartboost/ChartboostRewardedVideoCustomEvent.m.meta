@@ -1,21 +1,27 @@
 fileFormatVersion: 2
-guid: c9c8f3263b9224ce49b13fd1a698ed17
-timeCreated: 1494969632
+guid: c73b2649d626546d191860239a5afd55
+timeCreated: 1498679048
 licenseType: Free
 PluginImporter:
-  serializedVersion: 1
+  serializedVersion: 2
   iconMap: {}
   executionOrder: {}
   isPreloaded: 0
   isOverridable: 0
   platformData:
-    Editor:
-      enabled: 1
-      settings:
-        DefaultValueInitialized: true
     data:
-      enabled: 0
-      settings: {}
+      first:
+        Any: 
+      second:
+        enabled: 0
+        settings: {}
+    data:
+      first:
+        Editor: Editor
+      second:
+        enabled: 1
+        settings:
+          DefaultValueInitialized: true
   userData: 
   assetBundleName: 
   assetBundleVariant: 
