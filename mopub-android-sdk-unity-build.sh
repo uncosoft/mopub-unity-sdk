@@ -33,7 +33,7 @@ cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.mopub/mopub-sdk-rewardedvideo/$SDK_VERSION/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-rewardedvideo.jar
 
 # Copy MoPub SDK dependency jars
-cp ~/Library/Android/sdk/extras/android/support/v4/android-support-v4.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
+cp $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
 cp mopub-android-sdk-unity/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.1.1/jars/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-recyclerview-v7-23.1.1.jar
 
 # Copy Millennial Media SDK
