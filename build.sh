@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+git submodule update
+if [[ $? -ne 0 ]]; then
+    echo "Updating git submodules failed, fix before continuing"
+    exit 1
+fi
+
 ./mopub-android-sdk-unity-build.sh
 if [[ $? -ne 0 ]]; then
     echo "Android build failed, fix before continuing"

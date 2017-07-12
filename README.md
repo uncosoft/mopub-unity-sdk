@@ -5,27 +5,25 @@ git submodule init
 git submodule update
 ```
 
-### The structure of this directory is as follows:
+### Repository structure
 
-```
-mopub-android-sdk/            # Submodule of the MoPub android sdk. This remains unchanged.
-mopub-android-sdk-unity/      # Contains a project that adds Unity specific files to the above sdk. Namely
-			      # MoPubUnityPlugin.java
-mopub-ios-sdk/ 		      # Submodule of the MoPub ios sdk. This remains unchanged.
-mopub-ios-sdk-unity/	      # Contains a project that adds Unity specific files to the above sdk.
-unity/			      # Contains the Unity plugin.
-out/			      # Where the Unity package is exported after running ./unity-export-package.sh
-```
+* `mopub-android-sdk/` - Git submodule of the MoPub Android SDK
+* `mopub-android-sdk-unity/` - Contains a project that adds Unity-specific files to the Android SDK
+* `mopub-ios-sdk/` - Git submodule of the MoPub iOS SDK
+* `mopub-ios-sdk-unity/` - Contains a project that adds Unity-specific files to the iOS SDK
+* `unity/` - Contains the Unity Plugin
+* `out/` - Where the Unity packages are exported after running `./unity-export-package.sh`
+
 ### How do I build?
 
-Easy; `./build.sh`. This invokes the following scripts:
+Simply run `./build.sh` (make sure the Unity IDE is *not* running), which runs `git submodule update` and then invokes the following scripts:
 
-`mopub-android-sdk-unity-build.sh` - builds the mopub-android-sdk-unity project and copies the resulting atrifacts into unity/
-`mopub-ios-sdk-unity-build.sh` - builds the mopub-ios-sdk-unity project and copies the resulting artifacts into unity/
-`unity-export-package.sh`  - exports the unity package
+* `mopub-android-sdk-unity-build.sh` - builds the mopub-android-sdk-unity project and copies the resulting artifacts into `unity/`
+* `mopub-ios-sdk-unity-build.sh` - builds the mopub-ios-sdk-unity project and copies the resulting artifacts into `unity/`
+* `unity-export-package.sh`  - exports the unity package into `out/`
 
-Each script can be invoked separately. Exporting the unity package can also be done manually, by opening the unity/ project in Unity, right-clicking the Assets/ folder and chosing "Export Package...".
+Each script can be invoked separately. Exporting the unity package can also be done manually, by opening the `unity/` project in Unity, right-clicking the `Assets/` folder and chosing `Export Package...`.
 
 ### How do I run the sample unity project and test?
 
-Open unity/ in Unity, click File->Build Settings..., select iOS or Android, click "Build and Run". If changes have been made to mopub-android-sdk-unity or mopub-ios-sdk-unity projects, use the scripts above to build-and-copy-binaries into the unity project prior to running.
+After building per instructions above, open the `unity/` project in Unity, click `File > Build Settings...`, select iOS or Android, click `Build and Run`.
