@@ -1,25 +1,15 @@
 #!/usr/bin/env bash
+my_dir="$(dirname "$0")"
+source "$my_dir/validate.sh"
 
 git submodule update
-if [[ $? -ne 0 ]]; then
-    echo "Updating git submodules failed, fix before continuing"
-    exit 1
-fi
+validate "Updating git submodules failed, fix before continuing."
 
 ./mopub-android-sdk-unity-build.sh
-if [[ $? -ne 0 ]]; then
-    echo "Android build failed, fix before continuing"
-    exit 1
-fi
+validate "Android build failed, fix before continuing."
 
 ./mopub-ios-sdk-unity-build.sh
-if [[ $? -ne 0 ]]; then
-    echo "iOS build failed, fix before continuing"
-    exit 1
-fi
+validate "iOS build failed, fix before continuing."
 
 ./unity-export-package.sh
-if [[ $? -ne 0 ]]; then
-    echo "Exporting the package failed"
-    exit 1
-fi
+validate "Exporting the package failed."
