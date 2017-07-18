@@ -22,6 +22,30 @@ public class MoPubMediationSetting : Dictionary<string,object>
 	}
 }
 
+public class MoPubRewardedNetwork 
+{
+	private readonly string name;
+
+	private MoPubRewardedNetwork(string name) {
+        this.name = name;
+    }
+
+    public override string ToString() {
+        return name;
+    }
+
+#if UNITY_IPHONE
+	public static readonly MoPubRewardedNetwork AdColony = new MoPubRewardedNetwork("AdColonyRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork AdMob = new MoPubRewardedNetwork("MPGoogleAdMobRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Chartboost = new MoPubRewardedNetwork("ChartboostRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Facebook = new MoPubRewardedNetwork("FacebookRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Tapjoy = new MoPubRewardedNetwork("TapjoyRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Unity = new MoPubRewardedNetwork("UnityAdsRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Vungle = new MoPubRewardedNetwork("VungleRewardedVideoCustomEvent");
+#elif UNITY_ANDROID
+
+#endif	
+}
 
 public static class MoPub
 {
@@ -233,6 +257,15 @@ public static class MoPub
 		#endif
 	}
 
+	// Initializes the rewarded video system with the specified networks.
+	public static void initializeRewardedVideo(MoPubRewardedNetwork[] networks)
+	{
+		#if UNITY_IPHONE
+		MP.initializeRewardedVideoWithNetworks (networks);
+		#elif UNITY_ANDROID
+		
+		#endif
+	}
 
 	// Starts loading a rewarded video ad
 	public static void requestRewardedVideo (string adUnitId,

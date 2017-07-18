@@ -97,6 +97,20 @@ void _moPubInitializeRewardedVideo()
     [[MoPub sharedInstance] initializeRewardedVideoWithGlobalMediationSettings:nil delegate:[MoPubManager sharedManager]];
 }
 
+// @param networksToInitialize A comma-delimited string of networks to initialize, or NULL.
+void _moPubInitializeRewardedVideoWithNetworks( const char * networksToInitialize )
+{
+    // Parse the networks, if any.
+    NSArray * networks = nil;
+    if (networksToInitialize != nil) {
+        NSString * networksString = GetStringParam(networksToInitialize);
+        networks = [networksString componentsSeparatedByString:@","];
+    }
+    
+    [[MoPub sharedInstance] initializeRewardedVideoWithGlobalMediationSettings:nil
+                                                                      delegate:[MoPubManager sharedManager]
+                                                    networkInitializationOrder:networks];
+}
 
 
 // adVendor is required key

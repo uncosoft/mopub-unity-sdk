@@ -140,6 +140,23 @@ public class MoPubBinding
 
 
 	[DllImport ("__Internal")]
+	private static extern void _moPubInitializeRewardedVideoWithNetworks (string networksToInitialize);
+
+	public static void initializeRewardedVideoWithNetworks(MoPubRewardedNetwork[] networks)
+	{
+		if (Application.platform == RuntimePlatform.IPhonePlayer) {
+			// Translate the array of networks into a comma-delimited string.
+			string networksString = null;
+			if (networks != null && networks.Length > 0) {
+				networksString = string.Join(",", Array.ConvertAll(networks, x => x.ToString()));
+			}
+
+			_moPubInitializeRewardedVideoWithNetworks (networksString);
+		}
+	}
+
+
+	[DllImport ("__Internal")]
 	private static extern void _moPubRequestRewardedVideo (string adUnitId, string json, string keywords, double latitude, double longitude, string customerId);
 
 	// Starts loading a rewarded video ad
