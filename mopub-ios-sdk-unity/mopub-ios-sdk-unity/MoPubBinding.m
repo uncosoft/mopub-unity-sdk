@@ -1,9 +1,8 @@
 //
 //  MoPubBinding.m
-//  MoPubTest
+//  MoPub
 //
-//  Created by Mike DeSaro on 10/7/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2017 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
