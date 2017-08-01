@@ -24,6 +24,9 @@ import java.util.Locale;
 import java.util.Set;
 
 
+/**
+ * Provides an API that bridges the Unity Plugin with the MoPub Rewarded Ad SDK.
+ */
 public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
         implements MoPubRewardedVideoListener {
 
@@ -36,15 +39,241 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     private static final String ADCOLONY_MEDIATION_SETTINGS =
             "com.mopub.mobileads.AdColonyRewardedVideo$AdColonyInstanceMediationSettings";
 
-
+    /**
+     * Creates a {@link MoPubRewardedVideoUnityPlugin} for the given ad unit ID.
+     *
+     * @param adUnitId String for the ad unit ID to use for this rewarded video.
+     */
     public MoPubRewardedVideoUnityPlugin(final String adUnitId) {
         super(adUnitId);
     }
 
 
-    /* ***** ***** ***** ***** ***** ***** ***** *****
-     * Rewarded Videos API
+    /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
+     * Rewarded Videos API                                                                     *
+     * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
+
+    /**
+     * Initializes rewarded video system, if it hasn't been initialized already.
      */
+    public static void initializeRewardedVideo() {
+        runSafelyOnUiThread(new Runnable() {
+            public void run() {
+                if (!sRewardedVideoInitialized) {
+                    MoPubRewardedVideos.initializeRewardedVideo(getActivity());
+                    sRewardedVideoInitialized = true;
+                }
+            }
+        });
+    }
+
+    /**
+     * Loads a rewarded video ad for the current ad unit ID and the given mediation settings,
+     * keywords, latitude, longitude and customer ID.
+     *
+     * Options for mediation settings for each network are as follows on Android:
+     *  {
+     *      "adVendor": "AdColony",
+     *      "withConfirmationDialog": false,
+     *      "withResultsDialog": true
+     *  }
+     *  {
+     *      "adVendor": "Chartboost",
+     *      "customId": "the-user-id"
+     *  }
+     *  {
+     *      "adVendor": "Vungle",
+     *      "userId": "the-user-id",
+     *      "cancelDialogBody": "Cancel Body",
+     *      "cancelDialogCloseButton": "Shut it Down",
+     *      "cancelDialogKeepWatchingButton": "Watch On",
+     *      "cancelDialogTitle": "Cancel Title"
+     *  }
+     * See https://www.mopub.com/resources/docs/unity-engine-integration/#RewardedVideo for more
+     * details and sample helper methods to generate mediation settings.
+     *
+     * @param json String with JSON containing third-party network specific settings.
+     * @param keywords String with comma-separated key:value pairs of keywords.
+     * @param latitude double with the desired latitude.
+     * @param longitude double with the desired longitude.
+     * @param customerId String with the customer ID.
+     */
+    public void requestRewardedVideo(final String json, final String keywords,
+            final double latitude, final double longitude, final String customerId) {
+        runSafelyOnUiThread(new Runnable() {
+            public void run() {
+                Location location = new Location("");
+                location.setLatitude(latitude);
+                location.setLongitude(longitude);
+
+                MoPubRewardedVideoManager.RequestParameters requestParameters =
+                        new MoPubRewardedVideoManager.RequestParameters(
+                                keywords, location, customerId);
+
+                MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPlugin.this);
+
+                if (json != null) {
+                    MoPubRewardedVideos.loadRewardedVideo(
+                            mAdUnitId, requestParameters, extractMediationSettingsFromJson(json));
+                } else {
+                    MoPubRewardedVideos.loadRewardedVideo(mAdUnitId, requestParameters);
+                }
+            }
+        });
+    }
+
+    /**
+     * Whether there is a rewarded video ready to play or not.
+     *
+     * @return true if there is a rewarded video loaded and ready to play; false otherwise.
+     */
+    public boolean hasRewardedVideo() {
+        return MoPubRewardedVideos.hasRewardedVideo(mAdUnitId);
+    }
+
+    /**
+     * Takes over the screen and shows rewarded video ad, if one is loaded and ready to play.
+     */
+    public void showRewardedVideo() {
+        runSafelyOnUiThread(new Runnable() {
+            public void run() {
+                if (!MoPubRewardedVideos.hasRewardedVideo(mAdUnitId)) {
+                    Log.i(TAG, String.format(Locale.US,
+                            "No rewarded video is available at this time."));
+                    return;
+                }
+
+                MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPlugin.this);
+                MoPubRewardedVideos.showRewardedVideo(mAdUnitId);
+            }
+        });
+    }
+
+    /**
+     * Retrieves the list of available {@link MoPubReward}s for the current ad unit ID.
+     *
+     * @return an array with the available {@link MoPubReward}s.
+     */
+    public MoPubReward[] getAvailableRewards() {
+        Set<MoPubReward> rewardsSet = MoPubRewardedVideos.getAvailableRewards(mAdUnitId);
+
+        Log.i(TAG, String.format(Locale.US, "%d MoPub rewards available", rewardsSet.size()));
+
+        return rewardsSet.toArray(new MoPubReward[rewardsSet.size()]);
+    }
+
+    /**
+     * Specifies which reward should be given to the user on video completion.
+     *
+     * @param selectedReward a {@link MoPubReward} to reward the user with.
+     */
+    public void selectReward(@NonNull MoPubReward selectedReward) {
+        Preconditions.checkNotNull(selectedReward);
+
+        Log.i(TAG, String.format(Locale.US, "Selected reward \"%d %s\"",
+                selectedReward.getAmount(),
+                selectedReward.getLabel()));
+
+        MoPubRewardedVideos.selectReward(mAdUnitId, selectedReward);
+    }
+
+
+    /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
+     * RewardedVideoListener implementation                                                    *
+     * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
+
+    @Override
+    public void onRewardedVideoLoadSuccess(String adUnitId) {
+        if (mAdUnitId.equals(adUnitId)) {
+            Log.i(TAG, "Rewarded video loaded.");
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoLoaded", adUnitId);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoLoadFailure(String adUnitId, MoPubErrorCode errorCode) {
+        if (mAdUnitId.equals(adUnitId)) {
+            String errorMsg = String.format(Locale.US,
+                    "Rewarded video failed to load for AdUnit %s: %s",
+                    adUnitId,
+                    errorCode.toString());
+
+            Log.e(TAG, errorMsg);
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailed", errorMsg);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoStarted(String adUnitId) {
+        if (mAdUnitId.equals(adUnitId)) {
+            Log.i(TAG, "Rewarded video started.");
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoShown", adUnitId);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoClicked(@NonNull String adUnitId) {
+        if (mAdUnitId.equals(adUnitId)) {
+            Log.i(TAG, "Rewarded video clicked.");
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoClicked", adUnitId);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoPlaybackError(String adUnitId, MoPubErrorCode errorCode) {
+        if (mAdUnitId.equals(adUnitId)) {
+            String errorMsg = String.format(Locale.US,
+                    "Rewarded video playback error for AdUnit %s: %s",
+                    adUnitId,
+                    errorCode.toString());
+
+            Log.e(TAG, errorMsg);
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailedToPlay", errorMsg);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoClosed(String adUnitId) {
+        if (mAdUnitId.equals(adUnitId)) {
+            Log.i(TAG, "Rewarded video closed.");
+            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoClosed", adUnitId);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoCompleted(Set<String> adUnitIds, MoPubReward reward) {
+        if (adUnitIds.size() == 0 || reward == null) {
+            Log.e(TAG, String.format(Locale.US,
+                    "Rewarded video completed without adUnitId and/or reward."));
+            return;
+        }
+
+        String adUnitId = adUnitIds.toArray()[0].toString();
+        if (mAdUnitId.equals(adUnitId)) {
+            try {
+                Log.i(TAG, String.format(Locale.US,
+                        "Rewarded video completed with reward  \"%d %s\"",
+                        reward.getAmount(),
+                        reward.getLabel()));
+
+                JSONObject json = new JSONObject();
+                json.put("adUnitId", adUnitId);
+                json.put("currencyType", "");
+                json.put("amount", reward.getAmount());
+
+                UnityPlayer.UnitySendMessage(
+                        "MoPubManager", "onRewardedVideoReceivedReward", json.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
+     * Private helpers                                                                         *
+     * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
+
     private MediationSettings[] extractMediationSettingsFromJson(String json) {
         ArrayList<MediationSettings> settings = new ArrayList<MediationSettings>();
 
@@ -54,7 +283,6 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                 JSONObject jsonObj = jsonArray.getJSONObject(i);
                 String adVendor = jsonObj.getString("adVendor");
                 Log.i(TAG, "adding MediationSettings for ad vendor: " + adVendor);
-
                 if (adVendor.equalsIgnoreCase("chartboost")) {
                     if (jsonObj.has("customId")) {
                         try {
@@ -163,168 +391,6 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
         }
 
         return settings.toArray(new MediationSettings[settings.size()]);
-    }
-
-    public static void initializeRewardedVideo() {
-        runSafelyOnUiThread(new Runnable() {
-            public void run() {
-                if (!sRewardedVideoInitialized) {
-                    MoPubRewardedVideos.initializeRewardedVideo(getActivity());
-                    sRewardedVideoInitialized = true;
-                }
-            }
-        });
-    }
-
-    public void requestRewardedVideo(final String json, final String keywords,
-            final double latitude, final double longitude, final String customerId) {
-        runSafelyOnUiThread(new Runnable() {
-            public void run() {
-                Location location = new Location("");
-                location.setLatitude(latitude);
-                location.setLongitude(longitude);
-
-                MoPubRewardedVideoManager.RequestParameters requestParameters =
-                        new MoPubRewardedVideoManager.RequestParameters(
-                                keywords, location, customerId);
-
-                MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPlugin.this);
-
-                if (json != null) {
-                    MoPubRewardedVideos.loadRewardedVideo(
-                            mAdUnitId, requestParameters, extractMediationSettingsFromJson(json));
-                } else {
-                    MoPubRewardedVideos.loadRewardedVideo(mAdUnitId, requestParameters);
-                }
-            }
-        });
-    }
-
-    public boolean hasRewardedVideo() {
-        return MoPubRewardedVideos.hasRewardedVideo(mAdUnitId);
-    }
-
-    public void showRewardedVideo() {
-        runSafelyOnUiThread(new Runnable() {
-            public void run() {
-                if (!MoPubRewardedVideos.hasRewardedVideo(mAdUnitId)) {
-                    Log.i(TAG, String.format(Locale.US, "No rewarded video is available at this time."));
-                    return;
-                }
-
-                MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPlugin.this);
-                MoPubRewardedVideos.showRewardedVideo(mAdUnitId);
-            }
-        });
-    }
-
-    public MoPubReward[] getAvailableRewards() {
-        Set<MoPubReward> rewardsSet = MoPubRewardedVideos.getAvailableRewards(mAdUnitId);
-
-        Log.i(TAG, String.format(Locale.US, "%d MoPub rewards available", rewardsSet.size()));
-
-        return rewardsSet.toArray(new MoPubReward[rewardsSet.size()]);
-    }
-
-    public void selectReward(MoPubReward selectedReward) {
-        Preconditions.checkNotNull(selectedReward);
-
-        Log.i(TAG, String.format(Locale.US, "Selected reward \"%d %s\"",
-                selectedReward.getAmount(),
-                selectedReward.getLabel()));
-
-        MoPubRewardedVideos.selectReward(mAdUnitId, selectedReward);
-    }
-
-
-    /* ***** ***** ***** ***** ***** ***** ***** *****
-     * RewardedVideoListener implementation
-     */
-    @Override
-    public void onRewardedVideoLoadSuccess(String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            Log.i(TAG, "Rewarded video loaded.");
-            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoLoaded", adUnitId);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoLoadFailure(String adUnitId, MoPubErrorCode errorCode) {
-        if (mAdUnitId.equals(adUnitId)) {
-            String errorMsg = String.format(Locale.US,
-                    "Rewarded video failed to load for AdUnit %s: %s",
-                    adUnitId,
-                    errorCode.toString());
-
-            Log.e(TAG, errorMsg);
-            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailed", errorMsg);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoStarted(String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            Log.i(TAG, "Rewarded video started.");
-            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoShown", adUnitId);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoClicked(@NonNull String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            Log.i(TAG, "Rewarded video clicked.");
-            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoClicked", adUnitId);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoPlaybackError(String adUnitId, MoPubErrorCode errorCode) {
-        if (mAdUnitId.equals(adUnitId)) {
-            String errorMsg = String.format(Locale.US,
-                    "Rewarded video playback error for AdUnit %s: %s",
-                    adUnitId,
-                    errorCode.toString());
-
-            Log.e(TAG, errorMsg);
-            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoFailedToPlay", errorMsg);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoClosed(String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            Log.i(TAG, "Rewarded video closed.");
-            UnityPlayer.UnitySendMessage("MoPubManager", "onRewardedVideoClosed", adUnitId);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoCompleted(Set<String> adUnitIds, MoPubReward reward) {
-        if (adUnitIds.size() == 0 || reward == null) {
-            Log.e(TAG, String.format(Locale.US,
-                    "Rewarded video completed without adUnitId and/or reward."));
-            return;
-        }
-
-        String adUnitId = adUnitIds.toArray()[0].toString();
-        if (mAdUnitId.equals(adUnitId)) {
-            try {
-                Log.i(TAG, String.format(Locale.US,
-                        "Rewarded video completed with reward  \"%d %s\"",
-                        reward.getAmount(),
-                        reward.getLabel()));
-
-                JSONObject json = new JSONObject();
-                json.put("adUnitId", adUnitId);
-                json.put("currencyType", "");
-                json.put("amount", reward.getAmount());
-
-                UnityPlayer.UnitySendMessage(
-                        "MoPubManager", "onRewardedVideoReceivedReward", json.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
 
