@@ -1,6 +1,9 @@
 # OS X
 .DS_Store
 
+# Android Studio
+*.iml
+
 # Xcode
 build
 DerivedData

@@ -2,7 +2,7 @@
 //  MopubManager.h
 //  MoPub
 //
-//  Created by Mike DeSaro on 10/7/14
+//  Copyright (c) 2017 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

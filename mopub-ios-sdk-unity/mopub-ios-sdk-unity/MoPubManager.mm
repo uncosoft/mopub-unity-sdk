@@ -1,7 +1,8 @@
 //
 //  MopubManager.m
+//  MoPub
 //
-//  Created by Mike DeSaro on 10/7/14
+//  Copyright (c) 2017 __MyCompanyName__. All rights reserved.
 //
 
 #import "MoPubManager.h"
@@ -11,24 +12,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 	// life cycle management
-#ifdef __cplusplus
-	extern void	UnityPause(bool pause);
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
-
-
-
-void UnityPause( bool pause );
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+	void UnityPause( bool pause );
 	void UnitySendMessage( const char* obj, const char* method, const char* msg );
 #ifdef __cplusplus
 }
