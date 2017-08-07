@@ -2,11 +2,14 @@ package com.mopub.unity;
 
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPubReward;
 import com.mopub.common.Preconditions;
+import com.mopub.mobileads.CustomEventRewardedVideo;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubRewardedVideoListener;
 import com.mopub.mobileads.MoPubRewardedVideoManager;
@@ -20,6 +23,8 @@ import org.json.JSONObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -61,6 +66,41 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
             public void run() {
                 if (!sRewardedVideoInitialized) {
                     MoPubRewardedVideos.initializeRewardedVideo(getActivity());
+                    sRewardedVideoInitialized = true;
+                }
+            }
+        });
+    }
+
+    /**
+     * Initializes rewarded ad system, if it hasn't been initialized already, with the given
+     * networks.
+     *
+     * @param networksToInitString String of comma-separated network rewarded video adapter classes.
+     */
+    public static void initializeRewardedVideoWithNetworks(
+            @Nullable final String networksToInitString) {
+
+        // Extract classes from network strings
+        final List<Class<? extends CustomEventRewardedVideo>> networksToInit = new LinkedList<>();
+        if (!TextUtils.isEmpty(networksToInitString)) {
+            String[] networksArray = networksToInitString.split(",");
+            for (String networkString : networksArray) {
+                try {
+                    Class<? extends CustomEventRewardedVideo> networkClass =
+                            Class.forName(networkString).asSubclass(CustomEventRewardedVideo.class);
+                    networksToInit.add(networkClass);
+                } catch (ClassNotFoundException e) {
+                    Log.w(TAG, "Class not found for attempted network adapter class name: "
+                            + networksToInitString);
+                }
+            }
+        }
+
+        runSafelyOnUiThread(new Runnable() {
+            public void run() {
+                if (!sRewardedVideoInitialized) {
+                    MoPubRewardedVideos.initializeRewardedVideo(getActivity(), networksToInit);
                     sRewardedVideoInitialized = true;
                 }
             }

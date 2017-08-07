@@ -34,6 +34,22 @@ public class MoPubAndroidRewardedVideo
 	}
 
 
+	// Initializes the rewarded video system with desired networks
+	public static void initializeRewardedVideoWithNetworks (MoPubRewardedNetwork[] networks)
+	{
+		if (Application.platform != RuntimePlatform.Android)
+			return;
+
+		// Translate the array of networks into a comma-delimited string.
+		string networksString = null;
+		if (networks != null && networks.Length > 0) {
+			networksString = string.Join(",", Array.ConvertAll(networks, x => x.ToString()));
+		}
+
+		_pluginClass.CallStatic ("initializeRewardedVideoWithNetworks", networksString);
+	}
+
+
 	// Starts loading a rewarded video ad
 	public void requestRewardedVideo (List<MoPubMediationSetting> mediationSettings = null,
 		string keywords = null,

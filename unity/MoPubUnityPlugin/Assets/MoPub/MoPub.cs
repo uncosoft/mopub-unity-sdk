@@ -34,7 +34,7 @@ public class MoPubRewardedNetwork
         return name;
     }
 
-#if UNITY_IPHONE
+	#if UNITY_IPHONE
 	public static readonly MoPubRewardedNetwork AdColony = new MoPubRewardedNetwork("AdColonyRewardedVideoCustomEvent");
 	public static readonly MoPubRewardedNetwork AdMob = new MoPubRewardedNetwork("MPGoogleAdMobRewardedVideoCustomEvent");
 	public static readonly MoPubRewardedNetwork Chartboost = new MoPubRewardedNetwork("ChartboostRewardedVideoCustomEvent");
@@ -42,9 +42,22 @@ public class MoPubRewardedNetwork
 	public static readonly MoPubRewardedNetwork Tapjoy = new MoPubRewardedNetwork("TapjoyRewardedVideoCustomEvent");
 	public static readonly MoPubRewardedNetwork Unity = new MoPubRewardedNetwork("UnityAdsRewardedVideoCustomEvent");
 	public static readonly MoPubRewardedNetwork Vungle = new MoPubRewardedNetwork("VungleRewardedVideoCustomEvent");
-#elif UNITY_ANDROID
-
-#endif	
+	#elif UNITY_ANDROID
+	public static readonly MoPubRewardedNetwork AdColony =
+		new MoPubRewardedNetwork("com.mopub.mobileads.AdColonyRewardedVideo");
+	public static readonly MoPubRewardedNetwork AdMob =
+		new MoPubRewardedNetwork("com.mopub.mobileads.GooglePlayServicesRewardedVideo");
+	public static readonly MoPubRewardedNetwork Chartboost =
+		new MoPubRewardedNetwork("com.mopub.mobileads.ChartboostRewardedVideo");
+	public static readonly MoPubRewardedNetwork Facebook =
+		new MoPubRewardedNetwork("com.mopub.mobileads.FacebookRewardedVideo");
+	public static readonly MoPubRewardedNetwork Tapjoy =
+		new MoPubRewardedNetwork("com.mopub.mobileads.TapjoyRewardedVideo");
+	public static readonly MoPubRewardedNetwork Unity =
+		new MoPubRewardedNetwork("com.mopub.mobileads.UnityRewardedVideo");
+	public static readonly MoPubRewardedNetwork Vungle =
+		new MoPubRewardedNetwork("com.mopub.mobileads.VungleRewardedVideo");
+	#endif	
 }
 
 public static class MoPub
@@ -263,7 +276,7 @@ public static class MoPub
 		#if UNITY_IPHONE
 		MP.initializeRewardedVideoWithNetworks (networks);
 		#elif UNITY_ANDROID
-		
+		MPRewardedVideo.initializeRewardedVideoWithNetworks (networks);
 		#endif
 	}
 
