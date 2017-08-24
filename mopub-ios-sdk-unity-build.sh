@@ -9,8 +9,8 @@ if [[ -e mopub-ios-sdk-unity/bin/libmopub-ios-sdk-unity.a ]]; then
 fi
 
 # remove viewability binaries since they are not supported for unity
-rm -rf MoPubSDK/Viewability/Avid
-rm -rf MoPubSDK/Viewability/MOAT
+rm -rf mopub-ios-sdk/MoPubSDK/Viewability/Avid
+rm -rf mopub-ios-sdk/MoPubSDK/Viewability/MOAT
 
 # update version number to have unity suffix
 sed -i.bak 's/^\(#define MP_SDK_VERSION\)\(.*\)"/\1\2+unity"/'  mopub-ios-sdk/MoPubSDK/MPConstants.h
