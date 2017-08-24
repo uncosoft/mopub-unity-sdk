@@ -42,6 +42,10 @@
 
 @implementation FacebookRewardedVideoCustomEvent
 
+- (void)initializeSdkWithParameters:(NSDictionary *)parameters {
+    // No SDK initialization method provided.
+}
+
 - (void)requestRewardedVideoWithCustomEventInfo:(NSDictionary *)info {
     if (![info objectForKey:@"placement_id"]) {
         MPLogError(@"Placement ID is required for Facebook Rewarded Video ad");
@@ -49,10 +53,10 @@
         return;
     }
     MPLogInfo(@"Requesting Facebook Rewarded Video ad");
-    
+
     self.fbRewardedVideoAd =
     [[MPInstanceProvider sharedProvider] buildFBRewardedVideoAdWithPlacementID: [info objectForKey:@"placement_id"] delegate:self];
-    
+
     [self.fbRewardedVideoAd loadAd];
 }
 
@@ -88,10 +92,10 @@
 
 /*!
  @method
- 
+
  @abstract
  Sent after an ad has been clicked by the person.
- 
+
  @param rewardedVideoAd An FBRewardedVideoAd object sending the message.
  */
 - (void)rewardedVideoAdDidClick:(FBRewardedVideoAd *)rewardedVideoAd
@@ -102,10 +106,10 @@
 
 /*!
  @method
- 
+
  @abstract
  Sent when an ad has been successfully loaded.
- 
+
  @param rewardedVideoAd An FBRewardedVideoAd object sending the message.
  */
 - (void)rewardedVideoAdDidLoad:(FBRewardedVideoAd *)rewardedVideoAd
@@ -116,11 +120,11 @@
 
 /*!
  @method
- 
+
  @abstract
  Sent after an FBRewardedVideoAd object has been dismissed from the screen, returning control
  to your application.
- 
+
  @param rewardedVideoAd An FBRewardedVideoAd object sending the message.
  */
 - (void)rewardedVideoAdDidClose:(FBRewardedVideoAd *)rewardedVideoAd
@@ -131,10 +135,10 @@
 
 /*!
  @method
- 
+
  @abstract
  Sent immediately before an FBRewardedVideoAd object will be dismissed from the screen.
- 
+
  @param rewardedVideoAd An FBRewardedVideoAd object sending the message.
  */
 - (void)rewardedVideoAdWillClose:(FBRewardedVideoAd *)rewardedVideoAd
@@ -145,10 +149,10 @@
 
 /*!
  @method
- 
+
  @abstract
  Sent after an FBRewardedVideoAd fails to load the ad.
- 
+
  @param rewardedVideoAd An FBRewardedVideoAd object sending the message.
  @param error An error object containing details of the error.
  */
@@ -160,17 +164,17 @@
 
 /*!
  @method
- 
+
  @abstract
  Sent after the FBRewardedVideoAd object has finished playing the video successfully.
  Reward the user on this callback.
- 
+
  @param rewardedVideoAd An FBRewardedVideoAd object sending the message.
  */
 - (void)rewardedVideoAdComplete:(FBRewardedVideoAd *)rewardedVideoAd
 {
     MPLogInfo(@"Facebook rewarded video ad has finished playing successfully");
-    
+
     // Passing the reward type and amount as unspecified. Set the reward value in mopub UI.
     [self.delegate rewardedVideoShouldRewardUserForCustomEvent:self reward:[[MPRewardedVideoReward alloc] initWithCurrencyAmount:@(kMPRewardedVideoRewardCurrencyAmountUnspecified)]];
 
@@ -178,10 +182,10 @@
 
 /*!
  @method
- 
+
  @abstract
  Sent immediately before the impression of an FBRewardedVideoAd object will be logged.
- 
+
  @param rewardedVideoAd An FBRewardedVideoAd object sending the message.
  */
 - (void)rewardedVideoAdWillLogImpression:(FBRewardedVideoAd *)rewardedVideoAd
