@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion '25.0.2'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 25
     }
 }
 
@@ -22,6 +22,11 @@ dependencies {
     compile name: 'vungle-publisher-adaptive-id-4.0.2'
     compile name: 'dagger-2.4'
     compile name: 'javax.inject-1'
-    compile project(':mopub-sdk')
+
+    compile (project(':mopub-sdk')) {
+        // Viewability measurement is not supported on the MoPub Unity Plugin yet
+        exclude module: 'libAvid-mopub'
+        exclude module: 'moat-mobile-app-kit'
+    }
 }
 
