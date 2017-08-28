@@ -133,7 +133,13 @@ public static class MoPub
 		#endif
 	}
 
-
+	#if UNITY_IPHONE
+	// Forces the usage of WKWebView if able.
+	public static void forceWKWebView(bool shouldForce)
+	{
+		MoPubBinding.forceWKWebView(shouldForce);
+	}
+	#endif
 
 	/*
 	 * Banner API

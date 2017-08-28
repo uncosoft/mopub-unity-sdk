@@ -50,6 +50,15 @@ public class MoPubBinding
 			_moPubEnableLocationSupport (shouldUseLocation);
 	}
 
+	[DllImport ("__Internal")]
+	private static extern void _moPubForceWKWebView(bool shouldForce);
+
+	// Forces the usage of WKWebView if able
+	public static void forceWKWebView(bool shouldForce)
+	{
+		if (Application.platform == RuntimePlatform.IPhonePlayer)
+			_moPubForceWKWebView (shouldForce);
+	}
 
 	[DllImport ("__Internal")]
 	private static extern void _moPubCreateBanner (int bannerType, int position, string adUnitId);
