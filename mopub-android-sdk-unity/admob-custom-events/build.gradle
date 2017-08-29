@@ -1,20 +1,5 @@
 apply from: '../shared-build.gradle'
 
-android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
-
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 25
-    }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-}
-
 dependencies {
     compile 'com.google.android.gms:play-services-ads:10.2.0'
 }

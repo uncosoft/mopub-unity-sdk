@@ -1,23 +1,5 @@
 apply from: '../shared-build.gradle'
 
-android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
-
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 25
-    }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 dependencies {
     compile name: 'vungle-publisher-adaptive-id-4.0.2'
     compile name: 'dagger-2.4'
