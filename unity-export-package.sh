@@ -94,7 +94,7 @@ done
 # Millennial
 MM_IOS_EXPORT_FOLDERS_SUPPORT="Assets/MoPub/Editor/Support/Millennial"
 MM_ANDROID_EXPORT_FOLDERS_SUPPORT="Assets/Plugins/Android/mopub-support/libs/Millennial"
-MM_ANDROID_SDK_FOLDER="Assets/Plugins/Android/mm-ad-sdk"
+MM_ANDROID_SDK_FOLDER="Assets/Plugins/Android/mopub-support/libs/Millennial"
 MM_DEST_PACKAGE="$OUT_DIR/MillennialSupport.unitypackage"
 
 $UNITY_BIN -projectPath $PROJECT_PATH -quit -batchmode -logFile $EXPORT_LOG -exportPackage $MM_IOS_EXPORT_FOLDERS_SUPPORT $MM_ANDROID_EXPORT_FOLDERS_SUPPORT $MM_ANDROID_SDK_FOLDER $MM_DEST_PACKAGE
