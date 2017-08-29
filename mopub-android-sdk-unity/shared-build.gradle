@@ -1,0 +1,14 @@
+apply plugin: 'com.android.library'
+
+android {
+    // ensure build outputs to release/ instead of default/
+    publishNonDefault true
+}
+
+dependencies {
+    compile (project(':mopub-sdk')) {
+        // Viewability measurement is not supported on the MoPub Unity Plugin yet
+        exclude module: 'libAvid-mopub'
+        exclude module: 'moat-mobile-app-kit'
+    }
+}
