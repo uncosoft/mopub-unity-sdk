@@ -22,6 +22,43 @@ public class MoPubMediationSetting : Dictionary<string,object>
 	}
 }
 
+public class MoPubRewardedNetwork 
+{
+	private readonly string name;
+
+	private MoPubRewardedNetwork(string name) {
+        this.name = name;
+    }
+
+    public override string ToString() {
+        return name;
+    }
+
+	#if UNITY_IPHONE
+	public static readonly MoPubRewardedNetwork AdColony = new MoPubRewardedNetwork("AdColonyRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork AdMob = new MoPubRewardedNetwork("MPGoogleAdMobRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Chartboost = new MoPubRewardedNetwork("ChartboostRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Facebook = new MoPubRewardedNetwork("FacebookRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Tapjoy = new MoPubRewardedNetwork("TapjoyRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Unity = new MoPubRewardedNetwork("UnityAdsRewardedVideoCustomEvent");
+	public static readonly MoPubRewardedNetwork Vungle = new MoPubRewardedNetwork("VungleRewardedVideoCustomEvent");
+	#elif UNITY_ANDROID
+	public static readonly MoPubRewardedNetwork AdColony =
+		new MoPubRewardedNetwork("com.mopub.mobileads.AdColonyRewardedVideo");
+	public static readonly MoPubRewardedNetwork AdMob =
+		new MoPubRewardedNetwork("com.mopub.mobileads.GooglePlayServicesRewardedVideo");
+	public static readonly MoPubRewardedNetwork Chartboost =
+		new MoPubRewardedNetwork("com.mopub.mobileads.ChartboostRewardedVideo");
+	public static readonly MoPubRewardedNetwork Facebook =
+		new MoPubRewardedNetwork("com.mopub.mobileads.FacebookRewardedVideo");
+	public static readonly MoPubRewardedNetwork Tapjoy =
+		new MoPubRewardedNetwork("com.mopub.mobileads.TapjoyRewardedVideo");
+	public static readonly MoPubRewardedNetwork Unity =
+		new MoPubRewardedNetwork("com.mopub.mobileads.UnityRewardedVideo");
+	public static readonly MoPubRewardedNetwork Vungle =
+		new MoPubRewardedNetwork("com.mopub.mobileads.VungleRewardedVideo");
+	#endif	
+}
 
 public static class MoPub
 {
@@ -96,7 +133,13 @@ public static class MoPub
 		#endif
 	}
 
-
+	#if UNITY_IPHONE
+	// Forces the usage of WKWebView if able.
+	public static void forceWKWebView(bool shouldForce)
+	{
+		MoPubBinding.forceWKWebView(shouldForce);
+	}
+	#endif
 
 	/*
 	 * Banner API
@@ -233,6 +276,15 @@ public static class MoPub
 		#endif
 	}
 
+	// Initializes the rewarded video system with the specified networks.
+	public static void initializeRewardedVideo(MoPubRewardedNetwork[] networks)
+	{
+		#if UNITY_IPHONE
+		MP.initializeRewardedVideoWithNetworks (networks);
+		#elif UNITY_ANDROID
+		MPRewardedVideo.initializeRewardedVideoWithNetworks (networks);
+		#endif
+	}
 
 	// Starts loading a rewarded video ad
 	public static void requestRewardedVideo (string adUnitId,

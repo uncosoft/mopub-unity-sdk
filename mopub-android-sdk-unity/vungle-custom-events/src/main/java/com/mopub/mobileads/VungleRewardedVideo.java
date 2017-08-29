@@ -79,11 +79,13 @@ public class VungleRewardedVideo extends CustomEventRewardedVideo {
 
     @Override
     protected boolean checkAndInitializeSdk(@NonNull final Activity launcherActivity,
-                @NonNull final Map<String, Object> localExtras,
-                @NonNull final Map<String, String> serverExtras) throws Exception {
+            @NonNull final Map<String, Object> localExtras,
+            @NonNull final Map<String, String> serverExtras) throws Exception {
         synchronized (VungleRewardedVideo.class) {
             if (!sInitialized) {
                 sVunglePub = VunglePub.getInstance();
+                String appId = serverExtras.containsKey(APP_ID_KEY) ? serverExtras.get(APP_ID_KEY) : DEFAULT_VUNGLE_APP_ID;
+                sVunglePub.init(launcherActivity, appId);
                 sInitialized = true;
                 return true;
             }

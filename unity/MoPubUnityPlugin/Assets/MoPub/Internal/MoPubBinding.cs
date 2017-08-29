@@ -50,6 +50,15 @@ public class MoPubBinding
 			_moPubEnableLocationSupport (shouldUseLocation);
 	}
 
+	[DllImport ("__Internal")]
+	private static extern void _moPubForceWKWebView(bool shouldForce);
+
+	// Forces the usage of WKWebView if able
+	public static void forceWKWebView(bool shouldForce)
+	{
+		if (Application.platform == RuntimePlatform.IPhonePlayer)
+			_moPubForceWKWebView (shouldForce);
+	}
 
 	[DllImport ("__Internal")]
 	private static extern void _moPubCreateBanner (int bannerType, int position, string adUnitId);
@@ -136,6 +145,23 @@ public class MoPubBinding
 	{
 		if (Application.platform == RuntimePlatform.IPhonePlayer)
 			_moPubInitializeRewardedVideo ();
+	}
+
+
+	[DllImport ("__Internal")]
+	private static extern void _moPubInitializeRewardedVideoWithNetworks (string networksToInitialize);
+
+	public static void initializeRewardedVideoWithNetworks(MoPubRewardedNetwork[] networks)
+	{
+		if (Application.platform == RuntimePlatform.IPhonePlayer) {
+			// Translate the array of networks into a comma-delimited string.
+			string networksString = null;
+			if (networks != null && networks.Length > 0) {
+				networksString = string.Join(",", Array.ConvertAll(networks, x => x.ToString()));
+			}
+
+			_moPubInitializeRewardedVideoWithNetworks (networksString);
+		}
 	}
 
 

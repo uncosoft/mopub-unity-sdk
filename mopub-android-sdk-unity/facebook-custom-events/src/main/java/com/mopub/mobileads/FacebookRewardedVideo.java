@@ -16,8 +16,7 @@ import com.mopub.common.MoPubReward;
 import java.util.Map;
 
 /**
- * Please reference the Supported Mediation Partner page at http://bit.ly/2mqsuFH for the
- * latest version and ad format certifications.
+ * Certified with Facebook Audience Network 4.23.0
  */
 public class FacebookRewardedVideo extends CustomEventRewardedVideo implements RewardedVideoAdListener {
 

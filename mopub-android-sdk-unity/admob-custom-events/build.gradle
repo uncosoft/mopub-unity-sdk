@@ -1,21 +1,5 @@
-apply plugin: 'com.android.library'
-
-android {
-    compileSdkVersion 23
-    buildToolsVersion '25.0.2'
-
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 23
-    }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-}
+apply from: '../shared-build.gradle'
 
 dependencies {
     compile 'com.google.android.gms:play-services-ads:10.2.0'
-    compile project(':mopub-sdk')
 }

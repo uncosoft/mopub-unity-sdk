@@ -1,27 +1,8 @@
-apply plugin: 'com.android.library'
-
-android {
-    compileSdkVersion 23
-    buildToolsVersion '25.0.2'
-
-    defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 23
-    }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-    flatDir {
-        dirs 'libs'
-    }
-}
+apply from: '../shared-build.gradle'
 
 dependencies {
     compile name: 'vungle-publisher-adaptive-id-4.0.2'
     compile name: 'dagger-2.4'
     compile name: 'javax.inject-1'
-    compile project(':mopub-sdk')
 }
 
