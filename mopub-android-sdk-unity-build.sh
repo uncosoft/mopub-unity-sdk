@@ -42,17 +42,6 @@ validate
 cp $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
 validate
 
-# Copy Millennial Media SDK
-MM_SDK_VERSION=mm-ad-sdk-6.3.0
-cp mopub-android-sdk-unity/millennial-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mm-ad-sdk/libs/$MM_SDK_VERSION.jar
-validate
-cp mopub-android-sdk-unity/millennial-custom-events/build/intermediates/bundles/release/AndroidManifest.xml unity/MoPubUnityPlugin/Assets/Plugins/Android/mm-ad-sdk/
-validate
-cp -r mopub-android-sdk-unity/millennial-custom-events/build/intermediates/bundles/release/assets unity/MoPubUnityPlugin/Assets/Plugins/Android/mm-ad-sdk/
-validate
-cp -r mopub-android-sdk-unity/millennial-custom-events/build/intermediates/bundles/release/res unity/MoPubUnityPlugin/Assets/Plugins/Android/mm-ad-sdk/
-validate
-
 # Copy MoPub Custom Events jars
 cp mopub-android-sdk-unity/adcolony-custom-events/build/intermediates/bundles/release/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/AdColony/mopub-adcolony-custom-events.jar
 validate
