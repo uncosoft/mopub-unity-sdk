@@ -35,6 +35,11 @@ void _moPubEnableLocationSupport(bool shouldUseLocation )
     [[MoPubManager sharedManager] enableLocationSupport:shouldUseLocation];
 }
 
+void _moPubForceWKWebView( bool shouldForce )
+{
+    [MoPub sharedInstance].forceWKWebView = (shouldForce ? YES : NO);
+}
+
 
 void _moPubCreateBanner( int bannerType, int bannerPosition, const char * adUnitId )
 {
