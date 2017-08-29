@@ -12,6 +12,9 @@ fi
 rm -rf mopub-ios-sdk/MoPubSDK/Viewability/Avid
 rm -rf mopub-ios-sdk/MoPubSDK/Viewability/MOAT
 
+# remove unit tests since the viewability unit tests cause compile problems
+rm -rf mopub-ios-sdk/MoPubSDKTests
+
 # update version number to have unity suffix
 sed -i.bak 's/^\(#define MP_SDK_VERSION\)\(.*\)"/\1\2+unity"/'  mopub-ios-sdk/MoPubSDK/MPConstants.h
 validate
