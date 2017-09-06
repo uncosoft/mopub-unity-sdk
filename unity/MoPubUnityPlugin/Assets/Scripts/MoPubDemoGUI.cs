@@ -12,14 +12,14 @@ public class MoPubDemoGUI : MonoBehaviour
 	private string[] _interstitialAdUnits;
 	private string[] _rewardedVideoAdUnits;
 	private Dictionary<string, List<MoPubReward>> _adUnitToRewardsMapping =
-		new Dictionary<string, List<MoPubReward>>();
+		new Dictionary<string, List<MoPubReward>> ();
 	private Dictionary<string, bool> _adUnitToLoadedMapping =
-		new Dictionary<string, bool>();
+		new Dictionary<string, bool> ();
 	private Dictionary<string, bool> _bannerAdUnitToShownMapping =
-		new Dictionary<string, bool>();
+		new Dictionary<string, bool> ();
 
 	// Workaround for lacking adUnit from onAdLoadedEvent for Banners
-	private Queue<string> _requestedBannerAdUnits = new Queue<string>();
+	private Queue<string> _requestedBannerAdUnits = new Queue<string> ();
 
 	private string[] _networkList = new string[] {
 		"MoPub",
@@ -102,33 +102,32 @@ public class MoPubDemoGUI : MonoBehaviour
 	#endif
 
 
-	private static bool IsAdUnitArrayNullOrEmpty (string[] adUnitArray)
-	{
+	private static bool IsAdUnitArrayNullOrEmpty (string[] adUnitArray) {
 		return (adUnitArray == null || adUnitArray.Length == 0);
 	}
 
 
 	private void addAdUnitsToStateMaps (string[] adUnits) {
 		foreach (string adUnit in adUnits) {
-			_adUnitToLoadedMapping.Add(adUnit, false);
+			_adUnitToLoadedMapping.Add (adUnit, false);
 			// Only banners need this map, but init for all to keep it simple
-			_bannerAdUnitToShownMapping.Add(adUnit, false);
+			_bannerAdUnitToShownMapping.Add (adUnit, false);
 		}
 	}
 
 
-	public void loadAvailableRewards(string adUnitId, List<MoPubReward> availableRewards) {
+	public void loadAvailableRewards (string adUnitId, List<MoPubReward> availableRewards) {
 		// Remove any existing available rewards associated with this AdUnit from previous ad requests
 		_adUnitToRewardsMapping.Remove (adUnitId);
 
 		if (availableRewards != null) {
-			_adUnitToRewardsMapping [adUnitId] = availableRewards;
+			_adUnitToRewardsMapping[adUnitId] = availableRewards;
 		}
 	}
 
 
 	public void bannerLoaded () {
-		string firstRequestedBannerAdUnit = _requestedBannerAdUnits.Dequeue();
+		string firstRequestedBannerAdUnit = _requestedBannerAdUnits.Dequeue ();
 		_adUnitToLoadedMapping[firstRequestedBannerAdUnit] = true;
 		_bannerAdUnitToShownMapping[firstRequestedBannerAdUnit] = true;
 	}
@@ -144,8 +143,7 @@ public class MoPubDemoGUI : MonoBehaviour
 	}
 
 
-	void Start ()
-	{
+	void Start () {
 		var allBannerAdUnits = new string[0];
 		var allInterstitialAdUnits = new string[0];
 		var allRewardedVideoAdUnits = new string[0];
@@ -159,17 +157,17 @@ public class MoPubDemoGUI : MonoBehaviour
 		}
 
 		foreach (var rewardedVideoAdUnits in _rewardedVideoDict.Values) {
-			allRewardedVideoAdUnits = allRewardedVideoAdUnits.Union(rewardedVideoAdUnits).ToArray();
+			allRewardedVideoAdUnits = allRewardedVideoAdUnits.Union (rewardedVideoAdUnits).ToArray ();
 		}
 
-		addAdUnitsToStateMaps(allBannerAdUnits);
-		addAdUnitsToStateMaps(allInterstitialAdUnits);
-		addAdUnitsToStateMaps(allRewardedVideoAdUnits);
+		addAdUnitsToStateMaps (allBannerAdUnits);
+		addAdUnitsToStateMaps (allInterstitialAdUnits);
+		addAdUnitsToStateMaps (allRewardedVideoAdUnits);
 
 		#if UNITY_ANDROID
-		MoPub.loadBannerPluginsForAdUnits(allBannerAdUnits);
-		MoPub.loadInterstitialPluginsForAdUnits(allInterstitialAdUnits);
-		MoPub.loadRewardedVideoPluginsForAdUnits(allRewardedVideoAdUnits);
+		MoPub.loadBannerPluginsForAdUnits (allBannerAdUnits);
+		MoPub.loadInterstitialPluginsForAdUnits (allInterstitialAdUnits);
+		MoPub.loadRewardedVideoPluginsForAdUnits (allRewardedVideoAdUnits);
 		#elif UNITY_IPHONE
 		MoPub.loadPluginsForAdUnits(allBannerAdUnits);
 		MoPub.loadPluginsForAdUnits(allInterstitialAdUnits);
@@ -182,8 +180,7 @@ public class MoPubDemoGUI : MonoBehaviour
 	}
 
 
-	void OnGUI ()
-	{
+	void OnGUI () {
 		// Set default label style
 		GUI.skin.label.fontSize = 36;
 
@@ -201,10 +198,10 @@ public class MoPubDemoGUI : MonoBehaviour
 			new Rect (0, Screen.height - GUI.skin.button.fixedHeight, Screen.width, GUI.skin.button.fixedHeight),
 			_selectedToggleIndex,
 			_networkList);
-		string network = _networkList [_selectedToggleIndex];
-		_bannerAdUnits = _bannerDict.ContainsKey (network) ? _bannerDict [network] : null;
-		_interstitialAdUnits = _interstitialDict.ContainsKey (network) ? _interstitialDict [network] : null;
-		_rewardedVideoAdUnits = _rewardedVideoDict.ContainsKey (network) ? _rewardedVideoDict [network] : null;
+		string network = _networkList[_selectedToggleIndex];
+		_bannerAdUnits = _bannerDict.ContainsKey (network) ? _bannerDict[network] : null;
+		_interstitialAdUnits = _interstitialDict.ContainsKey (network) ? _interstitialDict[network] : null;
+		_rewardedVideoAdUnits = _rewardedVideoDict.ContainsKey (network) ? _rewardedVideoDict[network] : null;
 
 
 		GUILayout.BeginArea (new Rect (0, 0, Screen.width, Screen.height));
@@ -222,7 +219,7 @@ public class MoPubDemoGUI : MonoBehaviour
 				if (GUILayout.Button ("Request: " + bannerAdUnit.Substring (0, 6) + "...")) {
 					Debug.Log ("requesting banner with AdUnit: " + bannerAdUnit);
 					MoPub.createBanner (bannerAdUnit, MoPubAdPosition.BottomRight);
-					_requestedBannerAdUnits.Enqueue(bannerAdUnit);
+					_requestedBannerAdUnits.Enqueue (bannerAdUnit);
 				}
 
 				GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit];
@@ -321,9 +318,9 @@ public class MoPubDemoGUI : MonoBehaviour
 				GUI.enabled = !_adUnitToLoadedMapping[rewardedVideoAdUnit];
 				if (GUILayout.Button ("Request: " + rewardedVideoAdUnit.Substring (0, 6) + "...")) {
 					Debug.Log ("requesting rewarded video with AdUnit: " +
-						rewardedVideoAdUnit +
-						" and mediation settings: " +
-						MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings));
+					rewardedVideoAdUnit +
+					" and mediation settings: " +
+					MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings));
 					MoPub.requestRewardedVideo (rewardedVideoAdUnit,
 						mediationSettings,
 						"rewarded, video, mopub",
@@ -341,22 +338,22 @@ public class MoPubDemoGUI : MonoBehaviour
 				GUILayout.EndHorizontal ();
 
 				// Display rewards if there's a rewarded video loaded and there are multiple rewards available
-				if (MoPub.hasRewardedVideo(rewardedVideoAdUnit) &&
-					_adUnitToRewardsMapping.ContainsKey(rewardedVideoAdUnit) &&
-					_adUnitToRewardsMapping[rewardedVideoAdUnit].Count > 1) {
+				if (MoPub.hasRewardedVideo (rewardedVideoAdUnit) &&
+				    _adUnitToRewardsMapping.ContainsKey (rewardedVideoAdUnit) &&
+				    _adUnitToRewardsMapping[rewardedVideoAdUnit].Count > 1) {
 
-					GUILayout.BeginVertical();
+					GUILayout.BeginVertical ();
 					GUILayout.Space (sectionMargin);
 					GUILayout.Label ("Select a reward:");
 
 					foreach (MoPubReward reward in _adUnitToRewardsMapping[rewardedVideoAdUnit]) {
-						if (GUILayout.Button(reward.ToString())) {
-							MoPub.selectReward(rewardedVideoAdUnit, reward);
+						if (GUILayout.Button (reward.ToString ())) {
+							MoPub.selectReward (rewardedVideoAdUnit, reward);
 						}
 					}
 
 					GUILayout.Space (sectionMargin);
-					GUILayout.EndVertical();
+					GUILayout.EndVertical ();
 				}
 			}
 		} else {
