@@ -18,8 +18,8 @@ task wrapper(type: Wrapper) {
 android {
 
     defaultConfig {
-        versionCode 54
-        versionName '4.16.1'
+        versionCode 55
+        versionName '4.17.0'
         consumerProguardFiles 'proguard.txt'
     }
 

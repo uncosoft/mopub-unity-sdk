@@ -1,10 +1,15 @@
+## Version 4.17.0 (September 28, 2017)
+- Rewarded Ads can now send up optional custom data through the server completion url. See [`MoPub.showRewardedVideo (string, string)`](https://github.com/mopub/mopub-unity-sdk/blob/e0697d2f03c972de70d94aac39d5990bb30389af/unity/MoPubUnityPlugin/Assets/MoPub/MoPub.cs#L348).
+- Several improvements to the Sample Scene, including better layout, error cleanup, more details on failures, and showing the versions of the running Plugin and SDK.
+- The MoPub Unity Plugin is now compatible with version 4.17.0 of the MoPub Android SDK and version 4.17.0 of the MoPub iOS SDK.
+
 ## Version 4.16.1 (September 8, 2017)
 - The MoPub Unity Plugin is now fully open source! Please see the [readme](https://github.com/mopub/mopub-unity-sdk/blob/master/README.md) for details and building instructions.
 - This release does not change the SDK compatibility; the Plugin is still compatible with version 4.16.1 of the MoPub Android SDK and version 4.16.0 of the MoPub iOS SDK.
 
 ## Version 4.16.0 (August 30, 2017)
 - The MoPub Unity Plugin is now compatible with version 4.16.1 of the MoPub Android SDK and version 4.16.0 of the MoPub iOS SDK.
-- Rewarded Videos have a new init method. See `MoPub.initializeRewardedVideo(MoPubRewardedNetwork[])`. Pass in a list of networks to initialize, and MoPub will initialize those networks with the settings from the previous ad request, persisted across app close.
+- Rewarded Videos have a new init method. See [`MoPub.initializeRewardedVideo(MoPubRewardedNetwork[])`](https://github.com/mopub/mopub-unity-sdk/blob/e0697d2f03c972de70d94aac39d5990bb30389af/unity/MoPubUnityPlugin/Assets/MoPub/MoPub.cs#L306). Pass in a list of networks to initialize, and MoPub will initialize those networks with the settings from the previous ad request, persisted across app close.
 
 ## Version 4.15.0 (June 29, 2017)
 - The MoPub Unity Plugin is now compatible with version 4.15.0 of the MoPub SDK.
@@ -24,7 +29,7 @@
 
 ## Version 4.10.0
 #### The Mopub Unity Plugin 4.10.0 introduces Modularized SDK for Android
-Starting in the 4.10.0 release, we want to bring the modular SDK support to Android, so you choose to include specific ad formats and decrease overall SDK footprint in your app. For instance, if a publisher only wishes to integrate with MoPub’s interstitials and rewarded videos, you no longer need to include the banner SDK module to your project. For taking advantage of the new modular features, download the Android Unity package 4.10.0 from the "Getting Started" section and choose the modules of your choice from `Assets/Plugins/Android/mopub/libs/` directory:
+Starting in the 4.10.0 release, we want to bring the modular SDK support to Android, so you choose to include specific ad formats and decrease overall SDK footprint in your app. For instance, if a publisher only wishes to integrate with MoPub’s interstitials and rewarded videos, you no longer need to include the banner SDK module to your project. For taking advantage of the new modular features, download the Android Unity package 4.10.0 from the "Getting Started" section and choose the modules of your choice from [`Assets/Plugins/Android/mopub/libs/`](https://github.com/mopub/mopub-unity-sdk/tree/master/unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs) directory:
 
 - mopub-unity-plugins.jar: Unity plugins supporting banner, interstitial, and/or rewarded video (required)
 - mopub-sdk-base.jar: base module for MoPub Android SDK (required)

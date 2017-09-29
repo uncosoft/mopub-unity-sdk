@@ -88,6 +88,10 @@ public class MoPubUnityPlugin {
      * Helper Methods                                                                          *
      * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
 
+    public static String getSDKVersion() {
+        return MoPub.SDK_VERSION;
+    }
+
     protected static Activity getActivity() {
         return UnityPlayer.currentActivity;
     }
