@@ -62,8 +62,11 @@ public class MoPubRewardedNetwork
 
 public static class MoPub
 {
+	public const string PLUGIN_VERSION = "4.17.0";
 	public const double LAT_LONG_SENTINEL = 99999.0;
 	public const string ADUNIT_NOT_FOUND_MSG = "AdUnit {0} not found: no plugin was initialized";
+
+	private static string _sdkName;
 
 	#if UNITY_IPHONE
 	private static Dictionary<string, MP> _pluginsDict = new Dictionary<string, MP> ();
@@ -110,6 +113,29 @@ public static class MoPub
 			string.Join (", ", rewardedVideoAdUnitIds));
 	}
 	#endif
+
+	public static string getPluginName ()
+	{
+		return "MoPub Unity Plugin v" + PLUGIN_VERSION;
+	}
+
+	public static string getSDKName ()
+	{
+		if (_sdkName == null) {
+			#if UNITY_EDITOR
+			_sdkName = "no SDK loaded (not on a mobile device)";
+			#elif UNITY_ANDROID
+			AndroidJavaClass _pluginClass = new AndroidJavaClass ("com.mopub.unity.MoPubUnityPlugin");
+			string sdkVersion = _pluginClass.CallStatic<string> ("getSDKVersion");
+			_sdkName = "Android SDK v" + sdkVersion;
+			#elif UNITY_IPHONE
+			_sdkName = "iOS SDK v" + MoPubBinding.getSDKVersion();
+			#endif
+
+			_sdkName = _sdkName.Replace("+unity", "");
+		}
+		return _sdkName;
+	}
 
 
 	// Enables/disables location support for banners and interstitials
@@ -315,17 +341,23 @@ public static class MoPub
 	// If a rewarded video ad is loaded this will take over the screen and show the ad
 	public static void showRewardedVideo (string adUnitId)
 	{
+		showRewardedVideo (adUnitId, null);
+	}
+
+	// If a rewarded video ad is loaded this will take over the screen and show the ad
+	public static void showRewardedVideo (string adUnitId, string customData)
+	{
 		#if UNITY_IPHONE
 		MP plugin;
 		if (_pluginsDict.TryGetValue (adUnitId, out plugin)) {
-			plugin.showRewardedVideo ();
+			plugin.showRewardedVideo (customData);
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
 		#elif UNITY_ANDROID
 		MPRewardedVideo plugin;
 		if (_rewardedVideoPluginsDict.TryGetValue (adUnitId, out plugin)) {
-			plugin.showRewardedVideo ();
+			plugin.showRewardedVideo (customData);
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}

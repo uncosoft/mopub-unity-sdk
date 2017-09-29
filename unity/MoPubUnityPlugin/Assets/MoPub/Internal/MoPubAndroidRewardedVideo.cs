@@ -68,12 +68,12 @@ public class MoPubAndroidRewardedVideo
 
 
 	// If a rewarded video ad is loaded this will take over the screen and show the ad
-	public void showRewardedVideo ()
+	public void showRewardedVideo (string customData)
 	{
 		if (Application.platform != RuntimePlatform.Android)
 			return;
 
-		_plugin.Call ("showRewardedVideo");
+		_plugin.Call ("showRewardedVideo", customData);
 	}
 
 

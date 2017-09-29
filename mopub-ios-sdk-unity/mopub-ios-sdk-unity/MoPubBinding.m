@@ -30,6 +30,11 @@ char* cStringCopy(NSString* input)
     return res;
 }
 
+const char * _moPubGetSDKVersion()
+{
+    return cStringCopy([MoPub sharedInstance].version);
+}
+
 void _moPubEnableLocationSupport(bool shouldUseLocation )
 {
     [[MoPubManager sharedManager] enableLocationSupport:shouldUseLocation];
@@ -201,7 +206,7 @@ const char * _mopubGetAvailableRewards( const char * adUnitId )
     return cStringCopy(rewardsString);
 }
 
-void _moPubShowRewardedVideo( const char * adUnitId, const char * currencyName, int currencyAmount )
+void _moPubShowRewardedVideo( const char * adUnitId, const char * currencyName, int currencyAmount, const char * customData )
 {
     NSString *adUnitString = GetStringParam( adUnitId );
     if( ![MPRewardedVideo hasAdAvailableForAdUnitID:adUnitString] )
@@ -221,6 +226,8 @@ void _moPubShowRewardedVideo( const char * adUnitId, const char * currencyName, 
             *stop = YES;
         }
     }];
+    
+    NSString *customDataString = customData != NULL ? GetStringParam( customData ) : nil;
 
-    [MPRewardedVideo presentRewardedVideoAdForAdUnitID:adUnitString fromViewController:[MoPubManager unityViewController] withReward:selectedReward];
+    [MPRewardedVideo presentRewardedVideoAdForAdUnitID:adUnitString fromViewController:[MoPubManager unityViewController] withReward:selectedReward customData:customDataString];
 }

@@ -173,8 +173,10 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
 
     /**
      * Takes over the screen and shows rewarded ad, if one is loaded and ready to play.
+     *
+     * @param customData String with optional custom data for the Rewarded Ad.
      */
-    public void showRewardedVideo() {
+    public void showRewardedVideo(@Nullable final String customData) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 if (!MoPubRewardedVideos.hasRewardedVideo(mAdUnitId)) {
@@ -184,7 +186,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                 }
 
                 MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPlugin.this);
-                MoPubRewardedVideos.showRewardedVideo(mAdUnitId);
+                MoPubRewardedVideos.showRewardedVideo(mAdUnitId, customData);
             }
         });
     }

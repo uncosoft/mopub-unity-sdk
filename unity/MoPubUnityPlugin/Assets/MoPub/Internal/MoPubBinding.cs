@@ -42,6 +42,19 @@ public class MoPubBinding
 	}
 
 	[DllImport ("__Internal")]
+	private static extern string _moPubGetSDKVersion();
+
+	public static string getSDKVersion()
+	{
+		if (Application.platform == RuntimePlatform.IPhonePlayer)
+		{
+			return _moPubGetSDKVersion ();
+		} else {
+			return null;
+		}
+	}
+
+	[DllImport ("__Internal")]
 	private static extern void _moPubEnableLocationSupport (bool shouldUseLocation);
 
 	// Enables/disables location support for banners and interstitials
@@ -219,15 +232,15 @@ public class MoPubBinding
 	}
 
 	[DllImport ("__Internal")]
-	private static extern void _moPubShowRewardedVideo (string adUnitId, string currencyName, int currencyAmount);
+	private static extern void _moPubShowRewardedVideo (string adUnitId, string currencyName, int currencyAmount, string customData);
 
 	// If a rewarded video ad is loaded this will take over the screen and show the ad
-	public void showRewardedVideo ()
+	public void showRewardedVideo (string customData)
 	{
 		if (Application.platform == RuntimePlatform.IPhonePlayer) {
 			string name = (this.selectedReward != null ? this.selectedReward.Label : null);
 			int amount = (this.selectedReward != null ? this.selectedReward.Amount : 0);
-			_moPubShowRewardedVideo (adUnitId, name, amount);
+			_moPubShowRewardedVideo (adUnitId, name, amount, customData);
 		}
 	}
 }

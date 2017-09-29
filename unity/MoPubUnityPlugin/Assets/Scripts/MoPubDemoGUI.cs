@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -11,6 +11,7 @@ public class MoPubDemoGUI : MonoBehaviour
 	private string[] _bannerAdUnits;
 	private string[] _interstitialAdUnits;
 	private string[] _rewardedVideoAdUnits;
+	private string[] _rewardedRichMediaAdUnits;
 	private Dictionary<string, List<MoPubReward>> _adUnitToRewardsMapping =
 		new Dictionary<string, List<MoPubReward>> ();
 	private Dictionary<string, bool> _adUnitToLoadedMapping =
@@ -53,18 +54,16 @@ public class MoPubDemoGUI : MonoBehaviour
 
 	private Dictionary<string, string[]> _rewardedVideoDict = new Dictionary<string, string[]> () {
 		{ "AdColony", new string[] { "339929134a55413d9c0a85496b250057" } },
-		{ "AdMob", new string[] { "49a4a502ed2945fd92bc5798c9421a57" } },
-		{ "Chartboost", new string[] { "df605ab15b56400285c99e521ecc2cb1" } }, {
-			"MoPub",
-			new string[] {
-				"db2ef0eb1600433a8cdc31c75549c6b1",
-				"fdd35fb5d55b4ccf9ceb27c7a3926b7d",
-				"8f000bd5e00246de9c789eed39ff6096"
-			}
-		},
+		{ "MoPub", new string[] { "fdd35fb5d55b4ccf9ceb27c7a3926b7d", "8f000bd5e00246de9c789eed39ff6096" } },
 		{ "Facebook", new string[] { "a8d5f5fff87c49b2a60c5df86ab4f447" } },
 		{ "Unity Ads", new string[] { "facae35b91a1451c87b2d6dcb9776873" } },
 		{ "Vungle", new string[] { "2d38f4e6881341369e9fc2c2d01ddc9d" } }
+	};
+
+	private Dictionary<string, string[]> _rewardedRichMediaDict = new Dictionary<string, string[]> () {
+		{ "AdMob", new string[] { "49a4a502ed2945fd92bc5798c9421a57" } },
+		{ "Chartboost", new string[] { "df605ab15b56400285c99e521ecc2cb1" } },
+		{ "MoPub", new string[] { "db2ef0eb1600433a8cdc31c75549c6b1" } }
 	};
 
 	#elif UNITY_IPHONE
@@ -99,7 +98,28 @@ public class MoPubDemoGUI : MonoBehaviour
 		{ "Unity Ads", new string[] { "676a0fa97aca48cbbe489de5b2fa4cd1" } },
 		{ "Vungle", new string[] { "19a24d282ecb49c5bb43c65f501e33bf" } }
 	};
+
+	private Dictionary<string, string[]> _rewardedRichMediaDict = new Dictionary<string, string[]> () {
+	};
 	#endif
+
+	// Label style for no ad unit messages
+	private GUIStyle _smallerFont;
+
+	// Buffer space between sections
+	private int _sectionMarginSize;
+
+	// Currently selected network
+	private string _network;
+
+	// Default text for custom data fields
+	private static string _customDataDefaultText = "Optional custom data";
+
+	// String to fill with custom data for Rewarded Videos
+	private string _rvCustomData = _customDataDefaultText;
+
+	// String to fill with custom data for Rewarded Rich Media
+	private string _rrmCustomData = _customDataDefaultText;
 
 
 	private static bool IsAdUnitArrayNullOrEmpty (string[] adUnitArray) {
@@ -160,63 +180,111 @@ public class MoPubDemoGUI : MonoBehaviour
 			allRewardedVideoAdUnits = allRewardedVideoAdUnits.Union (rewardedVideoAdUnits).ToArray ();
 		}
 
+		foreach (var rewardedRichMediaAdUnits in _rewardedRichMediaDict.Values) {
+			allRewardedVideoAdUnits = allRewardedVideoAdUnits.Union (rewardedRichMediaAdUnits).ToArray ();
+		}
+
 		addAdUnitsToStateMaps (allBannerAdUnits);
 		addAdUnitsToStateMaps (allInterstitialAdUnits);
 		addAdUnitsToStateMaps (allRewardedVideoAdUnits);
 
-		#if UNITY_ANDROID
+		#if UNITY_ANDROID && !UNITY_EDITOR
 		MoPub.loadBannerPluginsForAdUnits (allBannerAdUnits);
 		MoPub.loadInterstitialPluginsForAdUnits (allInterstitialAdUnits);
 		MoPub.loadRewardedVideoPluginsForAdUnits (allRewardedVideoAdUnits);
-		#elif UNITY_IPHONE
+		#elif UNITY_IPHONE && !UNITY_EDITOR
 		MoPub.loadPluginsForAdUnits(allBannerAdUnits);
 		MoPub.loadPluginsForAdUnits(allInterstitialAdUnits);
 		MoPub.loadPluginsForAdUnits(allRewardedVideoAdUnits);
 		#endif
 
+		#if !UNITY_EDITOR
 		if (!IsAdUnitArrayNullOrEmpty (allRewardedVideoAdUnits)) {
 			MoPub.initializeRewardedVideo ();
 		}
+		#endif
 	}
 
 
 	void OnGUI () {
+		ConfigureGUI ();
+
+		CreateNetworksTab ();
+
+		GUILayout.BeginArea (new Rect (20, 0, Screen.width - 40, Screen.height));
+		GUILayout.BeginVertical ();
+
+		CreateTitleSection ();
+		CreateBannersSection ();
+		CreateInterstitialsSection ();
+		List<MoPubMediationSetting> mediationSettings = GetMediationSettings ();
+		CreateRewardedVideosSection (mediationSettings);
+		CreateRewardedRichMediaSection (mediationSettings);
+		CreateActionsSection ();
+
+		GUILayout.EndVertical ();
+		GUILayout.EndArea ();
+	}
+
+
+	private void ConfigureGUI () {
 		// Set default label style
-		GUI.skin.label.fontSize = 36;
+		GUI.skin.label.fontSize = 42;
 
 		// Set default button style
 		GUI.skin.button.margin = new RectOffset (0, 0, 10, 0);
 		GUI.skin.button.stretchWidth = true;
 		GUI.skin.button.fixedHeight = (Screen.width >= 960 || Screen.height >= 960) ? 75 : 50;
-		GUI.skin.button.fontSize = 28;
+		GUI.skin.button.fontSize = 34;
+
+		// Set default text field style
+		GUI.skin.textField.stretchWidth = true;
+		GUI.skin.textField.fixedHeight = 35;
+		GUI.skin.textField.fontSize = 28;
 
 		// Buffer space between sections
 		var sectionMargin = 36;
+		_smallerFont = new GUIStyle (GUI.skin.label);
+		_smallerFont.fontSize = GUI.skin.button.fontSize;
 
-		// Tabs for networks
+		_sectionMarginSize = GUI.skin.label.fontSize;
+	}
+
+
+	private void CreateNetworksTab () {
 		_selectedToggleIndex = GUI.Toolbar (
 			new Rect (0, Screen.height - GUI.skin.button.fixedHeight, Screen.width, GUI.skin.button.fixedHeight),
 			_selectedToggleIndex,
 			_networkList);
-		string network = _networkList[_selectedToggleIndex];
-		_bannerAdUnits = _bannerDict.ContainsKey (network) ? _bannerDict[network] : null;
-		_interstitialAdUnits = _interstitialDict.ContainsKey (network) ? _interstitialDict[network] : null;
-		_rewardedVideoAdUnits = _rewardedVideoDict.ContainsKey (network) ? _rewardedVideoDict[network] : null;
+		_network = _networkList[_selectedToggleIndex];
+		_bannerAdUnits = _bannerDict.ContainsKey (_network) ? _bannerDict[_network] : null;
+		_interstitialAdUnits = _interstitialDict.ContainsKey (_network) ? _interstitialDict[_network] : null;
+		_rewardedVideoAdUnits = _rewardedVideoDict.ContainsKey (_network) ? _rewardedVideoDict[_network] : null;
+		_rewardedRichMediaAdUnits = _rewardedRichMediaDict.ContainsKey (_network) ? _rewardedRichMediaDict[_network] : null;
+	}
 
 
-		GUILayout.BeginArea (new Rect (0, 0, Screen.width, Screen.height));
-		GUILayout.BeginVertical ();
+	private void CreateTitleSection () {
+		// App title including Plugin and SDK versions
+		GUIStyle centeredStyle = new GUIStyle (GUI.skin.label);
+		centeredStyle.alignment = TextAnchor.UpperCenter;
+		centeredStyle.fontSize = 48;
+		GUI.Label (new Rect (0, 10, Screen.width, 60), MoPub.getPluginName (), centeredStyle);
+		centeredStyle.fontSize = _smallerFont.fontSize;
+		GUI.Label (new Rect (0, 70, Screen.width, 60), "with " + MoPub.getSDKName (), centeredStyle);
+	}
 
 
-		// Banner AdUnits
-		GUILayout.Space (sectionMargin);
-		GUILayout.Label ("Banners:");
+	private void CreateBannersSection () {
+		int titlePadding = 102;
+		GUILayout.Space (titlePadding);
+		GUILayout.Label ("Banners");
 		if (!IsAdUnitArrayNullOrEmpty (_bannerAdUnits)) {
 			foreach (string bannerAdUnit in _bannerAdUnits) {
 				GUILayout.BeginHorizontal ();
 
 				GUI.enabled = !_adUnitToLoadedMapping[bannerAdUnit];
-				if (GUILayout.Button ("Request: " + bannerAdUnit.Substring (0, 6) + "...")) {
+				if (GUILayout.Button (CreateRequestButtonLabel (bannerAdUnit))) {
 					Debug.Log ("requesting banner with AdUnit: " + bannerAdUnit);
 					MoPub.createBanner (bannerAdUnit, MoPubAdPosition.BottomRight);
 					_requestedBannerAdUnits.Enqueue (bannerAdUnit);
@@ -245,19 +313,20 @@ public class MoPubDemoGUI : MonoBehaviour
 				GUILayout.EndHorizontal ();
 			}
 		} else {
-			GUILayout.Label ("No banner AdUnits for " + network);
+			GUILayout.Label ("No banner AdUnits for " + _network, _smallerFont, null);
 		}
+	}
 
 
-		// Interstitial AdUnits
-		GUILayout.Space (sectionMargin);
-		GUILayout.Label ("Interstitials:");
+	private void CreateInterstitialsSection () {
+		GUILayout.Space (_sectionMarginSize);
+		GUILayout.Label ("Interstitials");
 		if (!IsAdUnitArrayNullOrEmpty (_interstitialAdUnits)) {
 			foreach (string interstitialAdUnit in _interstitialAdUnits) {
 				GUILayout.BeginHorizontal ();
 
 				GUI.enabled = !_adUnitToLoadedMapping[interstitialAdUnit];
-				if (GUILayout.Button ("Request: " + interstitialAdUnit.Substring (0, 6) + "...")) {
+				if (GUILayout.Button (CreateRequestButtonLabel (interstitialAdUnit))) {
 					Debug.Log ("requesting interstitial with AdUnit: " + interstitialAdUnit);
 					MoPub.requestInterstitialAd (interstitialAdUnit);
 				}
@@ -271,56 +340,62 @@ public class MoPubDemoGUI : MonoBehaviour
 				GUILayout.EndHorizontal ();
 			}
 		} else {
-			GUILayout.Label ("No interstitial AdUnits for " + network);
+			GUILayout.Label ("No interstitial AdUnits for " + _network, _smallerFont, null);
 		}
+	}
 
 
-		// Rewarded Video AdUnits
-		GUILayout.Space (sectionMargin);
-		GUILayout.Label ("Rewarded Videos:");
+	private List<MoPubMediationSetting> GetMediationSettings () {
+		#if UNITY_ANDROID
+		MoPubMediationSetting adColonySettings = new MoPubMediationSetting ("AdColony");
+		adColonySettings.Add ("withConfirmationDialog", true);
+		adColonySettings.Add ("withResultsDialog", true);
+
+		MoPubMediationSetting chartboostSettings = new MoPubMediationSetting ("Chartboost");
+		chartboostSettings.Add ("customId", "the-user-id");
+
+		MoPubMediationSetting vungleSettings = new MoPubMediationSetting ("Vungle");
+		vungleSettings.Add ("userId", "the-user-id");
+		vungleSettings.Add ("cancelDialogBody", "Cancel Body");
+		vungleSettings.Add ("cancelDialogCloseButton", "Shut it Down");
+		vungleSettings.Add ("cancelDialogKeepWatchingButton", "Watch On");
+		vungleSettings.Add ("cancelDialogTitle", "Cancel Title");
+
+		List<MoPubMediationSetting> mediationSettings = new List<MoPubMediationSetting> ();
+		mediationSettings.Add (adColonySettings);
+		mediationSettings.Add (chartboostSettings);
+		mediationSettings.Add (vungleSettings);
+		#elif UNITY_IPHONE
+		MoPubMediationSetting adColonySettings = new MoPubMediationSetting ("AdColony");
+		adColonySettings.Add ("showPrePopup", true);
+		adColonySettings.Add ("showPostPopup", true);
+
+		MoPubMediationSetting vungleSettings = new MoPubMediationSetting ("Vungle");
+		vungleSettings.Add ("userIdentifier", "the-user-id");
+
+		List<MoPubMediationSetting> mediationSettings = new List<MoPubMediationSetting> ();
+		mediationSettings.Add (adColonySettings);
+		mediationSettings.Add (vungleSettings);
+		#endif
+
+		return mediationSettings;
+	}
+
+
+	private void CreateRewardedVideosSection (List<MoPubMediationSetting> mediationSettings) {
+		GUILayout.Space (_sectionMarginSize);
+		GUILayout.Label ("Rewarded Videos");
 		if (!IsAdUnitArrayNullOrEmpty (_rewardedVideoAdUnits)) {
-			// Set up mediation settings
-			#if UNITY_ANDROID
-			var adColonySettings = new MoPubMediationSetting ("AdColony");
-			adColonySettings.Add ("withConfirmationDialog", true);
-			adColonySettings.Add ("withResultsDialog", true);
-
-			var chartboostSettings = new MoPubMediationSetting ("Chartboost");
-			chartboostSettings.Add ("customId", "the-user-id");
-
-			var vungleSettings = new MoPubMediationSetting ("Vungle");
-			vungleSettings.Add ("userId", "the-user-id");
-			vungleSettings.Add ("cancelDialogBody", "Cancel Body");
-			vungleSettings.Add ("cancelDialogCloseButton", "Shut it Down");
-			vungleSettings.Add ("cancelDialogKeepWatchingButton", "Watch On");
-			vungleSettings.Add ("cancelDialogTitle", "Cancel Title");
-
-			var mediationSettings = new List<MoPubMediationSetting> ();
-			mediationSettings.Add (adColonySettings);
-			mediationSettings.Add (chartboostSettings);
-			mediationSettings.Add (vungleSettings);
-			#elif UNITY_IPHONE
-			var adColonySettings = new MoPubMediationSetting ("AdColony");
-			adColonySettings.Add ("showPrePopup", true);
-			adColonySettings.Add ("showPostPopup", true);
-
-			var vungleSettings = new MoPubMediationSetting ("Vungle");
-			vungleSettings.Add ("userIdentifier", "the-user-id");
-
-			var mediationSettings = new List<MoPubMediationSetting> ();
-			mediationSettings.Add (adColonySettings);
-			mediationSettings.Add (vungleSettings);
-			#endif
-
+			CreateCustomDataField ("rvCustomDataField", ref _rvCustomData);
 			foreach (string rewardedVideoAdUnit in _rewardedVideoAdUnits) {
 				GUILayout.BeginHorizontal ();
 
 				GUI.enabled = !_adUnitToLoadedMapping[rewardedVideoAdUnit];
-				if (GUILayout.Button ("Request: " + rewardedVideoAdUnit.Substring (0, 6) + "...")) {
+				if (GUILayout.Button (CreateRequestButtonLabel (rewardedVideoAdUnit))) {
 					Debug.Log ("requesting rewarded video with AdUnit: " +
-					rewardedVideoAdUnit +
-					" and mediation settings: " +
-					MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings));
+						rewardedVideoAdUnit +
+						" and mediation settings: " +
+						MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings));
 					MoPub.requestRewardedVideo (rewardedVideoAdUnit,
 						mediationSettings,
 						"rewarded, video, mopub",
@@ -331,19 +406,20 @@ public class MoPubDemoGUI : MonoBehaviour
 
 				GUI.enabled = _adUnitToLoadedMapping[rewardedVideoAdUnit];
 				if (GUILayout.Button ("Show")) {
-					MoPub.showRewardedVideo (rewardedVideoAdUnit);
+					MoPub.showRewardedVideo (rewardedVideoAdUnit, GetCustomData (_rvCustomData));
 				}
 				GUI.enabled = true;
 
 				GUILayout.EndHorizontal ();
 
+				#if !UNITY_EDITOR
 				// Display rewards if there's a rewarded video loaded and there are multiple rewards available
 				if (MoPub.hasRewardedVideo (rewardedVideoAdUnit) &&
-				    _adUnitToRewardsMapping.ContainsKey (rewardedVideoAdUnit) &&
-				    _adUnitToRewardsMapping[rewardedVideoAdUnit].Count > 1) {
+					_adUnitToRewardsMapping.ContainsKey (rewardedVideoAdUnit) &&
+					_adUnitToRewardsMapping[rewardedVideoAdUnit].Count > 1) {
 
 					GUILayout.BeginVertical ();
-					GUILayout.Space (sectionMargin);
+					GUILayout.Space (_sectionMarginSize);
 					GUILayout.Label ("Select a reward:");
 
 					foreach (MoPubReward reward in _adUnitToRewardsMapping[rewardedVideoAdUnit]) {
@@ -352,32 +428,111 @@ public class MoPubDemoGUI : MonoBehaviour
 						}
 					}
 
-					GUILayout.Space (sectionMargin);
+					GUILayout.Space (_sectionMarginSize);
 					GUILayout.EndVertical ();
 				}
+				#endif
 			}
 		} else {
-			GUILayout.Label ("No rewarded video AdUnits for " + network);
+			GUILayout.Label ("No rewarded video AdUnits for " + _network, _smallerFont, null);
 		}
+	}
 
 
-		// Report App Open
-		GUILayout.Space (sectionMargin);
-		GUILayout.Label ("Report App Open:");
+	private void CreateRewardedRichMediaSection (List<MoPubMediationSetting> mediationSettings)
+	{
+		GUILayout.Space (_sectionMarginSize);
+		GUILayout.Label ("Rewarded Rich Media");
+		if (!IsAdUnitArrayNullOrEmpty (_rewardedRichMediaAdUnits)) {
+			CreateCustomDataField ("rrmCustomDataField", ref _rrmCustomData);
+			foreach (string rewardedRichMediaAdUnit in _rewardedRichMediaAdUnits) {
+				GUILayout.BeginHorizontal ();
+
+				GUI.enabled = !_adUnitToLoadedMapping[rewardedRichMediaAdUnit];
+				if (GUILayout.Button (CreateRequestButtonLabel (rewardedRichMediaAdUnit))) {
+					Debug.Log ("requesting rewarded rich media with AdUnit: " +
+						rewardedRichMediaAdUnit +
+						" and mediation settings: " +
+						MoPubInternal.ThirdParty.MiniJSON.Json.Serialize (mediationSettings));
+					MoPub.requestRewardedVideo (rewardedRichMediaAdUnit,
+						mediationSettings,
+						"rewarded, video, mopub",
+						37.7833,
+						122.4167,
+						"customer101");
+				}
+
+				GUI.enabled = _adUnitToLoadedMapping[rewardedRichMediaAdUnit];
+				if (GUILayout.Button ("Show")) {
+					MoPub.showRewardedVideo (rewardedRichMediaAdUnit, GetCustomData (_rrmCustomData));
+				}
+				GUI.enabled = true;
+
+				GUILayout.EndHorizontal ();
+
+				#if !UNITY_EDITOR
+				// Display rewards if there's a rewarded rich media ad loaded and there are multiple rewards available
+				if (MoPub.hasRewardedVideo (rewardedRichMediaAdUnit) &&
+					_adUnitToRewardsMapping.ContainsKey (rewardedRichMediaAdUnit) &&
+					_adUnitToRewardsMapping[rewardedRichMediaAdUnit].Count > 1) {
+
+					GUILayout.BeginVertical ();
+					GUILayout.Space (_sectionMarginSize);
+					GUILayout.Label ("Select a reward:");
+
+					foreach (MoPubReward reward in _adUnitToRewardsMapping[rewardedRichMediaAdUnit]) {
+						if (GUILayout.Button (reward.ToString ())) {
+							MoPub.selectReward (rewardedRichMediaAdUnit, reward);
+						}
+					}
+
+					GUILayout.Space (_sectionMarginSize);
+					GUILayout.EndVertical ();
+				}
+				#endif
+			}
+		} else {
+			GUILayout.Label ("No rewarded rich media AdUnits for " + _network, _smallerFont, null);
+		}
+	}
+
+
+	private void CreateCustomDataField (string fieldName, ref string customDataValue)
+	{
+		GUI.SetNextControlName (fieldName);
+		customDataValue = GUILayout.TextField (customDataValue, new GUILayoutOption[] { GUILayout.MinWidth(200) });
+		if (UnityEngine.Event.current.type == EventType.Repaint) {
+			if (GUI.GetNameOfFocusedControl () == fieldName && customDataValue == _customDataDefaultText) {
+				// Clear default text when focused
+				customDataValue = "";
+			} else if (GUI.GetNameOfFocusedControl () != fieldName && customDataValue == "") {
+				// Restore default text when unfocused and empty
+				customDataValue = _customDataDefaultText;
+			}
+		}
+	}
+
+
+	private string GetCustomData (string customDataFieldValue)
+	{
+		return customDataFieldValue != _customDataDefaultText ? customDataFieldValue : null;
+	}
+
+
+	private void CreateActionsSection ()
+	{
+		GUILayout.Space (_sectionMarginSize);
+		GUILayout.Label ("Actions");
 		if (GUILayout.Button ("Report App Open")) {
 			MoPub.reportApplicationOpen ();
 		}
-
-
-		// Enable Location Support
-		GUILayout.Space (sectionMargin);
-		GUILayout.Label ("Enable Location Support:");
 		if (GUILayout.Button ("Enable Location Support")) {
 			MoPub.enableLocationSupport (true);
 		}
+	}
 
 
-		GUILayout.EndVertical ();
-		GUILayout.EndArea ();
+	private string CreateRequestButtonLabel (string adUnit) {
+		return "Request " + adUnit.Substring (0, 10) + "...";
 	}
 }

@@ -3,7 +3,7 @@ my_dir="$(dirname "$0")"
 source "$my_dir/validate.sh"
 
 # Current SDK version
-SDK_VERSION=4.16.1
+SDK_VERSION=4.17.0
 
 # Append "+unity" suffix to SDK_VERSION in MoPub.java
 sed -i.bak 's/^\(.*public static final String SDK_VERSION\)\(.*\)"/\1\2+unity"/' mopub-android-sdk/mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java
