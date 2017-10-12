@@ -34,7 +34,7 @@ config.status
 
 *.apk
 Editor Default Resources/
-Editor Default Resources.meta
+*.meta
 *Package/Temp
 *Package/Library/
 *.csproj
