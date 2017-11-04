@@ -3,7 +3,7 @@ my_dir="$(dirname "$0")"
 source "$my_dir/validate.sh"
 
 # Current SDK version
-SDK_VERSION=4.17.0
+SDK_VERSION=4.18.0
 
 # Append "+unity" suffix to SDK_VERSION in MoPub.java
 sed -i.bak 's/^\(.*public static final String SDK_VERSION\)\(.*\)"/\1\2+unity"/' mopub-android-sdk/mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java
@@ -38,8 +38,14 @@ validate
 cp mopub-android-sdk/mopub-sdk/mopub-sdk-rewardedvideo/build/intermediates/bundles/default/classes.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/mopub-sdk-rewardedvideo.jar
 validate
 
-# Copy MoPub SDK dependency jars
-cp $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
+# Copy MoPub SDK dependency jars/aars
+if [ -f $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar ]; then
+  # jars go under Plugins/Android/mopub/libs/
+  cp $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
+else
+  # aars go under Plugins/Android/
+  cp $ANDROID_HOME/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar unity/MoPubUnityPlugin/Assets/Plugins/Android/android-support-v4-23.1.1.aar
+fi
 validate
 
 # Copy MoPub Custom Events jars

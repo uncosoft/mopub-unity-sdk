@@ -2,20 +2,8 @@
 using System.Collections.Generic;
 
 
+
 #if UNITY_ANDROID
-
-public enum MoPubAdPosition
-{
-	TopLeft,
-	TopCenter,
-	TopRight,
-	Centered,
-	BottomLeft,
-	BottomCenter,
-	BottomRight
-}
-
-
 public class MoPubAndroidBanner
 {
 	private readonly AndroidJavaObject _bannerPlugin;
@@ -68,5 +56,4 @@ public class MoPubAndroidBanner
 		_bannerPlugin.Call ("setBannerKeywords", keywords);
 	}
 }
-
 #endif

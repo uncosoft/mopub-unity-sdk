@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 
 
-#if UNITY_IPHONE || UNITY_ANDROID
 using MoPubReward = MoPubManager.MoPubReward;
+
 #if UNITY_IPHONE
 using MP = MoPubBinding;
 #elif UNITY_ANDROID
@@ -13,6 +13,17 @@ using MPInterstitial = MoPubAndroidInterstitial;
 using MPRewardedVideo = MoPubAndroidRewardedVideo;
 #endif
 
+
+public enum MoPubAdPosition
+{
+	TopLeft,
+	TopCenter,
+	TopRight,
+	Centered,
+	BottomLeft,
+	BottomCenter,
+	BottomRight
+}
 
 public class MoPubMediationSetting : Dictionary<string,object>
 {
@@ -62,7 +73,7 @@ public class MoPubRewardedNetwork
 
 public static class MoPub
 {
-	public const string PLUGIN_VERSION = "4.17.0";
+	public const string PLUGIN_VERSION = "4.18.0";
 	public const double LAT_LONG_SENTINEL = 99999.0;
 	public const string ADUNIT_NOT_FOUND_MSG = "AdUnit {0} not found: no plugin was initialized";
 
@@ -183,15 +194,17 @@ public static class MoPub
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
 	}
-	#elif UNITY_ANDROID
+	#else
 	public static void createBanner (string adUnitId, MoPubAdPosition position)
 	{
+		#if  UNITY_ANDROID
 		MPBanner plugin;
 		if (_bannerPluginsDict.TryGetValue (adUnitId, out plugin)) {
 			plugin.createBanner (position);
 		} else {
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 		}
+		#endif
 	}
 	#endif
 
@@ -384,6 +397,8 @@ public static class MoPub
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 			return false;
 		}
+		#else
+			return false;
 		#endif
 	}
 
@@ -412,6 +427,8 @@ public static class MoPub
 			Debug.LogWarning (String.Format (ADUNIT_NOT_FOUND_MSG, adUnitId));
 			return null;
 		}
+		#else
+			return null;
 		#endif
 	}
 
@@ -436,5 +453,3 @@ public static class MoPub
 		#endif
 	}
 }
-
-#endif

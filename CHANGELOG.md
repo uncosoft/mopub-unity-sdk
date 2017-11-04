@@ -1,3 +1,10 @@
+## New in This Version (4.18.0 - November 3, 2017)
+- Improved documentation for third-party SDKs.
+- Added ability to change log level for iOS (Android already logs everything). See [`MoPubBinding.setSDKLogLevel(MoPubLogLevel)`](https://github.com/mopub/mopub-unity-sdk/blob/79e34235386b751054eeb70dfda2feda84f1762d/unity/MoPubUnityPlugin/Assets/MoPub/Internal/MoPubBinding.cs#L76)
+- Several third-party networks were upgraded.
+- Cleaned up errors for non-mobile platforms.
+- The MoPub Unity Plugin is now compatible with version 4.18.0 of the MoPub Android SDK and version 4.18.0 of the MoPub iOS SDK.
+
 ## Version 4.17.0 (September 28, 2017)
 - Rewarded Ads can now send up optional custom data through the server completion url. See [`MoPub.showRewardedVideo (string, string)`](https://github.com/mopub/mopub-unity-sdk/blob/e0697d2f03c972de70d94aac39d5990bb30389af/unity/MoPubUnityPlugin/Assets/MoPub/MoPub.cs#L348).
 - Several improvements to the Sample Scene, including better layout, error cleanup, more details on failures, and showing the versions of the running Plugin and SDK.
