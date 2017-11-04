@@ -1,8 +1,13 @@
 apply from: '../shared-build.gradle'
 
+repositories {
+    maven { url 'https://jitpack.io' }  // For Vungle
+}
+
 dependencies {
-    compile name: 'vungle-publisher-adaptive-id-4.0.2'
-    compile name: 'dagger-2.4'
-    compile name: 'javax.inject-1'
+    compile 'com.github.vungle:vungle-android-sdk:5.3.0'
+    compile 'com.google.android.gms:play-services-location:11.4.0'
+    compile 'com.google.android.gms:play-services-basement:11.4.0'
+    compile 'com.google.android.gms:play-services-ads:11.4.0'
 }
 

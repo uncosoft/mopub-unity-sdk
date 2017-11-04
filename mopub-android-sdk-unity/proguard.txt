@@ -16,3 +16,13 @@
 -keep class com.google.android.gms.common.GooglePlayServicesUtil {*;}
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {*;}
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {*;}
+
+# For communication with AdColony's WebView
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+# Keep ADCNative class members unobfuscated
+-keepclassmembers class com.adcolony.sdk.ADCNative** {
+    *;
+}

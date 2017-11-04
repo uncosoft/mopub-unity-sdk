@@ -1,5 +1,5 @@
 apply from: '../shared-build.gradle'
 
 dependencies {
-    compile name: 'chartboost-6.5.1'
+    compile name: 'chartboost-7.0.1'
 }

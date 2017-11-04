@@ -1,5 +1,5 @@
 apply from: '../shared-build.gradle'
 
 dependencies {
-    compile (name: 'mm-ad-sdk-6.3.0', ext: 'aar')
+    compile (name: 'mm-ad-sdk-6.6.1', ext: 'aar')
 }

@@ -4,9 +4,40 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-#if UNITY_IPHONE || UNITY_ANDROID
 public class MoPubManager : MonoBehaviour
 {
+
+
+	public class MoPubReward
+	{
+		private readonly string _label;
+		private readonly int _amount;
+
+		public MoPubReward (string label, int amount)
+		{
+			this._label = label;
+			this._amount = amount;
+		}
+
+		public string Label
+		{
+			get { return _label; }
+		}
+
+		public int Amount
+		{
+			get { return _amount; }
+		}
+
+		public override string ToString ()
+		{
+			return string.Format ("\"{0} {1}\"", Amount, Label);
+		}
+	}
+
+
+	#if UNITY_IPHONE || UNITY_ANDROID
+
 	// Fired when an ad loads in the banner. Includes the ad height.
 	public static event Action<float> onAdLoadedEvent;
 
@@ -96,35 +127,6 @@ public class MoPubManager : MonoBehaviour
 		public override string ToString ()
 		{
 			return string.Format ("adUnitId: {0}, currencyType: {1}, amount: {2}", adUnitId, currencyType, amount);
-		}
-	}
-
-
-
-	public class MoPubReward
-	{
-		private readonly string _label;
-		private readonly int _amount;
-
-		public MoPubReward (string label, int amount)
-		{
-			this._label = label;
-			this._amount = amount;
-		}
-
-		public string Label
-		{
-			get { return _label; }
-		}
-
-		public int Amount
-		{
-			get { return _amount; }
-		}
-
-		public override string ToString ()
-		{
-			return string.Format ("\"{0} {1}\"", Amount, Label);
 		}
 	}
 
@@ -294,5 +296,6 @@ public class MoPubManager : MonoBehaviour
 		if (onRewardedVideoLeavingApplicationEvent != null)
 			onRewardedVideoLeavingApplicationEvent (adUnitId);
 	}
+
+	#endif
 }
-#endif

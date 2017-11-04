@@ -17,15 +17,16 @@ public enum MoPubBannerType
 }
 
 
-public enum MoPubAdPosition
-{
-	TopLeft,
-	TopCenter,
-	TopRight,
-	Centered,
-	BottomLeft,
-	BottomCenter,
-	BottomRight
+
+public enum MoPubLogLevel : int {
+	MPLogLevelAll   = 0,
+	MPLogLevelTrace = 10,
+	MPLogLevelDebug = 20,
+	MPLogLevelInfo  = 30,
+	MPLogLevelWarn  = 40,
+	MPLogLevelError = 50,
+	MPLogLevelFatal = 60,
+	MPLogLevelOff   = 70
 }
 
 
@@ -51,6 +52,32 @@ public class MoPubBinding
 			return _moPubGetSDKVersion ();
 		} else {
 			return null;
+		}
+	}
+
+	[DllImport ("__Internal")]
+	private static extern int _moPubGetLogLevel();
+
+	public static MoPubLogLevel getSDKLogLevel()
+	{
+		if (Application.platform == RuntimePlatform.IPhonePlayer)
+		{
+			int logLevelInt = _moPubGetLogLevel ();
+			return (MoPubLogLevel)logLevelInt;
+		} else {
+			Debug.LogWarning ("Attempted to get iOS SDK level on non iOS device!");
+			return MoPubLogLevel.MPLogLevelInfo;
+		}
+	}
+
+	[DllImport ("__Internal")]
+	private static extern void _moPubSetLogLevel(int logLevel);
+
+	public static void setSDKLogLevel(MoPubLogLevel logLevel)
+	{
+		if (Application.platform == RuntimePlatform.IPhonePlayer)
+		{
+			_moPubSetLogLevel ((int) logLevel);
 		}
 	}
 

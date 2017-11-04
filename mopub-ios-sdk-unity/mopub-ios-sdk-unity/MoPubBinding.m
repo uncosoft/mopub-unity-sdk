@@ -35,6 +35,16 @@ const char * _moPubGetSDKVersion()
     return cStringCopy([MoPub sharedInstance].version);
 }
 
+void _moPubSetLogLevel(MPLogLevel logLevel)
+{
+    [MoPub sharedInstance].logLevel = logLevel;
+}
+
+int _moPubGetLogLevel()
+{
+    return [MoPub sharedInstance].logLevel;
+}
+
 void _moPubEnableLocationSupport(bool shouldUseLocation )
 {
     [[MoPubManager sharedManager] enableLocationSupport:shouldUseLocation];
