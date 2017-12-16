@@ -14,6 +14,7 @@
 				1832FFEC1CBD39810065521D /* CopyFiles */,
 			);
 			dependencies = (
+				414834A31FE084F500709AD6 /* PBXTargetDependency */,
 				1832FFE91CBD331D0065521D /* PBXTargetDependency */,
 				1832FFEB1CBD33200065521D /* PBXTargetDependency */,
 			);
@@ -25,6 +26,7 @@
 /* Begin PBXBuildFile section */
 		1832FFED1CBD39860065521D /* libMoPubSDK.a in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1832FF891CBC18C10065521D /* libMoPubSDK.a */; };
 		1832FFEE1CBD39890065521D /* libmopub-ios-sdk-unity.a in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D208F0D1CAD6A2100F2C8F0 /* libmopub-ios-sdk-unity.a */; };
+		414834C01FE08AF500709AD6 /* MoPub.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1832FF931CBC18C10065521D /* MoPub.bundle */; };
 		4D208F1C1CAD6A6000F2C8F0 /* MoPubBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D208F191CAD6A6000F2C8F0 /* MoPubBinding.m */; };
 		4D208F1D1CAD6A6000F2C8F0 /* MoPubManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4D208F1B1CAD6A6000F2C8F0 /* MoPubManager.mm */; };
 /* End PBXBuildFile section */
@@ -51,96 +53,12 @@
 			remoteGlobalIDString = AEF1F32816EF9AD700273462;
 			remoteInfo = "MoPubSDK+Networks";
 		};
-		1832FF8E1CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = AEA97BDE16EF9C030046D464;
-			remoteInfo = Specs;
-		};
-		1832FF901CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 570AFF1819D6174200065388;
-			remoteInfo = MoPubFabric;
-		};
 		1832FF921CBC18C10065521D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 570A005B19D6206800065388;
 			remoteInfo = MoPubResources;
-		};
-		1832FF941CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57CF551319DE44AD000D29C5;
-			remoteInfo = AdColonyCustomEvent;
-		};
-		1832FF961CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57CF54EA19DE442F000D29C5;
-			remoteInfo = ChartboostCustomEvent;
-		};
-		1832FF981CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57CF54B319DE435F000D29C5;
-			remoteInfo = FacebookCustomEvent;
-		};
-		1832FF9A1CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57CF553C19DE4539000D29C5;
-			remoteInfo = GoogleAdMobCustomEvent;
-		};
-		1832FF9C1CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57CF557519DE4607000D29C5;
-			remoteInfo = GreystripeCustomEvent;
-		};
-		1832FF9E1CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57CF559E19DE4664000D29C5;
-			remoteInfo = iAdCustomEvent;
-		};
-		1832FFA01CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57CF55C719DE46E1000D29C5;
-			remoteInfo = InMobiCustomEvent;
-		};
-		1832FFA21CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57CF55FD19DE472B000D29C5;
-			remoteInfo = VungleCustomEvent;
-		};
-		1832FFA41CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57CF562619DE47B5000D29C5;
-			remoteInfo = MillennialCustomEvent;
-		};
-		1832FFA61CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4ADE60141B4FFA66004C3673;
-			remoteInfo = UnityCustomEvent;
 		};
 		1832FFE81CBD331D0065521D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -156,6 +74,27 @@
 			remoteGlobalIDString = 4D208F0C1CAD6A2100F2C8F0;
 			remoteInfo = "mopub-ios-sdk-unity";
 		};
+		414834A21FE084F500709AD6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 570A005A19D6206800065388;
+			remoteInfo = MoPubResources;
+		};
+		414834A91FE084F500709AD6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BCA00B971EF47A91006FF762;
+			remoteInfo = "MoPubSDK-ExcludeNative";
+		};
+		414834AB1FE084F500709AD6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2AAA8DF91D95C77B006962E8;
+			remoteInfo = MoPubSDKTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -165,6 +104,7 @@
 			dstPath = "$(SRCROOT)/bin";
 			dstSubfolderSpec = 0;
 			files = (
+				414834C01FE08AF500709AD6 /* MoPub.bundle in CopyFiles */,
 				1832FFED1CBD39860065521D /* libMoPubSDK.a in CopyFiles */,
 				1832FFEE1CBD39890065521D /* libmopub-ios-sdk-unity.a in CopyFiles */,
 			);
@@ -195,21 +135,11 @@
 			isa = PBXGroup;
 			children = (
 				1832FF891CBC18C10065521D /* libMoPubSDK.a */,
+				414834AA1FE084F500709AD6 /* libMoPubSDK-ExcludeNative.a */,
 				1832FF8B1CBC18C10065521D /* libMoPubSDK-APICheck.a */,
 				1832FF8D1CBC18C10065521D /* libMoPubSDK+Networks.a */,
-				1832FF8F1CBC18C10065521D /* Specs.app */,
-				1832FF911CBC18C10065521D /* libMoPub.a */,
 				1832FF931CBC18C10065521D /* MoPub.bundle */,
-				1832FF951CBC18C10065521D /* libAdColonyCustomEvent.a */,
-				1832FF971CBC18C10065521D /* libChartboostCustomEvent.a */,
-				1832FF991CBC18C10065521D /* libFacebookCustomEvent.a */,
-				1832FF9B1CBC18C10065521D /* libGoogleAdMobCustomEvent.a */,
-				1832FF9D1CBC18C10065521D /* libGreystripeCustomEvent.a */,
-				1832FF9F1CBC18C10065521D /* libiAdCustomEvent.a */,
-				1832FFA11CBC18C10065521D /* libInMobiCustomEvent.a */,
-				1832FFA31CBC18C10065521D /* libVungleCustomEvent.a */,
-				1832FFA51CBC18C10065521D /* libMillennialCustomEvent.a */,
-				1832FFA71CBC18C10065521D /* libUnityCustomEvent.a */,
+				414834AC1FE084F500709AD6 /* MoPubSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -323,20 +253,6 @@
 			remoteRef = 1832FF8C1CBC18C10065521D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1832FF8F1CBC18C10065521D /* Specs.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = Specs.app;
-			remoteRef = 1832FF8E1CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FF911CBC18C10065521D /* libMoPub.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libMoPub.a;
-			remoteRef = 1832FF901CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		1832FF931CBC18C10065521D /* MoPub.bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -344,74 +260,18 @@
 			remoteRef = 1832FF921CBC18C10065521D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1832FF951CBC18C10065521D /* libAdColonyCustomEvent.a */ = {
+		414834AA1FE084F500709AD6 /* libMoPubSDK-ExcludeNative.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libAdColonyCustomEvent.a;
-			remoteRef = 1832FF941CBC18C10065521D /* PBXContainerItemProxy */;
+			path = "libMoPubSDK-ExcludeNative.a";
+			remoteRef = 414834A91FE084F500709AD6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1832FF971CBC18C10065521D /* libChartboostCustomEvent.a */ = {
+		414834AC1FE084F500709AD6 /* MoPubSDKTests.xctest */ = {
 			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libChartboostCustomEvent.a;
-			remoteRef = 1832FF961CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FF991CBC18C10065521D /* libFacebookCustomEvent.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libFacebookCustomEvent.a;
-			remoteRef = 1832FF981CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FF9B1CBC18C10065521D /* libGoogleAdMobCustomEvent.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libGoogleAdMobCustomEvent.a;
-			remoteRef = 1832FF9A1CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FF9D1CBC18C10065521D /* libGreystripeCustomEvent.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libGreystripeCustomEvent.a;
-			remoteRef = 1832FF9C1CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FF9F1CBC18C10065521D /* libiAdCustomEvent.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libiAdCustomEvent.a;
-			remoteRef = 1832FF9E1CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FFA11CBC18C10065521D /* libInMobiCustomEvent.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libInMobiCustomEvent.a;
-			remoteRef = 1832FFA01CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FFA31CBC18C10065521D /* libVungleCustomEvent.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libVungleCustomEvent.a;
-			remoteRef = 1832FFA21CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FFA51CBC18C10065521D /* libMillennialCustomEvent.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libMillennialCustomEvent.a;
-			remoteRef = 1832FFA41CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FFA71CBC18C10065521D /* libUnityCustomEvent.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libUnityCustomEvent.a;
-			remoteRef = 1832FFA61CBC18C10065521D /* PBXContainerItemProxy */;
+			fileType = wrapper.cfbundle;
+			path = MoPubSDKTests.xctest;
+			remoteRef = 414834AB1FE084F500709AD6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -438,6 +298,11 @@
 			isa = PBXTargetDependency;
 			target = 4D208F0C1CAD6A2100F2C8F0 /* mopub-ios-sdk-unity */;
 			targetProxy = 1832FFEA1CBD33200065521D /* PBXContainerItemProxy */;
+		};
+		414834A31FE084F500709AD6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MoPubResources;
+			targetProxy = 414834A21FE084F500709AD6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

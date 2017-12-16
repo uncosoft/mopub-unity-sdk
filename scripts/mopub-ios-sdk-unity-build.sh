@@ -40,9 +40,11 @@ cp mopub-ios-sdk-unity/bin/libmopub-ios-sdk-unity.a unity/MoPubUnityPlugin/Asset
 validate
 cp mopub-ios-sdk-unity/bin/libMoPubSDK.a unity/MoPubUnityPlugin/Assets/Plugins/iOS/mopub/libMoPubSDK.a
 validate
+cp -r mopub-ios-sdk-unity/bin/MoPub.bundle/ unity/MoPubUnityPlugin/Assets/Plugins/iOS/mopub/MoPub.bundle/
+validate
 cp -f mopub-ios-sdk/MoPubSDK/Resources/*.{html,png} unity/MoPubUnityPlugin/Assets/Plugins/iOS/mopub/MoPub.bundle/
 validate
-cp mopub-ios-sdk/MoPubSDK/Resources/MRAID.bundle/mraid.js unity/MoPubUnityPlugin/Assets/Plugins/iOS/mopub/MoPub.bundle/MRAID.bundle/mraid.js.prevent_unity_compilation
+mv unity/MoPubUnityPlugin/Assets/Plugins/iOS/mopub/MoPub.bundle/MRAID.bundle/mraid.js unity/MoPubUnityPlugin/Assets/Plugins/iOS/mopub/MoPub.bundle/MRAID.bundle/mraid.js.prevent_unity_compilation
 
 # Update the iOS resources used when packaging the unity assets.
 
@@ -83,3 +85,7 @@ rm -rf mopub-ios-sdk/AdNetworkSupport/AdMob
 validate
 rm -rf mopub-ios-sdk/AdNetworkSupport/UnityAds
 validate
+
+# Clean up submodule
+cd mopub-ios-sdk
+git checkout .

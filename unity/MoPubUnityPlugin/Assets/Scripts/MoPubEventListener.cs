@@ -69,6 +69,7 @@ public class MoPubEventListener : MonoBehaviour
 		MoPubManager.onRewardedVideoFailedEvent -= onRewardedVideoFailedEvent;
 		MoPubManager.onRewardedVideoExpiredEvent -= onRewardedVideoExpiredEvent;
 		MoPubManager.onRewardedVideoShownEvent -= onRewardedVideoShownEvent;
+		MoPubManager.onRewardedVideoClickedEvent -= onRewardedVideoClickedEvent;
 		MoPubManager.onRewardedVideoFailedToPlayEvent -= onRewardedVideoFailedToPlayEvent;
 		MoPubManager.onRewardedVideoReceivedRewardEvent -= onRewardedVideoReceivedRewardEvent;
 		MoPubManager.onRewardedVideoClosedEvent -= onRewardedVideoClosedEvent;

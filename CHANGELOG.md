@@ -1,4 +1,8 @@
-## New in This Version (4.18.0 - November 3, 2017)
+## Version 4.19.0 (December 15, 2017)
+- Bug fixes.
+- The MoPub Unity Plugin is now compatible with version 4.19.0 of the MoPub Android SDK and version 4.19.0 of the MoPub iOS SDK.
+
+## Version 4.18.0 (November 3, 2017)
 - Improved documentation for third-party SDKs.
 - Added ability to change log level for iOS (Android already logs everything). See [`MoPubBinding.setSDKLogLevel(MoPubLogLevel)`](https://github.com/mopub/mopub-unity-sdk/blob/79e34235386b751054eeb70dfda2feda84f1762d/unity/MoPubUnityPlugin/Assets/MoPub/Internal/MoPubBinding.cs#L76)
 - Several third-party networks were upgraded.

@@ -44,7 +44,7 @@ public class MoPubDemoGUI : MonoBehaviour
 		{ "AdColony", new string[] { "3aa79f11389540db8e250a80e4d16a46" } },
 		{ "Chartboost", new string[] { "376366b49d324dedae3d5edb360c27b4" } },
 		{ "Facebook", new string[] { "9792d876011f4359887d2d26380e8a84" } },
-		{ "Millennial", new string[] { "de4205fc932411e295fa123138070049" } },
+		{ "Millennial", new string[] { "7c8428e5acf94811b03d5d788e6b4c45" } },
 		{ "MoPub", new string[] { "24534e1901884e398f1253216226017e" } },
 		{ "Vungle", new string[] { "4f5e1e97f87c406cb7878b9eff1d2a77" } }
 	};
@@ -52,8 +52,9 @@ public class MoPubDemoGUI : MonoBehaviour
 	private Dictionary<string, string[]> _rewardedVideoDict = new Dictionary<string, string[]> () {
 		{ "AdColony", new string[] { "e258c916e659447d9d98256a3ab2979e" } },
 		{ "Chartboost", new string[] { "df605ab15b56400285c99e521ecc2cb1" } },
+		{ "Facebook", new string[] { "7220c37b8e93499a8f0aff2eb4f0ad3d" } },
 		{ "MoPub", new string[] { "920b6145fb1546cf8b5cf2ac34638bb7" } },
-		{ "Vungle", new string[] { "2d38f4e6881341369e9fc2c2d01ddc9d" } }
+		{ "Vungle", new string[] { "6f21f1edd97944a185df00e850d61a98" } }
 	};
 
 	private Dictionary<string, string[]> _rewardedRichMediaDict = new Dictionary<string, string[]> () {
@@ -62,14 +63,14 @@ public class MoPubDemoGUI : MonoBehaviour
 
 	#elif UNITY_IPHONE
 	private Dictionary<string, string[]> _bannerDict = new Dictionary<string, string[]> () {
-		{ "AdMob", new string[] { "01535a569c8e11e281c11231392559e4" } },
+		{ "AdMob", new string[] { "c9c2ea9a8e1249b68496978b072d2fd2" } },
 		{ "Facebook", new string[] { "446dfa864dcb4469965267694a940f3d" } },
 		{ "Millennial", new string[] { "b506db1f3e054c78bff513f188727748" } },
 		{ "MoPub", new string[] { "0ac59b0996d947309c33f59d6676399f", "23b49916add211e281c11231392559e4"} },
 	};
 
 	private Dictionary<string, string[]> _interstitialDict = new Dictionary<string, string[]> () {
-		{ "AdMob", new string[] { "16ae389a932d11e281c11231392559e4" } },
+		{ "AdMob", new string[] { "744e217f8adc4dec89c87481c9c4006a" } },
 		{ "Chartboost", new string[] { "a425ff78959911e295fa123138070049" } },
 		{ "Facebook", new string[] { "cec4c5ea0ff140d3a15264da23449f97" } },
 		{ "Millennial", new string[] { "93c3fc00fbb54825b6a33b20927315f7" } },
@@ -79,7 +80,7 @@ public class MoPubDemoGUI : MonoBehaviour
 
 	private Dictionary<string, string[]> _rewardedVideoDict = new Dictionary<string, string[]> () {
 		{ "AdColony", new string[] { "52aa460767374250a5aa5174c2345be3" } },
-		{ "AdMob", new string[] { "c0698ac4fb2940379b5465335eeefc5a" } },
+		{ "AdMob", new string[] { "0ceacb73895748ceadf0048a1f989855" } },
 		{ "Chartboost", new string[] { "8be0bb08fb4f4e90a86416c29c235d4a" } },
 		{ "Facebook", new string[] { "5a138cf1a03643ca851647d2b2e20d0d" } },
 		{ "Millennial", new string[] { "1908cd1ff0934f69bac04c316accc854" } },
@@ -141,9 +142,11 @@ public class MoPubDemoGUI : MonoBehaviour
 
 
 	public void bannerLoaded () {
-		string firstRequestedBannerAdUnit = _requestedBannerAdUnits.Dequeue ();
-		_adUnitToLoadedMapping[firstRequestedBannerAdUnit] = true;
-		_bannerAdUnitToShownMapping[firstRequestedBannerAdUnit] = true;
+		if (_requestedBannerAdUnits.Count > 0) {
+			string firstRequestedBannerAdUnit = _requestedBannerAdUnits.Dequeue ();
+			_adUnitToLoadedMapping[firstRequestedBannerAdUnit] = true;
+			_bannerAdUnitToShownMapping[firstRequestedBannerAdUnit] = true;
+		}
 	}
 
 
