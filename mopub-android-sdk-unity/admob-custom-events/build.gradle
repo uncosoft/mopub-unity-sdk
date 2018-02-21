@@ -1,5 +1,0 @@
-apply from: '../shared-build.gradle'
-
-dependencies {
-    compile 'com.google.android.gms:play-services-ads:10.2.0'
-}

@@ -24,7 +24,7 @@ public class MoPubAndroidRewardedVideo
 	}
 
 
-	// Initializes the rewarded video system
+	// Initializes the rewarded ad system
 	public static void initializeRewardedVideo ()
 	{
 		if (Application.platform != RuntimePlatform.Android)

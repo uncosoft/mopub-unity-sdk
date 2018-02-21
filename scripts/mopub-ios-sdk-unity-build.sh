@@ -56,36 +56,6 @@ echo "Copying all .h files from mopub-ios-sdk/MoPubSDK/ to unity/MoPubUnityPlugi
 find mopub-ios-sdk/MoPubSDK -name "*.h" -type f -exec cp {} unity/MoPubUnityPlugin/Assets/MoPub/Editor/Support/MoPubSDK \;
 validate
 
-# This is a hack until ADF-2658 makes it in.
-rm -rf mopub-ios-sdk/AdNetworkSupport/AdMob
-validate
-cp -R mopub-ios-sdk/AdNetworkSupport/GoogleAdMob mopub-ios-sdk/AdNetworkSupport/AdMob
-validate
-rm -rf mopub-ios-sdk/AdNetworkSupport/UnityAds
-validate
-cp -R mopub-ios-sdk/AdNetworkSupport/Unity mopub-ios-sdk/AdNetworkSupport/UnityAds
-validate
-
-# Clean and update the contents of all the supported iOS custom events. This is to ensure that the unity asset packages
-# are built with the most up to date changes.
-SUPPORT_LIBS=( "AdColony" "AdMob" "Chartboost" "Facebook" "Millennial" "UnityAds" "Vungle" )
-for SUPPORT_LIB in "${SUPPORT_LIBS[@]}"
-do
-    IOS_EXPORT_FOLDERS_SUPPORT="unity/MoPubUnityPlugin/Assets/MoPub/Editor/Support/$SUPPORT_LIB"
-
-    echo "Updating $SUPPORT_LIB Custom Events"
-    rm -rf $IOS_EXPORT_FOLDERS_SUPPORT
-    validate
-    cp -R mopub-ios-sdk/AdNetworkSupport/$SUPPORT_LIB $IOS_EXPORT_FOLDERS_SUPPORT
-    validate
-done
-
-# This is a hack until ADF-2658 makes it in.
-rm -rf mopub-ios-sdk/AdNetworkSupport/AdMob
-validate
-rm -rf mopub-ios-sdk/AdNetworkSupport/UnityAds
-validate
-
 # Clean up submodule
 cd mopub-ios-sdk
 git checkout .

@@ -39,5 +39,4 @@ Editor Default Resources/
 *Package/Library/
 *.csproj
 mopub-unity-plugin/exportlog.txt
-unity/MoPubUnityPlugin/ProjectSettings/
 *.zip

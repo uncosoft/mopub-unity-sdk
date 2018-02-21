@@ -10,11 +10,12 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (4.19.0 - December 15, 2017)
-- Bug fixes.
-- The MoPub Unity Plugin is now compatible with version 4.19.0 of the MoPub Android SDK and version 4.19.0 of the MoPub iOS SDK.
+## New in This Version (4.20.0 - February 20, 2018)
+- The MoPub Unity Plugin now includes version 4.20.0 of the MoPub Android SDK and version 4.20.0 of the MoPub iOS SDK.
+- We are formally separating network adapters from our MoPub SDK. This is to enable an independent release cadence resulting in faster updates and certification cycles. New mediation location is accessible [here](https://github.com/mopub/mopub-unity-mediation).
+We have also added an additional tool, making it easy for publishers to get up and running with the mediation integration. Check out https://developers.mopub.com/docs/mediation/integrate/ and integration instructions at https://developers.mopub.com/docs/unity/getting-started/.
 
-Please view the [changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements in all releases.
+Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
 ## License
 
@@ -35,16 +36,14 @@ git submodule update
 * `mopub-android-sdk-unity/` - Android wrapper, contains a project that adds Unity-specific files to the Android SDK
 * `mopub-ios-sdk/` - Git submodule of the MoPub iOS SDK
 * `mopub-ios-sdk-unity/` - iOS wrapper, contains a project that adds Unity-specific files to the iOS SDK
-* `unity/` - Contains the Unity Plugin
+* `unity/` - Contains MoPub Unity Plugin sample project
 * `mopub-unity-plugin/` - Where the Unity packages are exported after running `./unity-export-package.sh`
 
 ### Prerequisities
 Before you can build the plugin per the instructions below, you must do the following:
 * Place any third-party SDKs and dependencies in their corresponding directories, per README files in:
   * `mopub-android-sdk-unity/libs/` - Android wrapper dependencies
-  * `mopub-android-sdk-unity/[each network]-custom-events/libs/` - Android wrapper third-party networks
-  * `unity/MoPubUnityPlugin/Assets/Plugins/Android/` - Android third-party AARs
-  * `unity/MoPubUnityPlugin/Assets/Plugins/Android/mopub-support/libs/[each network]/` - Android third-party JARs
+  * `unity/MoPubUnityPlugin/Assets/Plugins/Android/` - Android plugin dependencies
   * iOS loads dependencies at runtime, so there's no need to add them prior to building
 * Set up the Unity IDE:
   * Make sure you are logged in to your Unity account
