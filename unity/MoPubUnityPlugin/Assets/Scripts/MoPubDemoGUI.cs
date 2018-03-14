@@ -193,7 +193,7 @@ public class MoPubDemoGUI : MonoBehaviour
 				GUI.enabled = !_adUnitToLoadedMapping[bannerAdUnit];
 				if (GUILayout.Button (CreateRequestButtonLabel (bannerAdUnit))) {
 					Debug.Log ("requesting banner with AdUnit: " + bannerAdUnit);
-					MoPub.createBanner (bannerAdUnit, MoPubAdPosition.BottomRight);
+					MoPub.createBanner (bannerAdUnit, MoPubAdPosition.BottomCenter);
 					_requestedBannerAdUnits.Enqueue (bannerAdUnit);
 				}
 
