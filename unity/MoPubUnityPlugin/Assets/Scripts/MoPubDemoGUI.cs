@@ -133,7 +133,10 @@ public class MoPubDemoGUI : MonoBehaviour
 	void OnGUI () {
 		ConfigureGUI ();
 
-		GUILayout.BeginArea (new Rect (20, 100f, Screen.width - 40, Screen.height));
+		Rect guiArea = Screen.safeArea;
+		guiArea.x += 20;
+		guiArea.width -= 40;
+		GUILayout.BeginArea(guiArea);
 		GUILayout.BeginVertical ();
 
 		CreateTitleSection ();

@@ -73,7 +73,7 @@ public class MoPubRewardedNetwork
 
 public static class MoPub
 {
-	public const string PLUGIN_VERSION = "4.20.1";
+	public const string PLUGIN_VERSION = "4.20.2";
 	public const double LAT_LONG_SENTINEL = 99999.0;
 	public const string ADUNIT_NOT_FOUND_MSG = "AdUnit {0} not found: no plugin was initialized";
 

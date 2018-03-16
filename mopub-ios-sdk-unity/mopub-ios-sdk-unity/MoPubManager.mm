@@ -68,58 +68,101 @@ extern "C" {
 
 - (void)adjustAdViewFrameToShowAdView
 {
-	// fetch screen dimensions and useful values
-	CGRect origFrame = _adView.frame;
+    if (@available(iOS 11.0, *)) {
+        UIView *superview = _adView.superview;
 
-	CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-	CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+        if(superview) {
 
-	// swap only on pre-iOS 8 when width is always less then height even in landscape
-	if( UIInterfaceOrientationIsLandscape( [MoPubManager unityViewController].interfaceOrientation ) && screenWidth < screenHeight )
-		screenHeight = [UIScreen mainScreen].bounds.size.width;
-	
-	
-	switch( bannerPosition )
-	{
-		case MoPubAdPositionTopLeft:
-			origFrame.origin.x = 0;
-			origFrame.origin.y = 0;
-			_adView.autoresizingMask = ( UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin );
-			break;
-		case MoPubAdPositionTopCenter:
-			origFrame.origin.x = ( screenWidth / 2 ) - ( origFrame.size.width / 2 );
-			origFrame.origin.y = 0;
-			_adView.autoresizingMask = ( UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin );
-			break;
-		case MoPubAdPositionTopRight:
-			origFrame.origin.x = screenWidth - origFrame.size.width;
-			origFrame.origin.y = 0;
-			_adView.autoresizingMask = ( UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin );
-			break;
-		case MoPubAdPositionCentered:
-			origFrame.origin.x = ( screenWidth / 2 ) - ( origFrame.size.width / 2 );
-			origFrame.origin.y = ( screenHeight / 2 ) - ( origFrame.size.height / 2 );
-			_adView.autoresizingMask = ( UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin );
-			break;
-		case MoPubAdPositionBottomLeft:
-			origFrame.origin.x = 0;
-			origFrame.origin.y = screenHeight - origFrame.size.height;
-			_adView.autoresizingMask = ( UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin );
-			break;
-		case MoPubAdPositionBottomCenter:
-			origFrame.origin.x = ( screenWidth / 2 ) - ( origFrame.size.width / 2 );
-			origFrame.origin.y = screenHeight - origFrame.size.height;
-			_adView.autoresizingMask = ( UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin );
-			break;
-		case MoPubAdPositionBottomRight:
-			origFrame.origin.x = screenWidth - _adView.frame.size.width;
-			origFrame.origin.y = screenHeight - origFrame.size.height;
-			_adView.autoresizingMask = ( UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin );
-			break;
-	}
-	
-	_adView.frame = origFrame;
-    NSLog( @"setting adView frame: %@", NSStringFromCGRect( origFrame ) );
+            _adView.translatesAutoresizingMaskIntoConstraints = NO;
+
+            NSMutableArray <NSLayoutConstraint *> *constraints = [NSMutableArray arrayWithArray:@[
+                                                                                                  [_adView.widthAnchor constraintEqualToConstant:CGRectGetWidth(_adView.frame)],
+                                                                                                  [_adView.heightAnchor constraintEqualToConstant:CGRectGetHeight(_adView.frame)],
+                                                                                                  ]];
+            switch( bannerPosition )
+            {
+                case MoPubAdPositionTopLeft:
+                    [constraints addObjectsFromArray:@[[_adView.topAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.topAnchor],
+                                                       [_adView.leftAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.leftAnchor],]];
+                    break;
+                case MoPubAdPositionTopCenter:
+                    [constraints addObjectsFromArray:@[[_adView.topAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.topAnchor],
+                                                       [_adView.centerXAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerXAnchor],]];
+                    break;
+                case MoPubAdPositionTopRight:
+                    [constraints addObjectsFromArray:@[[_adView.topAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.topAnchor],
+                                                       [_adView.rightAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.rightAnchor],]];
+                    break;
+                case MoPubAdPositionCentered:
+                    [constraints addObjectsFromArray:@[[_adView.centerXAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerXAnchor],
+                                                       [_adView.centerYAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerYAnchor],]];
+                    break;
+                case MoPubAdPositionBottomLeft:
+                    [constraints addObjectsFromArray:@[[_adView.bottomAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.bottomAnchor],
+                                                       [_adView.leftAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.leftAnchor],]];
+                    break;
+                case MoPubAdPositionBottomCenter:
+                    [constraints addObjectsFromArray:@[[_adView.bottomAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.bottomAnchor],
+                                                       [_adView.centerXAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerXAnchor],]];
+                    break;
+                case MoPubAdPositionBottomRight:
+                    [constraints addObjectsFromArray:@[[_adView.bottomAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.bottomAnchor],
+                                                       [_adView.rightAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.rightAnchor],]];
+                    break;
+            }
+            [NSLayoutConstraint activateConstraints:constraints];
+            NSLog( @"setting adView frame: %@", NSStringFromCGRect( _adView.frame ) );
+        } else {
+            NSLog( @"_adview.superview was nil! Was the ad view not added to another view?@" );
+        }
+    } else {
+        // fetch screen dimensions and useful values
+        CGRect origFrame = _adView.frame;
+
+        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+        CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+
+        switch( bannerPosition )
+        {
+            case MoPubAdPositionTopLeft:
+                origFrame.origin.x = 0;
+                origFrame.origin.y = 0;
+                _adView.autoresizingMask = ( UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin );
+                break;
+            case MoPubAdPositionTopCenter:
+                origFrame.origin.x = ( screenWidth / 2 ) - ( origFrame.size.width / 2 );
+                _adView.autoresizingMask = ( UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin );
+                break;
+            case MoPubAdPositionTopRight:
+                origFrame.origin.x = screenWidth - origFrame.size.width;
+                origFrame.origin.y = 0;
+                _adView.autoresizingMask = ( UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin );
+                break;
+            case MoPubAdPositionCentered:
+                origFrame.origin.x = ( screenWidth / 2 ) - ( origFrame.size.width / 2 );
+                origFrame.origin.y = ( screenHeight / 2 ) - ( origFrame.size.height / 2 );
+                _adView.autoresizingMask = ( UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin );
+                break;
+            case MoPubAdPositionBottomLeft:
+                origFrame.origin.x = 0;
+                origFrame.origin.y = screenHeight - origFrame.size.height;
+                _adView.autoresizingMask = ( UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin );
+                break;
+            case MoPubAdPositionBottomCenter:
+                origFrame.origin.x = ( screenWidth / 2 ) - ( origFrame.size.width / 2 );
+                origFrame.origin.y = screenHeight - origFrame.size.height;
+                _adView.autoresizingMask = ( UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin );
+                break;
+            case MoPubAdPositionBottomRight:
+                origFrame.origin.x = screenWidth - _adView.frame.size.width;
+                origFrame.origin.y = screenHeight - origFrame.size.height;
+                _adView.autoresizingMask = ( UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin );
+                break;
+        }
+
+        _adView.frame = origFrame;
+        NSLog( @"setting adView frame: %@", NSStringFromCGRect( origFrame ) );
+    }
 }
 
 
