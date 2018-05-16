@@ -1,6 +1,7 @@
 package com.mopub.unity;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -93,17 +94,31 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
     }
 
     /**
-     * Sets the given keywords for the current banner and then reloads it.
+     * Sets the given keywords for the current banner and then reloads it. Personally
+     * Identifiable Information (PII) should ONLY be passed via
+     * {@link #refreshBanner(String, String)}
      *
-     * @param keywords String with comma-separated key:value pairs of keywords.
+     * @param keywords String with comma-separated key:value pairs of non-PII keywords.
      */
-    public void setBannerKeywords(final String keywords) {
+    public void refreshBanner(final String keywords) {
+        refreshBanner(keywords, null);
+    }
+
+    /**
+     * Sets the given keywords for the current banner and then reloads it. Personally
+     * Identifiable Information (PII) should ONLY be present in the userDataKeywords field.
+     *
+     * @param keywords String with comma-separated key:value pairs of non-PII keywords.
+     * @param userDataKeywords String with comma-separated key:value pairs of PII keywords.
+     */
+    public void refreshBanner(final String keywords, @Nullable final String userDataKeywords) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 if (mMoPubView == null)
                     return;
 
                 mMoPubView.setKeywords(keywords);
+                mMoPubView.setUserDataKeywords(userDataKeywords);
                 mMoPubView.loadAd();
             }
         });
@@ -127,14 +142,24 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
     }
 
 
+
+    public void setAutorefreshEnabled(boolean enabled) {
+        mMoPubView.setAutorefreshEnabled(enabled);
+    }
+
+
+    public void forceRefresh() {
+        mMoPubView.forceRefresh();
+    }
+
+
     /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
      * BannerAdListener implementation                                                         *
      * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
 
     @Override
     public void onBannerLoaded(MoPubView banner) {
-        UnityPlayer.UnitySendMessage(
-                "MoPubManager", "onAdLoaded", String.valueOf(banner.getAdHeight()));
+        UnityEvent.AdLoaded.Emit(mAdUnitId, String.valueOf(banner.getAdHeight()));
 
         // re-center the ad
         int height = mMoPubView.getAdHeight();
@@ -151,25 +176,22 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
 
     @Override
     public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-        String errorMsg =
-                String.format("adUnitId = %s, errorCode = %s", mAdUnitId, errorCode.toString());
-        Log.i(TAG, "onAdFailed: " + errorMsg);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onAdFailed", errorMsg);
+        UnityEvent.AdFailed.Emit(mAdUnitId, errorCode.toString());
     }
 
     @Override
     public void onBannerClicked(MoPubView banner) {
-        UnityPlayer.UnitySendMessage("MoPubManager", "onAdClicked", mAdUnitId);
+        UnityEvent.AdClicked.Emit(mAdUnitId);
     }
 
     @Override
     public void onBannerExpanded(MoPubView banner) {
-        UnityPlayer.UnitySendMessage("MoPubManager", "onAdExpanded", mAdUnitId);
+        UnityEvent.AdExpanded.Emit(mAdUnitId);
     }
 
     @Override
     public void onBannerCollapsed(MoPubView banner) {
-        UnityPlayer.UnitySendMessage("MoPubManager", "onAdCollapsed", mAdUnitId);
+        UnityEvent.AdCollapsed.Emit(mAdUnitId);
     }
 
 

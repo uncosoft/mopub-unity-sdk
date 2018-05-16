@@ -1,5 +1,6 @@
 package com.mopub.unity;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.mopub.mobileads.MoPubErrorCode;
@@ -30,33 +31,60 @@ public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin
      * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
 
     /**
-     * Loads an interstitial ad for the current ad unit ID and with the given keywords.
+     * Loads an interstitial ad for the current ad unit ID and with the given keywords. Personally
+     * Identifiable Information (PII) should ONLY be passed via
+     * {@link #request(String, String)}
      *
-     * @param keywords String with comma-separated key:value pairs of keywords.
+     * @param keywords String with comma-separated key:value pairs of non-PII keywords.
      */
-    public void requestInterstitialAd(final String keywords) {
+    public void request(final String keywords) {
+        request(keywords, null);
+    }
+    /**
+     * Loads an interstitial ad for the current ad unit ID and with the given keywords. Personally
+     * Identifiable Information (PII) should ONLY be present in the userDataKeywords field.
+     *
+     * @param keywords String with comma-separated key:value pairs of non-PII keywords.
+     * @param userDataKeywords String with comma-separated key:value pairs of PII keywords.
+     */
+    public void request(final String keywords, @Nullable final String userDataKeywords) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 mMoPubInterstitial = new MoPubInterstitial(getActivity(), mAdUnitId);
                 mMoPubInterstitial.setInterstitialAdListener(MoPubInterstitialUnityPlugin.this);
 
-                if (keywords != null && keywords.length() > 0)
-                    mMoPubInterstitial.setKeywords(keywords);
-
+                mMoPubInterstitial.setKeywords(keywords);
+                mMoPubInterstitial.setUserDataKeywords(userDataKeywords);
                 mMoPubInterstitial.load();
             }
         });
     }
 
     /**
+     * Check if the interstitial ad has finished loading.
+     */
+    public boolean isReady() {
+        return mMoPubInterstitial.isReady();
+    }
+
+
+    /**
      * Shows the loaded interstitial ad.
      */
-    public void showInterstitialAd() {
+    public void show() {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 mMoPubInterstitial.show();
             }
         });
+    }
+
+
+    /**
+     * Destroy the interstitial ad.
+     */
+    public void destroy() {
+        mMoPubInterstitial.destroy();
     }
 
 
@@ -66,33 +94,26 @@ public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin
 
     @Override
     public void onInterstitialLoaded(MoPubInterstitial interstitial) {
-        Log.i(TAG, "onInterstitialLoaded: " + interstitial);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialLoaded", mAdUnitId);
+        UnityEvent.InterstitialLoaded.Emit(mAdUnitId);
     }
 
     @Override
     public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-        String errorMsg =
-                String.format("adUnitId = %s, errorCode = %s", mAdUnitId, errorCode.toString());
-        Log.i(TAG, "onInterstitialFailed: " + errorMsg);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialFailed", errorMsg);
+        UnityEvent.InterstitialFailed.Emit(mAdUnitId, errorCode.toString());
     }
 
     @Override
     public void onInterstitialShown(MoPubInterstitial interstitial) {
-        Log.i(TAG, "onInterstitialShown: " + interstitial);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialShown", mAdUnitId);
+        UnityEvent.InterstitialShown.Emit(mAdUnitId);
     }
 
     @Override
     public void onInterstitialClicked(MoPubInterstitial interstitial) {
-        Log.i(TAG, "onInterstitialClicked: " + interstitial);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialClicked", mAdUnitId);
+        UnityEvent.InterstitialClicked.Emit(mAdUnitId);
     }
 
     @Override
     public void onInterstitialDismissed(MoPubInterstitial interstitial) {
-        Log.i(TAG, "onInterstitialDismissed: " + interstitial);
-        UnityPlayer.UnitySendMessage("MoPubManager", "onInterstitialDismissed", mAdUnitId);
+        UnityEvent.InterstitialDismissed.Emit(mAdUnitId);
     }
 }

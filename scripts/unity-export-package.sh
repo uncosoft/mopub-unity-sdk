@@ -4,7 +4,8 @@ source "$my_dir/validate.sh"
 
 PACKAGE_NAME=MoPubUnity
 UNITY_BIN=/Applications/Unity/Unity.app/Contents/MacOS/Unity
-PROJECT_PATH="`pwd`/unity/MoPubUnityPlugin"
+# UNITY_BIN=/Applications/Unity/Hub/Editor/2017.4.1f1/Unity.app/Contents/MacOS/Unity
+PROJECT_PATH="`pwd`/unity-sample-app"
 OUT_DIR="`pwd`/mopub-unity-plugin"
 DEST_PACKAGE="$OUT_DIR/$PACKAGE_NAME.unitypackage"
 EXPORT_FOLDERS_MAIN="Assets/MoPub Assets/Plugins Assets/Scripts Assets/Scenes"

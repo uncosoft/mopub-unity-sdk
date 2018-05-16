@@ -20,13 +20,11 @@ task wrapper(type: Wrapper) {
 }
 
 android {
-
     defaultConfig {
         versionCode 58
         versionName '4.20.0'
         consumerProguardFiles 'proguard.txt'
     }
-
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -38,7 +36,6 @@ android {
             assets.srcDirs = ['assets']
         }
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -49,6 +46,8 @@ android {
             minifyEnabled false
         }
     }
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
 }
 
 dependencies {

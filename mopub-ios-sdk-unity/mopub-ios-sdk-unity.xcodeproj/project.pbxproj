@@ -14,9 +14,8 @@
 				1832FFEC1CBD39810065521D /* CopyFiles */,
 			);
 			dependencies = (
-				414834A31FE084F500709AD6 /* PBXTargetDependency */,
-				1832FFE91CBD331D0065521D /* PBXTargetDependency */,
-				1832FFEB1CBD33200065521D /* PBXTargetDependency */,
+				57230DEB2089334A0011A197 /* PBXTargetDependency */,
+				57230DD4208931430011A197 /* PBXTargetDependency */,
 			);
 			name = "MoPub for Unity";
 			productName = "MoPub for Unity";
@@ -24,11 +23,12 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		1832FFED1CBD39860065521D /* libMoPubSDK.a in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1832FF891CBC18C10065521D /* libMoPubSDK.a */; };
-		1832FFEE1CBD39890065521D /* libmopub-ios-sdk-unity.a in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D208F0D1CAD6A2100F2C8F0 /* libmopub-ios-sdk-unity.a */; };
-		414834C01FE08AF500709AD6 /* MoPub.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1832FF931CBC18C10065521D /* MoPub.bundle */; };
-		4D208F1C1CAD6A6000F2C8F0 /* MoPubBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D208F191CAD6A6000F2C8F0 /* MoPubBinding.m */; };
-		4D208F1D1CAD6A6000F2C8F0 /* MoPubManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4D208F1B1CAD6A6000F2C8F0 /* MoPubManager.mm */; };
+		57230DD5208931530011A197 /* MoPubSDKFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 574851FA2087CC2500635B77 /* MoPubSDKFramework.framework */; };
+		57230DD62089315C0011A197 /* MoPubBinding.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D208F191CAD6A6000F2C8F0 /* MoPubBinding.m */; };
+		57230DD7208931610011A197 /* MoPubManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D208F1A1CAD6A6000F2C8F0 /* MoPubManager.h */; };
+		57230DD82089316B0011A197 /* MoPubManager.mm in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D208F1B1CAD6A6000F2C8F0 /* MoPubManager.mm */; };
+		57230DE6208932480011A197 /* MoPubBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D208F191CAD6A6000F2C8F0 /* MoPubBinding.m */; };
+		57230DE72089324C0011A197 /* MoPubManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4D208F1B1CAD6A6000F2C8F0 /* MoPubManager.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,46 +39,11 @@
 			remoteGlobalIDString = AE515F9C171F1B110086B464;
 			remoteInfo = MoPubSDK;
 		};
-		1832FF8A1CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 468BCE1019996C550054A051;
-			remoteInfo = "MoPubSDK-APICheck";
-		};
-		1832FF8C1CBC18C10065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = AEF1F32816EF9AD700273462;
-			remoteInfo = "MoPubSDK+Networks";
-		};
 		1832FF921CBC18C10065521D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 570A005B19D6206800065388;
-			remoteInfo = MoPubResources;
-		};
-		1832FFE81CBD331D0065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = AE515F39171F1B110086B464;
-			remoteInfo = MoPubSDK;
-		};
-		1832FFEA1CBD33200065521D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4D208F051CAD6A2100F2C8F0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4D208F0C1CAD6A2100F2C8F0;
-			remoteInfo = "mopub-ios-sdk-unity";
-		};
-		414834A21FE084F500709AD6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 570A005A19D6206800065388;
 			remoteInfo = MoPubResources;
 		};
 		414834A91FE084F500709AD6 /* PBXContainerItemProxy */ = {
@@ -95,6 +60,34 @@
 			remoteGlobalIDString = 2AAA8DF91D95C77B006962E8;
 			remoteInfo = MoPubSDKTests;
 		};
+		57230DD3208931430011A197 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2AF030C02016723700909F29;
+			remoteInfo = MoPubSDKFramework;
+		};
+		57230DE8208933360011A197 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2AF030C02016723700909F29;
+			remoteInfo = MoPubSDKFramework;
+		};
+		57230DEA2089334A0011A197 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4D208F051CAD6A2100F2C8F0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 57230DDC208932130011A197;
+			remoteInfo = "mopub-ios-sdk-unity";
+		};
+		574851F92087CC2500635B77 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2AF030C12016723700909F29;
+			remoteInfo = MoPubSDKFramework;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -104,9 +97,19 @@
 			dstPath = "$(SRCROOT)/bin";
 			dstSubfolderSpec = 0;
 			files = (
-				414834C01FE08AF500709AD6 /* MoPub.bundle in CopyFiles */,
-				1832FFED1CBD39860065521D /* libMoPubSDK.a in CopyFiles */,
-				1832FFEE1CBD39890065521D /* libmopub-ios-sdk-unity.a in CopyFiles */,
+				57230DD82089316B0011A197 /* MoPubManager.mm in CopyFiles */,
+				57230DD7208931610011A197 /* MoPubManager.h in CopyFiles */,
+				57230DD62089315C0011A197 /* MoPubBinding.m in CopyFiles */,
+				57230DD5208931530011A197 /* MoPubSDKFramework.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		57230DDB208932130011A197 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,14 +117,14 @@
 
 /* Begin PBXFileReference section */
 		1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MoPubSDK.xcodeproj; path = "../mopub-ios-sdk/MoPubSDK.xcodeproj"; sourceTree = "<group>"; };
-		4D208F0D1CAD6A2100F2C8F0 /* libmopub-ios-sdk-unity.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libmopub-ios-sdk-unity.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D208F191CAD6A6000F2C8F0 /* MoPubBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoPubBinding.m; sourceTree = "<group>"; };
 		4D208F1A1CAD6A6000F2C8F0 /* MoPubManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoPubManager.h; sourceTree = "<group>"; };
 		4D208F1B1CAD6A6000F2C8F0 /* MoPubManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MoPubManager.mm; sourceTree = "<group>"; };
+		57230DDD208932130011A197 /* libmopub-ios-sdk-unity.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libmopub-ios-sdk-unity.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4D208F0A1CAD6A2100F2C8F0 /* Frameworks */ = {
+		57230DDA208932130011A197 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -136,10 +139,9 @@
 			children = (
 				1832FF891CBC18C10065521D /* libMoPubSDK.a */,
 				414834AA1FE084F500709AD6 /* libMoPubSDK-ExcludeNative.a */,
-				1832FF8B1CBC18C10065521D /* libMoPubSDK-APICheck.a */,
-				1832FF8D1CBC18C10065521D /* libMoPubSDK+Networks.a */,
 				1832FF931CBC18C10065521D /* MoPub.bundle */,
 				414834AC1FE084F500709AD6 /* MoPubSDKTests.xctest */,
+				574851FA2087CC2500635B77 /* MoPubSDKFramework.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -150,13 +152,14 @@
 				4D208F0F1CAD6A2100F2C8F0 /* mopub-ios-sdk-unity */,
 				4D208F0E1CAD6A2100F2C8F0 /* Products */,
 				1832FF6F1CBC18C10065521D /* MoPubSDK.xcodeproj */,
+				57E93F1220891C8F00C1FFEE /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		4D208F0E1CAD6A2100F2C8F0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4D208F0D1CAD6A2100F2C8F0 /* libmopub-ios-sdk-unity.a */,
+				57230DDD208932130011A197 /* libmopub-ios-sdk-unity.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,23 +174,32 @@
 			path = "mopub-ios-sdk-unity";
 			sourceTree = "<group>";
 		};
+		57E93F1220891C8F00C1FFEE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4D208F0C1CAD6A2100F2C8F0 /* mopub-ios-sdk-unity */ = {
+		57230DDC208932130011A197 /* mopub-ios-sdk-unity */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4D208F161CAD6A2100F2C8F0 /* Build configuration list for PBXNativeTarget "mopub-ios-sdk-unity" */;
+			buildConfigurationList = 57230DE3208932130011A197 /* Build configuration list for PBXNativeTarget "mopub-ios-sdk-unity" */;
 			buildPhases = (
-				4D208F091CAD6A2100F2C8F0 /* Sources */,
-				4D208F0A1CAD6A2100F2C8F0 /* Frameworks */,
+				57230DD9208932130011A197 /* Sources */,
+				57230DDA208932130011A197 /* Frameworks */,
+				57230DDB208932130011A197 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				57230DE9208933360011A197 /* PBXTargetDependency */,
 			);
 			name = "mopub-ios-sdk-unity";
 			productName = "mopub-ios-sdk-unity";
-			productReference = 4D208F0D1CAD6A2100F2C8F0 /* libmopub-ios-sdk-unity.a */;
+			productReference = 57230DDD208932130011A197 /* libmopub-ios-sdk-unity.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -202,8 +214,10 @@
 					1832FFE41CBD33070065521D = {
 						CreatedOnToolsVersion = 7.3;
 					};
-					4D208F0C1CAD6A2100F2C8F0 = {
-						CreatedOnToolsVersion = 7.2.1;
+					57230DDC208932130011A197 = {
+						CreatedOnToolsVersion = 9.3;
+						DevelopmentTeam = 4S7XS533V3;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -225,8 +239,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				4D208F0C1CAD6A2100F2C8F0 /* mopub-ios-sdk-unity */,
 				1832FFE41CBD33070065521D /* MoPub for Unity */,
+				57230DDC208932130011A197 /* mopub-ios-sdk-unity */,
 			);
 		};
 /* End PBXProject section */
@@ -237,20 +251,6 @@
 			fileType = archive.ar;
 			path = libMoPubSDK.a;
 			remoteRef = 1832FF881CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FF8B1CBC18C10065521D /* libMoPubSDK-APICheck.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libMoPubSDK-APICheck.a";
-			remoteRef = 1832FF8A1CBC18C10065521D /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1832FF8D1CBC18C10065521D /* libMoPubSDK+Networks.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libMoPubSDK+Networks.a";
-			remoteRef = 1832FF8C1CBC18C10065521D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1832FF931CBC18C10065521D /* MoPub.bundle */ = {
@@ -274,35 +274,42 @@
 			remoteRef = 414834AB1FE084F500709AD6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		574851FA2087CC2500635B77 /* MoPubSDKFramework.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MoPubSDKFramework.framework;
+			remoteRef = 574851F92087CC2500635B77 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4D208F091CAD6A2100F2C8F0 /* Sources */ = {
+		57230DD9208932130011A197 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D208F1C1CAD6A6000F2C8F0 /* MoPubBinding.m in Sources */,
-				4D208F1D1CAD6A6000F2C8F0 /* MoPubManager.mm in Sources */,
+				57230DE72089324C0011A197 /* MoPubManager.mm in Sources */,
+				57230DE6208932480011A197 /* MoPubBinding.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1832FFE91CBD331D0065521D /* PBXTargetDependency */ = {
+		57230DD4208931430011A197 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = MoPubSDK;
-			targetProxy = 1832FFE81CBD331D0065521D /* PBXContainerItemProxy */;
+			name = MoPubSDKFramework;
+			targetProxy = 57230DD3208931430011A197 /* PBXContainerItemProxy */;
 		};
-		1832FFEB1CBD33200065521D /* PBXTargetDependency */ = {
+		57230DE9208933360011A197 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4D208F0C1CAD6A2100F2C8F0 /* mopub-ios-sdk-unity */;
-			targetProxy = 1832FFEA1CBD33200065521D /* PBXContainerItemProxy */;
+			name = MoPubSDKFramework;
+			targetProxy = 57230DE8208933360011A197 /* PBXContainerItemProxy */;
 		};
-		414834A31FE084F500709AD6 /* PBXTargetDependency */ = {
+		57230DEB2089334A0011A197 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = MoPubResources;
-			targetProxy = 414834A21FE084F500709AD6 /* PBXContainerItemProxy */;
+			target = 57230DDC208932130011A197 /* mopub-ios-sdk-unity */;
+			targetProxy = 57230DEA2089334A0011A197 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -405,27 +412,65 @@
 			};
 			name = Release;
 		};
-		4D208F171CAD6A2100F2C8F0 /* Debug */ = {
+		57230DE4208932130011A197 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../mopub-ios-sdk/MoPubSDK/**";
-				ONLY_ACTIVE_ARCH = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4S7XS533V3;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		4D208F181CAD6A2100F2C8F0 /* Release */ = {
+		57230DE5208932130011A197 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../mopub-ios-sdk/MoPubSDK/**";
-				ONLY_ACTIVE_ARCH = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4S7XS533V3;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -450,11 +495,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4D208F161CAD6A2100F2C8F0 /* Build configuration list for PBXNativeTarget "mopub-ios-sdk-unity" */ = {
+		57230DE3208932130011A197 /* Build configuration list for PBXNativeTarget "mopub-ios-sdk-unity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4D208F171CAD6A2100F2C8F0 /* Debug */,
-				4D208F181CAD6A2100F2C8F0 /* Release */,
+				57230DE4208932130011A197 /* Debug */,
+				57230DE5208932130011A197 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
