@@ -3,7 +3,9 @@ using System.IO;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
+#if UNITY_2017_1_OR_NEWER
 using UnityEditor.iOS.Xcode.Extensions;
+#endif
 
 using UnityEngine;
 
@@ -46,7 +48,9 @@ namespace MoPubInternal.Editor.Postbuild
             }
 
             var fileGuid = project.FindFileGuidByProjectPath("Frameworks/Plugins/iOS/MoPubSDKFramework.framework");
+#if UNITY_2017_1_OR_NEWER
             project.AddFileToEmbedFrameworks(target, fileGuid);
+#endif
             project.SetBuildProperty(
                 target, "LD_RUNPATH_SEARCH_PATHS", "$(inherited) @executable_path/Frameworks");
 

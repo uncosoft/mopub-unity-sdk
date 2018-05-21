@@ -269,7 +269,7 @@ public class MoPubBase
     public static string ConsentLanguageCode { get; set; }
 
 
-    private const string PluginVersion = "5.0.0";
+    private const string PluginVersion = "5.0.1";
 
     public const double LatLongSentinel = 99999.0;
 

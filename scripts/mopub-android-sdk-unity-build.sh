@@ -3,7 +3,7 @@ my_dir="$(dirname "$0")"
 source "$my_dir/validate.sh"
 
 # Current SDK version
-SDK_VERSION=5.0.0
+SDK_VERSION=5.0.1
 
 # Features under development - please contact support@mopub.com if interested in our Beta Program!
 NATIVE_BETA=false

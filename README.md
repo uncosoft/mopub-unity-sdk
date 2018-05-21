@@ -17,6 +17,9 @@ To file an issue with our team please email [support@mopub.com](mailto:support@m
 
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
+### Patch Release 5.0.1 (May 21, 2018)
+The 5.0.1 patch fixes a bug that affected iOS builds on Unity versions below 2017.1. Note that a manual step in XCode is required for these cases to ensure that the `MoPubSDKFramework.framework` is included in the Embedded Binaries list. Please see the [Getting Started Guide](https://developers.mopub.com/docs/unity/getting-started/) for details.
+
 ## Upgrading to SDK 5.0
 
 Please see the [Getting Started Guide](https://developers.mopub.com/docs/unity/getting-started/) for instructions on upgrading from SDK 4.X to SDK 5.0.
