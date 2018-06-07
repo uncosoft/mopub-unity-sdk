@@ -13,10 +13,10 @@ public class MoPubEventListener : MonoBehaviour
     {
         if (_demoGUI == null)
             _demoGUI = GetComponent<MoPubDemoGUI>();
-        if (_demoGUI == null) {
-            Debug.LogError("Missing reference to MoPubDemoGUI.  Please fix in the editor.");
-            Destroy(this);
-        }
+
+        if (_demoGUI != null) return;
+        Debug.LogError("Missing reference to MoPubDemoGUI.  Please fix in the editor.");
+        Destroy(this);
     }
 
 
@@ -105,11 +105,11 @@ public class MoPubEventListener : MonoBehaviour
 
     private void AdFailed(string adUnitId, string action, string error)
     {
-        string errorMsg = "Failed to " + action + " ad unit " + adUnitId;
+        var errorMsg = "Failed to " + action + " ad unit " + adUnitId;
         if (!string.IsNullOrEmpty(error))
             errorMsg += ": " + error;
         Debug.LogError(errorMsg);
-        _demoGUI.AdFailed(errorMsg);
+        _demoGUI.UpdateStatusLabel("Error: " + errorMsg);
     }
 
 
@@ -137,7 +137,8 @@ public class MoPubEventListener : MonoBehaviour
 
     private void OnConsentDialogFailedEvent(string err)
     {
-        Debug.Log("OnConsentDialogFailedEvent: error = " + err);
+        Debug.Log("OnConsentDialogFailedEvent: " + err);
+        _demoGUI.UpdateStatusLabel(err);
     }
 
 

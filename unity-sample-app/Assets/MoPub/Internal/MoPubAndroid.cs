@@ -431,6 +431,12 @@ public class MoPubAndroid : MoPubBase
     }
 
 
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ForceGdprApplicable"/>
+    public static void ForceGdprApplicable() {
+        PluginClass.CallStatic("forceGdprApplies");
+    }
+
+
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.PartnerApi"/>
     public static class PartnerApi
     {

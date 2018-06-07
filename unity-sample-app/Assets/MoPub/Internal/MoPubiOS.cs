@@ -392,6 +392,12 @@ public class MoPubiOS : MoPubBase
     }
 
 
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ForceGdprApplicable"/>
+    public static void ForceGdprApplicable() {
+        _moPubForceGDPRApplicable();
+    }
+
+
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.PartnerApi"/>
     public static class PartnerApi
     {
@@ -519,6 +525,10 @@ public class MoPubiOS : MoPubBase
 
     [DllImport("__Internal")]
     private static extern int _moPubIsGDPRApplicable();
+
+
+    [DllImport("__Internal")]
+    private static extern int _moPubForceGDPRApplicable();
 
 
     [DllImport("__Internal")]

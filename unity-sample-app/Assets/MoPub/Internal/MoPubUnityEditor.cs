@@ -635,6 +635,18 @@ public class MoPubUnityEditor : MoPubBase
 
 
     /// <summary>
+    /// Forces the SDK to treat this app as in a GDPR region. Setting this will permanently force GDPR rules for this
+    /// user unless this app is uninstalled or the data for this app is cleared.
+    /// <para>
+    /// For platform-specific implementations, see
+    /// MoPubAndroid.<see cref="MoPubAndroid.ForceGdprApplicable"/> and
+    /// MoPubiOS.<see cref="MoPubiOS.ForceGdprApplicable"/>.
+    /// </para>
+    /// </summary>
+    public static void ForceGdprApplicable() { IsGdprApplicable = true; }
+
+
+    /// <summary>
     /// API calls to be used by whitelisted publishers who are implementing their own consent dialog.
     /// <para>
     /// For platform-specific implementations, see

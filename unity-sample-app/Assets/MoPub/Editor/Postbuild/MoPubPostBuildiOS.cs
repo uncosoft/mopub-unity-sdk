@@ -23,6 +23,7 @@ namespace MoPubInternal.Editor.Postbuild
             if (buildTarget.ToString() != "iOS" && buildTarget.ToString() != "iPhone") return;
             CheckiOSVersion();
             PrepareProject(buildPath);
+            RemoveMetaFiles(buildPath);
             RenameMRAIDSource(buildPath);
         }
 
@@ -55,10 +56,23 @@ namespace MoPubInternal.Editor.Postbuild
                 target, "LD_RUNPATH_SEARCH_PATHS", "$(inherited) @executable_path/Frameworks");
 
             project.AddBuildProperty(target, "OTHER_LDFLAGS", "-ObjC");
+            project.AddBuildProperty(target, "GCC_ENABLE_OBJC_EXCEPTIONS", "YES");
             project.AddBuildProperty(target, "CLANG_ENABLE_MODULES", "YES");
             project.AddBuildProperty(target, "ENABLE_BITCODE", "NO");
 
             File.WriteAllText(projPath, project.WriteToString());
+        }
+
+        private static void RemoveMetaFiles(string buildPath)
+        {
+            // Remove all the .meta files that Unity copies into the Xcode subdirectories.
+            foreach (var subdir in new[] { "Frameworks/Plugins/iOS", "Libraries/Plugins/iOS" }) {
+                var path = Path.Combine(buildPath, subdir);
+                var metaFiles = Directory.GetFiles(path, "*.meta", SearchOption.AllDirectories);
+                foreach (var metaFile in metaFiles) {
+                    File.Delete(metaFile);
+                }
+            }
         }
 
         private static void RenameMRAIDSource(string buildPath)

@@ -96,6 +96,9 @@ public class MoPubDemoGUI : MonoBehaviour
     // Flag indicating that the General Data Protection Regulation (GDPR) applies to this user
     private bool? _isGdprApplicable = false;
 
+    // Flag indicating that the General Data Protection Regulation (GDPR) has been forcibly applied by the publisher
+    private bool _isGdprForced = false;
+
     // Status string for tracking current state
     private string _status = string.Empty;
 
@@ -117,10 +120,19 @@ public class MoPubDemoGUI : MonoBehaviour
 
     public void SdkInitialized()
     {
-        _canCollectPersonalInfo = MoPub.CanCollectPersonalInfo;
-        _currentConsentStatus = MoPub.CurrentConsentStatus;
-        _shouldShowConsentDialog = MoPub.ShouldShowConsentDialog;
-        _isGdprApplicable = MoPub.IsGdprApplicable;
+        UpdateConsentValues();
+    }
+
+
+    public void UpdateStatusLabel(string message)
+    {
+        _status = message;
+    }
+
+
+    public void ClearStatusLabel()
+    {
+        UpdateStatusLabel(string.Empty);
     }
 
 
@@ -130,7 +142,7 @@ public class MoPubDemoGUI : MonoBehaviour
         _currentConsentStatus = newStatus;
         _shouldShowConsentDialog = MoPub.ShouldShowConsentDialog;
 
-        _status = "Consent status changed";
+        UpdateStatusLabel("Consent status changed");
     }
 
     public void LoadAvailableRewards(string adUnitId, List<MoPub.Reward> availableRewards)
@@ -154,20 +166,14 @@ public class MoPubDemoGUI : MonoBehaviour
     public void AdLoaded(string adUnit)
     {
         _adUnitToLoadedMapping[adUnit] = true;
-        _status = "Loaded " + adUnit;
-    }
-
-
-    public void AdFailed(string error)
-    {
-        _status = "Error: " + error;
+        UpdateStatusLabel("Loaded " + adUnit);
     }
 
 
     public void AdDismissed(string adUnit)
     {
         _adUnitToLoadedMapping[adUnit] = false;
-        _status = string.Empty;
+        ClearStatusLabel();
     }
 
 
@@ -187,7 +193,7 @@ public class MoPubDemoGUI : MonoBehaviour
         private get { return _consentDialogLoaded; }
         set {
             _consentDialogLoaded = value;
-            if (_consentDialogLoaded) _status = "Consent dialog loaded";
+            if (_consentDialogLoaded) UpdateStatusLabel("Consent dialog loaded");
         }
     }
 
@@ -342,13 +348,13 @@ public class MoPubDemoGUI : MonoBehaviour
                 GUI.enabled = !_adUnitToLoadedMapping[bannerAdUnit];
                 if (GUILayout.Button(CreateRequestButtonLabel(bannerAdUnit))) {
                     Debug.Log("requesting banner with AdUnit: " + bannerAdUnit);
-                    _status = "Requesting " + bannerAdUnit;
+                    UpdateStatusLabel("Requesting " + bannerAdUnit);
                     MoPub.CreateBanner(bannerAdUnit, MoPub.AdPosition.BottomCenter);
                 }
 
                 GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit];
                 if (GUILayout.Button("Destroy")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     MoPub.DestroyBanner(bannerAdUnit);
                     _adUnitToLoadedMapping[bannerAdUnit] = false;
                     _adUnitToShownMapping[bannerAdUnit] = false;
@@ -356,14 +362,14 @@ public class MoPubDemoGUI : MonoBehaviour
 
                 GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit] && !_adUnitToShownMapping[bannerAdUnit];
                 if (GUILayout.Button("Show")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     MoPub.ShowBanner(bannerAdUnit, true);
                     _adUnitToShownMapping[bannerAdUnit] = true;
                 }
 
                 GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit] && _adUnitToShownMapping[bannerAdUnit];
                 if (GUILayout.Button("Hide")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     MoPub.ShowBanner(bannerAdUnit, false);
                     _adUnitToShownMapping[bannerAdUnit] = false;
                 }
@@ -389,13 +395,13 @@ public class MoPubDemoGUI : MonoBehaviour
                 GUI.enabled = !_adUnitToLoadedMapping[interstitialAdUnit];
                 if (GUILayout.Button(CreateRequestButtonLabel(interstitialAdUnit))) {
                     Debug.Log("requesting interstitial with AdUnit: " + interstitialAdUnit);
-                    _status = "Requesting " + interstitialAdUnit;
+                    UpdateStatusLabel("Requesting " + interstitialAdUnit);
                     MoPub.RequestInterstitialAd(interstitialAdUnit);
                 }
 
                 GUI.enabled = _adUnitToLoadedMapping[interstitialAdUnit];
                 if (GUILayout.Button("Show")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     MoPub.ShowInterstitialAd(interstitialAdUnit);
                 }
 
@@ -420,7 +426,7 @@ public class MoPubDemoGUI : MonoBehaviour
                 GUI.enabled = !_adUnitToLoadedMapping[rewardedVideoAdUnit];
                 if (GUILayout.Button(CreateRequestButtonLabel(rewardedVideoAdUnit))) {
                     Debug.Log("requesting rewarded video with AdUnit: " + rewardedVideoAdUnit);
-                    _status = "Requesting " + rewardedVideoAdUnit;
+                    UpdateStatusLabel("Requesting " + rewardedVideoAdUnit);
                     MoPub.RequestRewardedVideo(
                         adUnitId: rewardedVideoAdUnit, keywords: "rewarded, video, mopub",
                         latitude: 37.7833, longitude: 122.4167, customerId: "customer101");
@@ -428,7 +434,7 @@ public class MoPubDemoGUI : MonoBehaviour
 
                 GUI.enabled = _adUnitToLoadedMapping[rewardedVideoAdUnit];
                 if (GUILayout.Button("Show")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     MoPub.ShowRewardedVideo(rewardedVideoAdUnit, GetCustomData(_rvCustomData));
                 }
 
@@ -473,7 +479,7 @@ public class MoPubDemoGUI : MonoBehaviour
                 GUI.enabled = !_adUnitToLoadedMapping[rewardedRichMediaAdUnit];
                 if (GUILayout.Button(CreateRequestButtonLabel(rewardedRichMediaAdUnit))) {
                     Debug.Log("requesting rewarded rich media with AdUnit: " + rewardedRichMediaAdUnit);
-                    _status = "Requesting " + rewardedRichMediaAdUnit;
+                    UpdateStatusLabel("Requesting " + rewardedRichMediaAdUnit);
                     MoPub.RequestRewardedVideo(
                         adUnitId: rewardedRichMediaAdUnit, keywords: "rewarded, video, mopub",
                         latitude: 37.7833, longitude: 122.4167, customerId: "customer101");
@@ -481,7 +487,7 @@ public class MoPubDemoGUI : MonoBehaviour
 
                 GUI.enabled = _adUnitToLoadedMapping[rewardedRichMediaAdUnit];
                 if (GUILayout.Button("Show")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     MoPub.ShowRewardedVideo(rewardedRichMediaAdUnit, GetCustomData(_rrmCustomData));
                 }
 
@@ -527,19 +533,19 @@ public class MoPubDemoGUI : MonoBehaviour
                 GUI.enabled = !_adUnitToLoadedMapping[nativeAdUnit];
                 if (GUILayout.Button(CreateRequestButtonLabel(nativeAdUnit))) {
                     Debug.Log("requesting native AdUnit: " + nativeAdUnit);
-                    _status = "Requesting " + nativeAdUnit;
+                    UpdateStatusLabel("Requesting " + nativeAdUnit);
                     nativeAd.LoadAd();
                 }
 
                 GUI.enabled = _adUnitToLoadedMapping[nativeAdUnit] && !_adUnitToShownMapping[nativeAdUnit];
                 if (GUILayout.Button("Show")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     ShowNativeAd(nativeAd);
                 }
 
                 GUI.enabled = _adUnitToLoadedMapping[nativeAdUnit] && _adUnitToShownMapping[nativeAdUnit];
                 if (GUILayout.Button("Hide")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     HideNativeAd(nativeAd);
                 }
 
@@ -561,19 +567,19 @@ public class MoPubDemoGUI : MonoBehaviour
                 GUI.enabled = !_adUnitToLoadedMapping[fbNativeAdUnit];
                 if (GUILayout.Button(CreateRequestButtonLabel(fbNativeAdUnit))) {
                     Debug.Log("requesting native AdUnit: " + fbNativeAdUnit);
-                    _status = "Requesting " + fbNativeAdUnit;
+                    UpdateStatusLabel("Requesting " + fbNativeAdUnit);
                     fbNativeAd.LoadAd();
                 }
 
                 GUI.enabled = _adUnitToLoadedMapping[fbNativeAdUnit] && !_adUnitToShownMapping[fbNativeAdUnit];
                 if (GUILayout.Button("Show")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     ShowNativeAd(fbNativeAd);
                 }
 
                 GUI.enabled = _adUnitToLoadedMapping[fbNativeAdUnit] && _adUnitToShownMapping[fbNativeAdUnit];
                 if (GUILayout.Button("Hide")) {
-                    _status = string.Empty;
+                    ClearStatusLabel();
                     HideNativeAd(fbNativeAd);
                 }
 
@@ -603,13 +609,20 @@ public class MoPubDemoGUI : MonoBehaviour
         GUILayout.BeginHorizontal();
         GUI.enabled = !ConsentDialogLoaded;
         if (GUILayout.Button("Load Consent Dialog")) {
-            _status = "Loading consent dialog";
+            UpdateStatusLabel("Loading consent dialog");
             MoPub.LoadConsentDialog();
         }
         GUI.enabled = ConsentDialogLoaded;
         if (GUILayout.Button("Show Consent Dialog")) {
-            _status = string.Empty;
+            ClearStatusLabel();
             MoPub.ShowConsentDialog();
+        }
+        GUI.enabled = !_isGdprForced;
+        if (GUILayout.Button("Force GDPR")) {
+            ClearStatusLabel();
+            MoPub.ForceGdprApplicable();
+            UpdateConsentValues();
+            _isGdprForced = true;
         }
         GUI.enabled = true;
         if (GUILayout.Button("Grant Consent")) {
@@ -630,14 +643,23 @@ public class MoPubDemoGUI : MonoBehaviour
         GUILayout.Space(_sectionMarginSize);
         GUILayout.Label("Actions");
         if (GUILayout.Button("Report App Open")) {
-            _status = string.Empty;
+            ClearStatusLabel();
             MoPub.ReportApplicationOpen();
         }
 
         if (!GUILayout.Button("Enable Location Support")) return;
 
-        _status = string.Empty;
+        ClearStatusLabel();
         MoPub.EnableLocationSupport(true);
+    }
+
+
+    private void UpdateConsentValues()
+    {
+        _canCollectPersonalInfo = MoPub.CanCollectPersonalInfo;
+        _currentConsentStatus = MoPub.CurrentConsentStatus;
+        _shouldShowConsentDialog = MoPub.ShouldShowConsentDialog;
+        _isGdprApplicable = MoPub.IsGdprApplicable;
     }
 
 

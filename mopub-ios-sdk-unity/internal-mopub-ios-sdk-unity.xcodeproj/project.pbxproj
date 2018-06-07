@@ -1,0 +1,510 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		1832FFE41CBD33070065521D /* MoPub for Unity */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1832FFE51CBD33070065521D /* Build configuration list for PBXAggregateTarget "MoPub for Unity" */;
+			buildPhases = (
+				1832FFEC1CBD39810065521D /* CopyFiles */,
+			);
+			dependencies = (
+				4177A62020C1D35900C6E42D /* PBXTargetDependency */,
+				57230DEB2089334A0011A197 /* PBXTargetDependency */,
+			);
+			name = "MoPub for Unity";
+			productName = "MoPub for Unity";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		4177A62120C1D36000C6E42D /* MoPubSDKFramework.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4177A61B20C1D30400C6E42D /* MoPubSDKFramework.framework */; };
+		57230DD62089315C0011A197 /* MoPubBinding.m in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D208F191CAD6A6000F2C8F0 /* MoPubBinding.m */; };
+		57230DD7208931610011A197 /* MoPubManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D208F1A1CAD6A6000F2C8F0 /* MoPubManager.h */; };
+		57230DD82089316B0011A197 /* MoPubManager.mm in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4D208F1B1CAD6A6000F2C8F0 /* MoPubManager.mm */; };
+		57230DE6208932480011A197 /* MoPubBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D208F191CAD6A6000F2C8F0 /* MoPubBinding.m */; };
+		57230DE72089324C0011A197 /* MoPubManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4D208F1B1CAD6A6000F2C8F0 /* MoPubManager.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4177A61220C1D30400C6E42D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AE515F9C171F1B110086B464;
+			remoteInfo = MoPubSDK;
+		};
+		4177A61420C1D30400C6E42D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BCA00B971EF47A91006FF762;
+			remoteInfo = "MoPubSDK-ExcludeNative";
+		};
+		4177A61620C1D30400C6E42D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 570A005B19D6206800065388;
+			remoteInfo = MoPubResources;
+		};
+		4177A61820C1D30400C6E42D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2AAA8DF91D95C77B006962E8;
+			remoteInfo = MoPubSDKTests;
+		};
+		4177A61A20C1D30400C6E42D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2AF030C12016723700909F29;
+			remoteInfo = MoPubSDKFramework;
+		};
+		4177A61D20C1D34800C6E42D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2AF030C02016723700909F29;
+			remoteInfo = MoPubSDKFramework;
+		};
+		4177A61F20C1D35900C6E42D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2AF030C02016723700909F29;
+			remoteInfo = MoPubSDKFramework;
+		};
+		57230DEA2089334A0011A197 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4D208F051CAD6A2100F2C8F0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 57230DDC208932130011A197;
+			remoteInfo = "mopub-ios-sdk-unity";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1832FFEC1CBD39810065521D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(SRCROOT)/bin";
+			dstSubfolderSpec = 0;
+			files = (
+				4177A62120C1D36000C6E42D /* MoPubSDKFramework.framework in CopyFiles */,
+				57230DD82089316B0011A197 /* MoPubManager.mm in CopyFiles */,
+				57230DD7208931610011A197 /* MoPubManager.h in CopyFiles */,
+				57230DD62089315C0011A197 /* MoPubBinding.m in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		57230DDB208932130011A197 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MoPubSDK.xcodeproj; path = "../mopub-ios/MoPubSDK.xcodeproj"; sourceTree = "<group>"; };
+		4D208F191CAD6A6000F2C8F0 /* MoPubBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoPubBinding.m; sourceTree = "<group>"; };
+		4D208F1A1CAD6A6000F2C8F0 /* MoPubManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoPubManager.h; sourceTree = "<group>"; };
+		4D208F1B1CAD6A6000F2C8F0 /* MoPubManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MoPubManager.mm; sourceTree = "<group>"; };
+		57230DDD208932130011A197 /* libmopub-ios-sdk-unity.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libmopub-ios-sdk-unity.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		57230DDA208932130011A197 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4177A60B20C1D30400C6E42D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4177A61320C1D30400C6E42D /* libMoPubSDK.a */,
+				4177A61520C1D30400C6E42D /* libMoPubSDK-ExcludeNative.a */,
+				4177A61720C1D30400C6E42D /* MoPub.bundle */,
+				4177A61920C1D30400C6E42D /* MoPubSDKTests.xctest */,
+				4177A61B20C1D30400C6E42D /* MoPubSDKFramework.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4D208F041CAD6A2100F2C8F0 = {
+			isa = PBXGroup;
+			children = (
+				4D208F0F1CAD6A2100F2C8F0 /* mopub-ios-sdk-unity */,
+				4D208F0E1CAD6A2100F2C8F0 /* Products */,
+				4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */,
+				57E93F1220891C8F00C1FFEE /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4D208F0E1CAD6A2100F2C8F0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				57230DDD208932130011A197 /* libmopub-ios-sdk-unity.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4D208F0F1CAD6A2100F2C8F0 /* mopub-ios-sdk-unity */ = {
+			isa = PBXGroup;
+			children = (
+				4D208F191CAD6A6000F2C8F0 /* MoPubBinding.m */,
+				4D208F1A1CAD6A6000F2C8F0 /* MoPubManager.h */,
+				4D208F1B1CAD6A6000F2C8F0 /* MoPubManager.mm */,
+			);
+			path = "mopub-ios-sdk-unity";
+			sourceTree = "<group>";
+		};
+		57E93F1220891C8F00C1FFEE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		57230DDC208932130011A197 /* mopub-ios-sdk-unity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 57230DE3208932130011A197 /* Build configuration list for PBXNativeTarget "mopub-ios-sdk-unity" */;
+			buildPhases = (
+				57230DD9208932130011A197 /* Sources */,
+				57230DDA208932130011A197 /* Frameworks */,
+				57230DDB208932130011A197 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4177A61E20C1D34800C6E42D /* PBXTargetDependency */,
+			);
+			name = "mopub-ios-sdk-unity";
+			productName = "mopub-ios-sdk-unity";
+			productReference = 57230DDD208932130011A197 /* libmopub-ios-sdk-unity.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4D208F051CAD6A2100F2C8F0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = MoPub;
+				TargetAttributes = {
+					1832FFE41CBD33070065521D = {
+						CreatedOnToolsVersion = 7.3;
+					};
+					57230DDC208932130011A197 = {
+						CreatedOnToolsVersion = 9.3;
+						DevelopmentTeam = 4S7XS533V3;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 4D208F081CAD6A2100F2C8F0 /* Build configuration list for PBXProject "internal-mopub-ios-sdk-unity" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4D208F041CAD6A2100F2C8F0;
+			productRefGroup = 4D208F0E1CAD6A2100F2C8F0 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 4177A60B20C1D30400C6E42D /* Products */;
+					ProjectRef = 4177A60A20C1D30400C6E42D /* MoPubSDK.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				1832FFE41CBD33070065521D /* MoPub for Unity */,
+				57230DDC208932130011A197 /* mopub-ios-sdk-unity */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		4177A61320C1D30400C6E42D /* libMoPubSDK.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMoPubSDK.a;
+			remoteRef = 4177A61220C1D30400C6E42D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4177A61520C1D30400C6E42D /* libMoPubSDK-ExcludeNative.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libMoPubSDK-ExcludeNative.a";
+			remoteRef = 4177A61420C1D30400C6E42D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4177A61720C1D30400C6E42D /* MoPub.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MoPub.bundle;
+			remoteRef = 4177A61620C1D30400C6E42D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4177A61920C1D30400C6E42D /* MoPubSDKTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MoPubSDKTests.xctest;
+			remoteRef = 4177A61820C1D30400C6E42D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4177A61B20C1D30400C6E42D /* MoPubSDKFramework.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MoPubSDKFramework.framework;
+			remoteRef = 4177A61A20C1D30400C6E42D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		57230DD9208932130011A197 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				57230DE72089324C0011A197 /* MoPubManager.mm in Sources */,
+				57230DE6208932480011A197 /* MoPubBinding.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4177A61E20C1D34800C6E42D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MoPubSDKFramework;
+			targetProxy = 4177A61D20C1D34800C6E42D /* PBXContainerItemProxy */;
+		};
+		4177A62020C1D35900C6E42D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MoPubSDKFramework;
+			targetProxy = 4177A61F20C1D35900C6E42D /* PBXContainerItemProxy */;
+		};
+		57230DEB2089334A0011A197 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 57230DDC208932130011A197 /* mopub-ios-sdk-unity */;
+			targetProxy = 57230DEA2089334A0011A197 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1832FFE61CBD33070065521D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = iphoneos;
+			};
+			name = Debug;
+		};
+		1832FFE71CBD33070065521D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = iphoneos;
+			};
+			name = Release;
+		};
+		4D208F141CAD6A2100F2C8F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		4D208F151CAD6A2100F2C8F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		57230DE4208932130011A197 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4S7XS533V3;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		57230DE5208932130011A197 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4S7XS533V3;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1832FFE51CBD33070065521D /* Build configuration list for PBXAggregateTarget "MoPub for Unity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1832FFE61CBD33070065521D /* Debug */,
+				1832FFE71CBD33070065521D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4D208F081CAD6A2100F2C8F0 /* Build configuration list for PBXProject "internal-mopub-ios-sdk-unity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D208F141CAD6A2100F2C8F0 /* Debug */,
+				4D208F151CAD6A2100F2C8F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		57230DE3208932130011A197 /* Build configuration list for PBXNativeTarget "mopub-ios-sdk-unity" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				57230DE4208932130011A197 /* Debug */,
+				57230DE5208932130011A197 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4D208F051CAD6A2100F2C8F0 /* Project object */;
+}

@@ -1,3 +1,11 @@
+## Version 5.1.0 (June 6, 2018)
+- Allow publishers to determine which users should be treated as GDPR-compliant users through the new API `ForceGdprApplicable`.
+- Loading MoPub's consent dialog is only possible when GDPR rules applies to the app.
+- Added support for AdMob's NPA mediation setting ([Issue #15](https://github.com/mopub/mopub-unity-sdk/issues/15)).
+- Fixed event name for `RewardedVideoReceivedReward` on Android ([Issue #16](https://github.com/mopub/mopub-unity-sdk/issues/16)).
+- Fixed Rewarded Video adapter class names for AdMob and UnityAds.
+- Banners now only refresh after an impression is made.
+
 ## Version 5.0.1 (May 21, 2018)
 - Fixes a bug that affected iOS builds on Unity versions below 2017.1.
 - Note that a manual step in XCode is required for these cases to ensure that the `MoPubSDKFramework.framework` is included in the Embedded Binaries list. Please see the [Getting Started Guide](https://developers.mopub.com/docs/unity/getting-started/) for details.

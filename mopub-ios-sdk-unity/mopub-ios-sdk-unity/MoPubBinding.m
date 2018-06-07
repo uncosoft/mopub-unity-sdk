@@ -43,35 +43,34 @@ static NSArray* extractNetworkClasses(const char* networkClassesString) {
    return networks;
 }
 
-static NSArray* extractMediationSettings(const char* mediationSettingsJson) {
+static NSArray* extractMediationSettings(const char* mediationSettingsJson, BOOL isInstance) {
     NSString* jsonString = GetStringParam(mediationSettingsJson);
     if (jsonString.length == 0)
         return nil;
 
     NSMutableArray* mediationSettings = [NSMutableArray array];
-    for (NSDictionary* dict in
-         [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
-                                         options:0
-                                           error:nil]) {
+    for (NSMutableDictionary* dict in [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                      options:NSJSONReadingMutableContainers
+                                                                        error:nil]) {
         NSString* adVendor = [dict objectForKey:@"adVendor"];
-        NSObject* mediationSetting = [NSClassFromString([adVendor stringByAppendingString:@"InstanceMediationSettings"]) new];
-        if (!mediationSetting)
+        // We use this key to distinguish the target network, so don't pass it through
+        [dict removeObjectForKey:@"adVendor"];
+        NSString* mediationSettingClassName =
+            [adVendor stringByAppendingString:isInstance ? @"InstanceMediationSettings" : @"GlobalMediationSettings"];
+        Class mediationSettingClass = NSClassFromString(mediationSettingClassName);
+        if (!mediationSettingClass) {
+            NSLog(@"No class found for mediation settings name %@", mediationSettingClassName);
             continue;
-        if ([adVendor isEqualToString:@"AdColony"]) {
-            if ([dict.allKeys containsObject:@"showPrePopup"])
-                [mediationSetting setValue:[dict objectForKey:@"showPrePopup"] forKey:@"showPrePopup"];
-
-            if ([dict.allKeys containsObject:@"showPostPopup"])
-                [mediationSetting setValue:[dict objectForKey:@"showPostPopup"] forKey:@"showPostPopup"];
-        } else if ([adVendor isEqualToString:@"Vungle"]) {
-            if ([dict.allKeys containsObject:@"userIdentifier"])
-                [mediationSetting setValue:[dict objectForKey:@"userIdentifier"] forKey:@"userIdentifier"];
-        } else if ([adVendor isEqualToString:@"UnityAds"]) {
-            if ([dict.allKeys containsObject:@"userIdentifier"])
-                [mediationSetting setValue:[dict objectForKey:@"userIdentifier"] forKey:@"userIdentifier"];
         }
-        [mediationSettings addObject:mediationSetting];
-        NSLog(@"adding mediation settings %@ for mediation class [%@]", dict, [mediationSetting class]);
+        @try {
+            NSObject* mediationSetting = [mediationSettingClass new];
+            [mediationSetting setValuesForKeysWithDictionary:dict];
+            [mediationSettings addObject:mediationSetting];
+            NSLog(@"adding mediation settings %@ for mediation class [%@]", dict, mediationSettingClass);
+        }
+        @catch (NSException* e) {
+            NSLog(@"Error adding mediation setting for mediation class [%@]: %@", mediationSettingClass, e);
+        }
     }
     return mediationSettings;
 }
@@ -104,7 +103,7 @@ void _moPubInitializeSdk(const char* adUnitIdString, const char* advancedBidders
     NSString* adUnitId = GetStringParam(adUnitIdString);
     MPMoPubConfiguration* config = [[MPMoPubConfiguration alloc] initWithAdUnitIdForAppInitialization:adUnitId];
     config.advancedBidders = extractNetworkClasses(advancedBiddersString);
-    config.globalMediationSettings = extractMediationSettings(mediationSettingsJson);
+    config.globalMediationSettings = extractMediationSettings(mediationSettingsJson, NO);
     config.mediatedNetworks = extractNetworkClasses(networksToInitString);
     if (config.mediatedNetworks.count == 0)
         config.mediatedNetworks = MoPub.sharedInstance.allCachedNetworks;
@@ -242,7 +241,7 @@ void _moPubDestroyInterstitialAd(const char* adUnitId)
 
 void _moPubRequestRewardedVideo(const char* adUnitIdStr, const char* json, const char* keywords, const char* userDataKeywords, double latitude, double longitude, const char* customerId)
 {
-    NSArray* mediationSettings = extractMediationSettings(json);
+    NSArray* mediationSettings = extractMediationSettings(json, YES);
     CLLocation* location = nil;
     if (latitude != LAT_LONG_SENTINEL && longitude != LAT_LONG_SENTINEL)
         location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
@@ -321,6 +320,11 @@ int _moPubCurrentConsentStatus()
 int _moPubIsGDPRApplicable()
 {
 	return [[MoPub sharedInstance] isGDPRApplicable];
+}
+
+void _moPubForceGDPRApplicable()
+{
+    return [[MoPub sharedInstance] forceGDPRApplicable];
 }
 
 bool _moPubShouldShowConsentDialog()

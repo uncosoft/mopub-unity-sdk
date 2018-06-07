@@ -169,10 +169,17 @@ public class MoPubBase
 
     public class MediationSetting : Dictionary<string, object>
     {
-        public MediationSetting(string adVendor)
-        {
-            Add("adVendor", adVendor);
-        }
+        public MediationSetting(string adVendor) { Add("adVendor", adVendor); }
+
+        // Shortcut class names so you don't have to remember the right ad vendor string (also to not misspell it).
+        public class AdColony : MediationSetting { public AdColony() : base("AdColony") { } }
+#if UNITY_IOS
+        public class AdMob : MediationSetting { public AdMob() : base("MPGoogle") { } }
+#else
+        public class AdMob : MediationSetting { public AdMob() : base("GooglePlayServices") { } }
+#endif
+        public class Chartboost : MediationSetting { public Chartboost() : base("Chartboost") { } }
+        public class Vungle : MediationSetting { public Vungle() : base("Vungle") { } }
     }
 
 
@@ -253,11 +260,21 @@ public class MoPubBase
 
 
         public static readonly RewardedNetwork AdColony = GetNetwork("AdColony");
-        public static readonly RewardedNetwork AdMob = GetNetwork("GooglePlayServices");
+        public static readonly RewardedNetwork AdMob = // Names are different for Android vs iOS
+#if UNITY_IOS
+            GetNetwork("MPGoogleAdMob");
+#else
+            GetNetwork("GooglePlayServices");
+#endif
         public static readonly RewardedNetwork Chartboost = GetNetwork("Chartboost");
         public static readonly RewardedNetwork Facebook = GetNetwork("Facebook");
         public static readonly RewardedNetwork Tapjoy = GetNetwork("Tapjoy");
-        public static readonly RewardedNetwork Unity = GetNetwork("Unity");
+        public static readonly RewardedNetwork Unity = // Names are different for Android vs iOS
+#if UNITY_IOS
+            GetNetwork("UnityAds");
+#else
+            GetNetwork("Unity");
+#endif
         public static readonly RewardedNetwork Vungle = GetNetwork("Vungle");
     }
 
@@ -269,15 +286,13 @@ public class MoPubBase
     public static string ConsentLanguageCode { get; set; }
 
 
-    private const string PluginVersion = "5.0.1";
-
     public const double LatLongSentinel = 99999.0;
 
 
     private static string _pluginName;
 
     public static string PluginName {
-        get { return _pluginName ?? (_pluginName = "MoPub Unity Plugin v" + PluginVersion); }
+        get { return _pluginName ?? (_pluginName = "MoPub Unity Plugin v" + Application.version); }
     }
 
 

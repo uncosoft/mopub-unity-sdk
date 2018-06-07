@@ -101,7 +101,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
 
                 if (json != null) {
                     MoPubRewardedVideos.loadRewardedVideo(
-                            mAdUnitId, requestParameters, extractMediationSettingsFromJson(json));
+                            mAdUnitId, requestParameters, extractMediationSettingsFromJson(json, true));
                 } else {
                     MoPubRewardedVideos.loadRewardedVideo(mAdUnitId, requestParameters);
                 }
@@ -223,7 +223,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
 
         String adUnitId = adUnitIds.toArray()[0].toString();
         if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoReceived.Emit(adUnitId, reward.getLabel(),
+            UnityEvent.RewardedVideoReceivedReward.Emit(adUnitId, reward.getLabel(),
                     String.valueOf(reward.getAmount()));
         }
     }

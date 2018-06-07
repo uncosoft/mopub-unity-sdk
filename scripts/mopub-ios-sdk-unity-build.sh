@@ -2,45 +2,62 @@
 my_dir="$(dirname "$0")"
 source "$my_dir/validate.sh"
 
+# Set this to 'true' to build with the internal iOS SDK; set to 'false' to build with public iOS SDK.
+# May also be overriden from the command line as such: INTERNAL_SDK=false ./scripts/mopub-ios-sdk-unity-build.sh
+: "${INTERNAL_SDK:=false}"
+
+SDK_DIR="mopub-ios-sdk"
+SDK_NAME="PUBLIC iOS SDK"
+SDK_VERSION_SUFFIX="unity"
+XCODE_PROJECT_NAME="mopub-ios-sdk-unity.xcodeproj"
+if [ $INTERNAL_SDK == true ]; then
+  SDK_DIR="mopub-ios"
+  SDK_VERSION_SUFFIX=$(cd $SDK_DIR; git rev-parse --short HEAD)
+  SDK_NAME="INTERNAL iOS SDK ("$SDK_VERSION_SUFFIX")"
+  XCODE_PROJECT_NAME="internal-"$XCODE_PROJECT_NAME
+fi
+SDK_VERSION_HOST_FILE=$SDK_DIR/MoPubSDK/MPConstants.h
+
+echo "Building the MoPub Unity plugin for iOS using the" $SDK_NAME
+
 # remove viewability binaries since they are not supported for unity
-rm -rf mopub-ios-sdk/MoPubSDK/Viewability/Avid
-rm -rf mopub-ios-sdk/MoPubSDK/Viewability/MOAT
+rm -rf $SDK_DIR/MoPubSDK/Viewability/{Avid,MOAT}
 
 # remove unit tests since the viewability unit tests cause compile problems
-rm -rf mopub-ios-sdk/MoPubSDKTests
+rm -rf $SDK_DIR/MoPubSDKTests
 
-# update version number to have unity suffix
-sed -i.bak 's/^\(#define MP_SDK_VERSION\)\(.*\)"/\1\2+unity"/'  mopub-ios-sdk/MoPubSDK/MPConstants.h
+# Append "+unity" (or the latest commit SHA, for internal SDK builds) suffix to SDK_VERSION in MPConstants.h
+sed -i.bak 's/^\(#define MP_SDK_VERSION.*"\)\([^+"]*\).*"/\1\2+'$SDK_VERSION_SUFFIX'"/' $SDK_VERSION_HOST_FILE
 validate
 
-xcrun xcodebuild -project mopub-ios-sdk-unity/mopub-ios-sdk-unity.xcodeproj -scheme "MoPub for Unity" -destination generic/platform=iphoneos clean
-validate
-xcrun xcodebuild GCC_PREPROCESSOR_DEFINITIONS="MP_FABRIC=1" -project mopub-ios-sdk-unity/mopub-ios-sdk-unity.xcodeproj -scheme "MoPub for Unity" OTHER_CFLAGS="-fembed-bitcode -w" -destination generic/platform=iphoneos build
+# make a clean build (copies build artifacts to mopub-ios-sdk-unity/bin directory)
+xcrun xcodebuild -project mopub-ios-sdk-unity/$XCODE_PROJECT_NAME \
+                 -scheme "MoPub for Unity" \
+                 -configuration "Release" \
+                 OTHER_CFLAGS="-fembed-bitcode -w" \
+                 BITCODE_GENERATION_MODE=bitcode \
+                 clean \
+                 build
 validate
 
 # after build, undo the unity suffix
-cd mopub-ios-sdk
-git checkout MoPubSDK/MPConstants.h
+mv $SDK_VERSION_HOST_FILE.bak $SDK_VERSION_HOST_FILE
 validate
-rm -f MoPubSDK/MPConstants.h.bak
-validate
-cd ..
 
-# Copy three artifacts into the unity plugin; libMoPubSDK.a - the unchanged mopub ios sdk, libmopub-ios-sdk-unity.a - the unity specific components, and mraid.js.
-# Due to the treatment of .js files as source code in unity, we must change the extension. The extension gets changed back by the ios post build script within
-# the unity plugin. The end result is an xcode project that contains 'mraid.js'. This removes the need to change the hard-coded extension in the ios sdk.
+# copy build artifacts to unity project, deleting any now-missing files from the destination 
+# to account for file moves and renames.  (.meta files excluded, unity will handle them.)
+rsync -r -v --delete --exclude='*.meta' mopub-ios-sdk-unity/bin/* unity-sample-app/Assets/Plugins/iOS
+validate
 
-# TODO(ADF-3403): use rsync to update Assets/Plugins/iOS/MoPub* to account for renames and deletions
-cp mopub-ios-sdk-unity/bin/MoPub*.{h,m,mm} unity-sample-app/Assets/Plugins/iOS
+# copy in the html and png files from the original source
+# TODO (ADF-3528): not clear why this is needed, as the framework already has these files?
+rsync -r -v --delete --exclude='*.meta' $SDK_DIR/MoPubSDK/Resources/*.{html,png} unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework
 validate
-rm -rf unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework/
-validate
-cp -r mopub-ios-sdk-unity/bin/MoPubSDKFramework.framework/ unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework/
-validate
-cp -f mopub-ios-sdk/MoPubSDK/Resources/*.{html,png} unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework/
-validate
+
+# Due to the treatment of .js files as source code in unity, we must change the extension to something it won't try to compile. 
+# The extension gets changed back by the ios post build script within the unity plugin. 
 mv unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework/MRAID.bundle/mraid.js unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework/MRAID.bundle/mraid.js.prevent_unity_compilation
 
 # Clean up submodule
-cd mopub-ios-sdk
+cd $SDK_DIR
 git checkout .

@@ -10,15 +10,15 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.0.0 - May 16, 2018)
-- General Data Protection Regulation (GDPR) update to support a way for publishers to determine GDPR applicability and to obtain and manage consent from users in European Economic Area, the United Kingdom, or Switzerland to serve personalized ads.
-- New SDK initialization method to initialize consent management and rewarded video ad networks. Required for receiving personalized ads. In future versions of the SDK, initialization will be required to receive ads.
-- Sample app directory updated to `unity-sample-app/`
+## New in This Version (5.1.0 - June 6, 2018)
+- Allow publishers to determine which users should be treated as GDPR-compliant users through the new API `ForceGdprApplicable`.
+- Loading MoPub's consent dialog is only possible when GDPR rules applies to the app.
+- Added support for AdMob's NPA mediation setting ([Issue #15](https://github.com/mopub/mopub-unity-sdk/issues/15)).
+- Fixed event name for `RewardedVideoReceivedReward` on Android ([Issue #16](https://github.com/mopub/mopub-unity-sdk/issues/16)).
+- Fixed Rewarded Video adapter class names for AdMob and UnityAds.
+- Banners now only refresh after an impression is made.
 
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
-
-### Patch Release 5.0.1 (May 21, 2018)
-The 5.0.1 patch fixes a bug that affected iOS builds on Unity versions below 2017.1. Note that a manual step in XCode is required for these cases to ensure that the `MoPubSDKFramework.framework` is included in the Embedded Binaries list. Please see the [Getting Started Guide](https://developers.mopub.com/docs/unity/getting-started/) for details.
 
 ## Upgrading to SDK 5.0
 

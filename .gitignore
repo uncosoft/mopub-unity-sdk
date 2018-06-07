@@ -2,9 +2,6 @@
 *.idea
 *.iml
 
-# iOS wrapper project
-*.xcodeproj
-
 # release scripts bytecode
 *.pyc
 

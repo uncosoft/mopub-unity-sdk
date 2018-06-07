@@ -1,6 +1,7 @@
 package com.mopub.unity;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -16,7 +17,6 @@ import com.mopub.common.privacy.ConsentDialogListener;
 import com.mopub.common.privacy.ConsentStatus;
 import com.mopub.common.privacy.ConsentStatusChangeListener;
 import com.mopub.common.privacy.PersonalInfoManager;
-import com.mopub.common.util.Json;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.unity3d.player.UnityPlayer;
@@ -71,7 +71,7 @@ public class MoPubUnityPlugin {
         RewardedVideoClicked("RewardedVideoClicked"),
         RewardedVideoFailedToPlay("RewardedVideoFailedToPlay"),
         RewardedVideoClosed("RewardedVideoClosed"),
-        RewardedVideoReceived("RewardedVideoReceived"),
+        RewardedVideoReceivedReward("RewardedVideoReceivedReward"),
         // Native Ads
         NativeImpression("NativeImpression"),
         NativeClick("NativeClick"),
@@ -110,8 +110,12 @@ public class MoPubUnityPlugin {
             "com.mopub.mobileads.ChartboostRewardedVideo$ChartboostMediationSettings";
     private static final String VUNGLE_MEDIATION_SETTINGS =
             "com.mopub.mobileads.VungleRewardedVideo$VungleMediationSettings$Builder";
-    private static final String ADCOLONY_MEDIATION_SETTINGS =
+    private static final String ADCOLONY_GLOBAL_MEDIATION_SETTINGS =
+            "com.mopub.mobileads.AdColonyRewardedVideo$AdColonyGlobalMediationSettings";
+    private static final String ADCOLONY_INSTANCE_MEDIATION_SETTINGS =
             "com.mopub.mobileads.AdColonyRewardedVideo$AdColonyInstanceMediationSettings";
+    private static final String ADMOB_MEDIATION_SETTINGS =
+            "com.mopub.mobileads.GooglePlayServicesRewardedVideo$GooglePlayServicesMediationSettings";
 
     // TODO: see if we can't get MoPub to add an accessor for their is-initialized bool, and get rid of this one.
     private static boolean mIsSdkInitialized = false;
@@ -148,7 +152,7 @@ public class MoPubUnityPlugin {
             final String mediationSettingsJson, final String networksToInitString) {
         final SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(adUnitId)
                 .withAdvancedBidders(extractAdvancedBiddersClasses(advancedBiddersString))
-                .withMediationSettings(extractMediationSettingsFromJson(mediationSettingsJson))
+                .withMediationSettings(extractMediationSettingsFromJson(mediationSettingsJson, false))
                 .withNetworksToInit(Arrays.asList(networksToInitString.split(",")))
                 .build();
 
@@ -281,6 +285,19 @@ public class MoPubUnityPlugin {
         return applies == null ? 0 : applies ? 1 : -1;
     }
 
+    /**
+     * Forces the SDK to treat this app as in a GDPR region. Setting this will permanently force
+     * GDPR rules for this user unless this app is uninstalled or the data for this app is cleared.
+     */
+    public static void forceGdprApplies() {
+        PersonalInfoManager pim = MoPub.getPersonalInformationManager();
+        if (pim == null) {
+            Log.e(TAG, "Failed to force GDPR applicability; did you initialize the MoPub " +
+                    "SDK?");
+        } else {
+            pim.forceGdprApplies();
+        }
+    }
 
     /**
      * Checks to see if a publisher should load and then show a consent dialog.
@@ -465,7 +482,7 @@ public class MoPubUnityPlugin {
         return advancedBidders;
     }
 
-    protected static MediationSettings[] extractMediationSettingsFromJson(String json) {
+    protected static MediationSettings[] extractMediationSettingsFromJson(String json, boolean isInstance) {
         if (TextUtils.isEmpty(json))
             return new MediationSettings[0];
 
@@ -560,7 +577,8 @@ public class MoPubUnityPlugin {
 
                         try {
                             Class<?> mediationSettingsClass =
-                                    Class.forName(ADCOLONY_MEDIATION_SETTINGS);
+                                    Class.forName(isInstance ? ADCOLONY_INSTANCE_MEDIATION_SETTINGS
+                                                             : ADCOLONY_GLOBAL_MEDIATION_SETTINGS);
                             Constructor<?> mediationSettingsConstructor =
                                     mediationSettingsClass
                                             .getConstructor(boolean.class, boolean.class);
@@ -575,7 +593,24 @@ public class MoPubUnityPlugin {
                             printExceptionStackTrace(e);
                         }
                     }
-                } else {
+                } else if (adVendor.equalsIgnoreCase("googleplayservices")) {
+                    if (jsonObj.has("npa")) {
+                        try {
+                            Class<?> mediationSettingsClass =
+                                    Class.forName(ADMOB_MEDIATION_SETTINGS);
+                            Constructor<?> constructor = mediationSettingsClass.getConstructor(Bundle.class);
+                            Bundle extras = new Bundle();
+                            extras.putString("npa", jsonObj.getString("npa"));
+                            MediationSettings s = (MediationSettings) constructor.newInstance(extras);
+                            settings.add(s);
+                        } catch (ClassNotFoundException e) {
+                            Log.i(TAG, "could not find GooglePlayServicesMediationSettings class. " +
+                                    "Did you add AdMob Network SDK to your Android folder?");
+                        } catch (Exception e) {
+                            printExceptionStackTrace(e);
+                        }
+                    }
+                 } else {
                     Log.e(TAG, "adVendor not available for custom mediation settings: " +
                             "[" + adVendor + "]");
                 }
@@ -648,6 +683,12 @@ public class MoPubUnityPlugin {
         @Override
         public String getConsentedVendorListIabFormat() {
             return null;
+        }
+
+        @Deprecated
+        @Override
+        public boolean isForceGdprApplies() {
+            return false;
         }
     }
 }
