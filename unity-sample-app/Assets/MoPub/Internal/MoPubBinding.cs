@@ -118,7 +118,7 @@ public class MoPubBinding
 
 
     #region DllImports
-
+#if UNITY_IOS
     [DllImport("__Internal")]
     private static extern void _moPubCreateBanner(int bannerType, int position, string adUnitId);
 
@@ -176,6 +176,25 @@ public class MoPubBinding
     [DllImport("__Internal")]
     private static extern void _moPubShowRewardedVideo(string adUnitId, string currencyName, int currencyAmount,
                                                        string customData);
+#else
+    private static void _moPubCreateBanner(int bannerType, int position, string adUnitId) { }
+    private static void _moPubDestroyBanner(string adUnitId) {}
+    private static void _moPubShowBanner(string adUnitId, bool shouldShow) {}
+    private static void _moPubRefreshBanner(string adUnitId, string keywords, string userDataKeywords) {}
+    private static void _moPubSetAutorefreshEnabled(string adUnitId, bool enabled) {}
+    private static void _moPubForceRefresh(string adUnitId) {}
+    private static void _moPubRequestInterstitialAd(string adUnitId, string keywords, string userDataKeywords) {}
 
+    private static bool _moPubIsInterstitialReady(string adUnitId) { return false; }
+    private static void _moPubShowInterstitialAd(string adUnitId) {}
+    private static void _moPubDestroyInterstitialAd(string adUnitId) {}
+    private static void _moPubRequestRewardedVideo(string adUnitId, string json, string keywords,
+        string userDataKeywords, double latitude, double longitude,
+        string customerId) {}
+    private static bool _mopubHasRewardedVideo(string adUnitId) { return false; }
+    private static string _mopubGetAvailableRewards(string adUnitId) { return null; }
+    private static void _moPubShowRewardedVideo(string adUnitId, string currencyName, int currencyAmount,
+        string customData) {}
+#endif
     #endregion
 }
