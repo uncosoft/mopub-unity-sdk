@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public abstract class AbstractNativeAd : MonoBehaviour
 {
-#if mopub_native_beta
     public struct Data
     {
         public Uri MainImageUrl;
@@ -85,6 +84,7 @@ public abstract class AbstractNativeAd : MonoBehaviour
     public Renderer IconImage;
     public Renderer PrivacyInformationIconImage;
 
+#if mopub_native_beta
     private NativeAdClickHandler[] _clickHandlers;
     protected bool IsLoaded;
     private const float InvisibleScale = 1e-10f;

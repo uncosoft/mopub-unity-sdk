@@ -24,6 +24,9 @@ sysinfo.txt
 # JetBrains Rider Plugin
 Assets/Plugins/Editor*
 
+# GitHub for Unity Plugin
+Assets/Plugins/GitHub*
+
 # Temporary ignore of AudienceNetwork SDK while Native Ads is under development
 # (Remove once mediated native ads are migrated to mopub-unity-mediation)
 Assets/AudienceNetwork*

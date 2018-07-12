@@ -9,6 +9,7 @@
 
 #import "MOPUBDisplayAgentType.h"
 #import "MPAdConversionTracker.h"
+#import "MPAdImpressionTimer.h"
 #import "MPAdvancedBidder.h"
 #import "MPAdView.h"
 #import "MPBannerCustomEvent.h"
@@ -17,6 +18,7 @@
 #import "MPConsentChangedNotification.h"
 #import "MPConsentError.h"
 #import "MPConsentStatus.h"
+#import "MPError.h"
 #import "MPGlobal.h"
 #import "MPIdentityProvider.h"
 #import "MPInterstitialAdController.h"
@@ -28,6 +30,7 @@
 #import "MPMediationSdkInitializable.h"
 #import "MPMediationSettingsProtocol.h"
 #import "MPMoPubConfiguration.h"
+#import "MPRealTimeTimer.h"
 #import "MPRewardedVideo.h"
 #import "MPRewardedVideoReward.h"
 #import "MPRewardedVideoCustomEvent.h"
@@ -35,12 +38,6 @@
 #import "MPRewardedVideoError.h"
 #import "MPViewabilityAdapter.h"
 #import "MPViewabilityOption.h"
-#import "MPError.h"
-#import "MPAdConfiguration.h"
-#import "MPAdImpressionTimer.h"
-#import "MPRealTimeTimer.h"
-#import "MPAdDestinationDisplayAgent.h"
-#import "MPCoreInstanceProvider.h"
 
 #if MP_HAS_NATIVE_PACKAGE
 #import "MPNativeAd.h"
@@ -52,6 +49,8 @@
 #import "MPNativeAdRendering.h"
 #import "MPNativeAdRequest.h"
 #import "MPNativeAdRequestTargeting.h"
+#import "MPNativeView.h"
+#import "MPNativeAdUtils.h"
 #import "MPCollectionViewAdPlacer.h"
 #import "MPTableViewAdPlacer.h"
 #import "MPClientAdPositioning.h"
@@ -62,15 +61,11 @@
 #import "MPNativeAdRendererSettings.h"
 #import "MPNativeAdRenderer.h"
 #import "MPStaticNativeAdRenderer.h"
+#import "MPNativeAdRendererImageHandler.h"
 #import "MOPUBNativeVideoAdRendererSettings.h"
 #import "MOPUBNativeVideoAdRenderer.h"
 #import "MPNativeAdRenderingImageLoader.h"
 #import "MPStreamAdPlacer.h"
-#import "MPNativeAdRendererImageHandler.h"
-#import "MPNativeCache.h"
-#import "MPNativeView.h"
-#import "MPNativeAdUtils.h"
-#import "MPNativeAdRendererImageHandler.h"
 #endif
 
 // Import these frameworks for module support.
@@ -251,8 +246,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loadConsentDialogWithCompletion:(void (^ _Nullable)(NSError * _Nullable error))completion;
 
 /**
- * If a consent dialog is currently loaded, this method will present it modally on top of `viewController`. If no
- * consent dialog is loaded, this method will do nothing. Completion is called upon successful presentation of the
+ * If a consent dialog is currently loaded, this method will present it modally on top of @c viewController. If no
+ * consent dialog is loaded, this method will do nothing. @c didShow is called upon successful presentation of the
+ * consent dialog; otherwise it is not called. @c didDismiss is called after the dismissal of the consent dialog;
+ * otherwise (including if the dialog failed to present) it is not called.
+ */
+- (void)showConsentDialogFromViewController:(UIViewController *)viewController
+                                    didShow:(void (^ _Nullable)(void))didShow
+                                 didDismiss:(void (^ _Nullable)(void))didDismiss;
+
+/**
+ * If a consent dialog is currently loaded, this method will present it modally on top of @c viewController. If no
+ * consent dialog is loaded, this method will do nothing. @c completion is called upon successful presentation of the
  * consent dialog; otherwise it is not called.
  */
 - (void)showConsentDialogFromViewController:(UIViewController *)viewController completion:(void (^ _Nullable)(void))completion;

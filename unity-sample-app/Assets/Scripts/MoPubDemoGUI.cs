@@ -57,10 +57,6 @@ public class MoPubDemoGUI : MonoBehaviour
 #endif
     };
 
-#if mopub_mediation
-    private Dictionary<string, FacebookNativeAd> _fbNativeAds;
-    private readonly string[] _fbNativeAdUnits = { "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID" };
-#endif
 #endif// mopub_native_beta
 
     [SerializeField]
@@ -216,9 +212,6 @@ public class MoPubDemoGUI : MonoBehaviour
         AddAdUnitsToStateMaps(_rewardedRichMediaAdUnits);
 #if mopub_native_beta
         AddAdUnitsToStateMaps(_nativeAdUnits);
-#if mopub_mediation
-        AddAdUnitsToStateMaps(_fbNativeAdUnits);
-#endif
 #endif
         ConsentDialogLoaded = false;
     }
@@ -248,22 +241,14 @@ public class MoPubDemoGUI : MonoBehaviour
 
 #if mopub_native_beta
         _nativeAds = new Dictionary<string, MoPubStaticNativeAd>();
-        var staticNativeAds = GameObject.Find("MoPubNativeAds").GetComponentsInChildren<MoPubStaticNativeAd>();
+        var nativeAds = GameObject.Find("MoPubNativeAds");
+        if (nativeAds == null) return;
+        var staticNativeAds = nativeAds.GetComponentsInChildren<MoPubStaticNativeAd>();
         Debug.Log("Found " + staticNativeAds.Length + " mopub static native ads");
         foreach (var nativeAd in staticNativeAds) {
             _nativeAds.Add(nativeAd.AdUnitId, nativeAd);
             HideNativeAd(nativeAd);
         }
-
-#if mopub_mediation
-        _fbNativeAds = new Dictionary<string, FacebookNativeAd>();
-        var fbStaticNativeAds = GameObject.Find("MoPubNativeAds").GetComponentsInChildren<FacebookNativeAd>();
-        Debug.Log("Found " + fbStaticNativeAds.Length + " facebook native ads");
-        foreach (var fbNativeAd in fbStaticNativeAds) {
-            _fbNativeAds.Add(fbNativeAd.AdUnitId, fbNativeAd);
-            HideNativeAd(fbNativeAd);
-        }
-#endif
 #else
         var nativeAdsGO = GameObject.Find("MoPubNativeAds");
         if (nativeAdsGO != null)
@@ -526,6 +511,7 @@ public class MoPubDemoGUI : MonoBehaviour
         GUILayout.Label("Native Ads");
         if (!IsAdUnitArrayNullOrEmpty(_nativeAdUnits)) {
             foreach (var nativeAdUnit in _nativeAdUnits) {
+                if (!_nativeAds.ContainsKey(nativeAdUnit)) continue;
                 GUILayout.BeginHorizontal();
 
                 var nativeAd = _nativeAds[nativeAdUnit];
@@ -556,41 +542,6 @@ public class MoPubDemoGUI : MonoBehaviour
         } else {
             GUILayout.Label("No native AdUnits available", _smallerFont, null);
         }
-
-#if mopub_mediation
-        if (!IsAdUnitArrayNullOrEmpty(_fbNativeAdUnits)) {
-            foreach (var fbNativeAdUnit in _fbNativeAdUnits) {
-                GUILayout.BeginHorizontal();
-
-                var fbNativeAd = _fbNativeAds[fbNativeAdUnit];
-
-                GUI.enabled = !_adUnitToLoadedMapping[fbNativeAdUnit];
-                if (GUILayout.Button(CreateRequestButtonLabel(fbNativeAdUnit))) {
-                    Debug.Log("requesting native AdUnit: " + fbNativeAdUnit);
-                    UpdateStatusLabel("Requesting " + fbNativeAdUnit);
-                    fbNativeAd.LoadAd();
-                }
-
-                GUI.enabled = _adUnitToLoadedMapping[fbNativeAdUnit] && !_adUnitToShownMapping[fbNativeAdUnit];
-                if (GUILayout.Button("Show")) {
-                    ClearStatusLabel();
-                    ShowNativeAd(fbNativeAd);
-                }
-
-                GUI.enabled = _adUnitToLoadedMapping[fbNativeAdUnit] && _adUnitToShownMapping[fbNativeAdUnit];
-                if (GUILayout.Button("Hide")) {
-                    ClearStatusLabel();
-                    HideNativeAd(fbNativeAd);
-                }
-
-                GUI.enabled = true;
-
-                GUILayout.EndHorizontal();
-            }
-        } else {
-            GUILayout.Label("No Facebook Audience Network native AdUnits available", _smallerFont, null);
-        }
-#endif
     }
 #endif
 

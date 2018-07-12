@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 my_dir="$(dirname "$0")"
 source "$my_dir/validate.sh"
+source "$my_dir/print_helpers.sh"
 
 # Set this to 'true' to build with the internal iOS SDK; set to 'false' to build with public iOS SDK.
 # May also be overriden from the command line as such: INTERNAL_SDK=false ./scripts/mopub-ios-sdk-unity-build.sh
@@ -17,8 +18,10 @@ if [ $INTERNAL_SDK == true ]; then
   XCODE_PROJECT_NAME="internal-"$XCODE_PROJECT_NAME
 fi
 SDK_VERSION_HOST_FILE=$SDK_DIR/MoPubSDK/MPConstants.h
+XCODEBUILD_LOG_FILE="$my_dir/xcodebuildlog.txt"
 
-echo "Building the MoPub Unity plugin for iOS using the" $SDK_NAME
+# echo "Building the MoPub Unity plugin for iOS using the $SDK_NAME..."
+print_build_starting "iOS" "$SDK_NAME"
 
 # remove viewability binaries since they are not supported for unity
 rm -rf $SDK_DIR/MoPubSDK/Viewability/{Avid,MOAT}
@@ -31,14 +34,16 @@ sed -i.bak 's/^\(#define MP_SDK_VERSION.*"\)\([^+"]*\).*"/\1\2+'$SDK_VERSION_SUF
 validate
 
 # make a clean build (copies build artifacts to mopub-ios-sdk-unity/bin directory)
+echo -n "Running xcodebuild... "
 xcrun xcodebuild -project mopub-ios-sdk-unity/$XCODE_PROJECT_NAME \
                  -scheme "MoPub for Unity" \
                  -configuration "Release" \
                  OTHER_CFLAGS="-fembed-bitcode -w" \
                  BITCODE_GENERATION_MODE=bitcode \
                  clean \
-                 build
-validate
+                 build > $XCODEBUILD_LOG_FILE
+validate "Building the iOS wrapper has failed, please check $XCODEBUILD_LOG_FILE"
+echo "done"
 
 # after build, undo the unity suffix
 mv $SDK_VERSION_HOST_FILE.bak $SDK_VERSION_HOST_FILE
@@ -46,13 +51,17 @@ validate
 
 # copy build artifacts to unity project, deleting any now-missing files from the destination 
 # to account for file moves and renames.  (.meta files excluded, unity will handle them.)
-rsync -r -v --delete --exclude='*.meta' mopub-ios-sdk-unity/bin/* unity-sample-app/Assets/Plugins/iOS
-validate
+echo -n "Copying build artifacts into unity project... "
+rsync -r -v --delete --exclude='*.meta' mopub-ios-sdk-unity/bin/* unity-sample-app/Assets/Plugins/iOS >> $XCODEBUILD_LOG_FILE
+validate "Copying iOS wrapper build artifacts has failed, please check $XCODEBUILD_LOG_FILE"
+echo "done"
 
 # copy in the html and png files from the original source
 # TODO (ADF-3528): not clear why this is needed, as the framework already has these files?
-rsync -r -v --delete --exclude='*.meta' $SDK_DIR/MoPubSDK/Resources/*.{html,png} unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework
-validate
+echo -n "Copying additional artifacts into unity project... "
+rsync -r -v --delete --exclude='*.meta' $SDK_DIR/MoPubSDK/Resources/*.{html,png} unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework >> $XCODEBUILD_LOG_FILE
+validate "Copying iOS wrapper build artifacts has failed, please check $XCODEBUILD_LOG_FILE"
+echo "done"
 
 # Due to the treatment of .js files as source code in unity, we must change the extension to something it won't try to compile. 
 # The extension gets changed back by the ios post build script within the unity plugin. 
@@ -61,3 +70,5 @@ mv unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework/MRAID.bundle/
 # Clean up submodule
 cd $SDK_DIR
 git checkout .
+
+print_build_finished "iOS" "$SDK_NAME"

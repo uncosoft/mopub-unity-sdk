@@ -1,3 +1,9 @@
+## Version 5.2.0 (July 11, 2018)
+- A new MoPub Preferences pane has been added to Unity Preferences, with optional Beta features.
+- A Beta MoPub Menu has been added, including build commands for the MoPub wrappers. Please see the [developer support site](https://developers.mopub.com/docs/unity/getting-started/) for details.
+- A Beta of the experimental MoPub Native Ad format has been included. Please see the [developer support site](https://developers.mopub.com/docs/unity/getting-started/) for details.
+- The MoPub Unity Plugin now includes versions 5.2.0 of the MoPub Android SDK and the MoPub iOS SDK.
+
 ## Version 5.1.0 (June 6, 2018)
 - Allow publishers to determine which users should be treated as GDPR-compliant users through the new API `ForceGdprApplicable`.
 - Loading MoPub's consent dialog is only possible when GDPR rules applies to the app.

@@ -5,6 +5,5 @@
 # release scripts bytecode
 *.pyc
 
-# export script log
-mopub-unity-plugin/exportlog.txt
-
+# extra logging from build and export scripts
+scripts/*log.txt

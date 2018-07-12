@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 my_dir="$(dirname "$0")"
 source "$my_dir/validate.sh"
+source "$my_dir/print_helpers.sh"
 
 # Set this to 'true' to build with the internal Android SDK; set to 'false' to build with public Android SDK.
 # May also be overriden from the command line as such: INTERNAL_SDK=false ./scripts/mopub-android-sdk-unity-build.sh
 : "${INTERNAL_SDK:=false}"
-
-# Features under development - please contact support@mopub.com if interested in our Beta Program!
-NATIVE_BETA=false
 
 # Set the SDK directory as an environment variable for mopub-android-sdk-unity/settings.gradle
 export SDK_DIR="mopub-android-sdk"
@@ -21,7 +19,7 @@ if [ $INTERNAL_SDK == true ]; then
 fi
 SDK_VERSION_HOST_FILE=$SDK_DIR/mopub-sdk/mopub-sdk-base/src/main/java/com/mopub/common/MoPub.java
 
-echo "Building the MoPub Unity plugin for Android using the" $SDK_NAME
+print_build_starting "Android" "$SDK_NAME"
 
 # Append "+unity" (or the latest commit SHA, for internal SDK builds) suffix to SDK_VERSION in MoPub.java
 sed -i.bak 's/^\(.*public static final String SDK_VERSION.*"\)\([^+"]*\).*"/\1\2+'$SDK_VERSION_SUFFIX'"/' $SDK_VERSION_HOST_FILE
@@ -47,19 +45,25 @@ cp $SDK_DIR/mopub-sdk/mopub-sdk-interstitial/build/intermediates/bundles/release
 validate
 cp $SDK_DIR/mopub-sdk/mopub-sdk-rewardedvideo/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-rewardedvideo.jar
 validate
-if [ $NATIVE_BETA == true ]; then
-  cp $SDK_DIR/mopub-sdk/mopub-sdk-native-static/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-native-static.jar
-else
-  rm -f unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-native*
-fi
+
+# Copy Native Ads jar into placeholder directory and add/remove from Plugins as needed
+cp $SDK_DIR/mopub-sdk/mopub-sdk-native-static/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/MoPub/Extras/mopub-sdk-native-static.jar
 validate
+NATIVE_BETA=$(grep -oe mopub_native_beta unity-sample-app/ProjectSettings/ProjectSettings.asset)
+if [ -z "$NATIVE_BETA" ]; then
+  rm -f unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-native*
+else
+  cp $SDK_DIR/mopub-sdk/mopub-sdk-native-static/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-native-static.jar
+fi
 
 # Copy MoPub SDK dependency jars/aars
 if [ -f $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar ]; then
   # jars go under Plugins/Android/mopub/libs/
-  cp $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/android-support-v4-23.1.1.jar
+  cp $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar unity-sample-app/Assets/Plugins/Android/libs/android-support-v4-23.1.1.jar
 else
   # aars go under Plugins/Android/
   cp $ANDROID_HOME/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar unity-sample-app/Assets/Plugins/Android/android-support-v4-23.1.1.aar
 fi
 validate
+
+print_build_finished "Android" "$SDK_NAME"

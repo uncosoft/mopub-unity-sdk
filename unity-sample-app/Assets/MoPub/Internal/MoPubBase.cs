@@ -171,13 +171,18 @@ public class MoPubBase
     {
         public MediationSetting(string adVendor) { Add("adVendor", adVendor); }
 
+        public MediationSetting(string android, string ios) :
+#if UNITY_IOS
+            this(ios)
+#else
+            this(android)
+#endif
+            {}
+
+
         // Shortcut class names so you don't have to remember the right ad vendor string (also to not misspell it).
         public class AdColony : MediationSetting { public AdColony() : base("AdColony") { } }
-#if UNITY_IOS
-        public class AdMob : MediationSetting { public AdMob() : base("MPGoogle") { } }
-#else
-        public class AdMob : MediationSetting { public AdMob() : base("GooglePlayServices") { } }
-#endif
+        public class AdMob : MediationSetting { public AdMob() : base(android: "GooglePlayServices", ios: "MPGoogle") { } }
         public class Chartboost : MediationSetting { public Chartboost() : base("Chartboost") { } }
         public class Vungle : MediationSetting { public Vungle() : base("Vungle") { } }
     }
@@ -259,22 +264,25 @@ public class MoPubBase
         }
 
 
-        public static readonly RewardedNetwork AdColony = GetNetwork("AdColony");
-        public static readonly RewardedNetwork AdMob = // Names are different for Android vs iOS
+        private static RewardedNetwork GetNetwork(string android, string ios)
+        {
 #if UNITY_IOS
-            GetNetwork("MPGoogleAdMob");
+            return GetNetwork(ios);
 #else
-            GetNetwork("GooglePlayServices");
+            return GetNetwork(android);
 #endif
+        }
+
+
+        public static readonly RewardedNetwork AdColony = GetNetwork("AdColony");
+        public static readonly RewardedNetwork AdMob = GetNetwork(android: "GooglePlayServices", ios: "MPGoogleAdMob");
+        public static readonly RewardedNetwork AppLovin = GetNetwork("AppLovin");
         public static readonly RewardedNetwork Chartboost = GetNetwork("Chartboost");
         public static readonly RewardedNetwork Facebook = GetNetwork("Facebook");
+        public static readonly RewardedNetwork IronSource = GetNetwork("IronSource");
+        public static readonly RewardedNetwork OnebyAOL = GetNetwork(android: "Millenial", ios: "MPMillennial");
         public static readonly RewardedNetwork Tapjoy = GetNetwork("Tapjoy");
-        public static readonly RewardedNetwork Unity = // Names are different for Android vs iOS
-#if UNITY_IOS
-            GetNetwork("UnityAds");
-#else
-            GetNetwork("Unity");
-#endif
+        public static readonly RewardedNetwork Unity = GetNetwork(android: "Unity", ios: "UnityAds");
         public static readonly RewardedNetwork Vungle = GetNetwork("Vungle");
     }
 

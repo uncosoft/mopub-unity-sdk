@@ -472,8 +472,38 @@ public class MoPubiOS : MoPubBase
 
 
     #region DllImports
-
-
+#if ENABLE_IL2CPP && UNITY_ANDROID
+    // IL2CPP on Android scrubs DllImports, so we need to provide stubs to unblock compilation
+    private static void _moPubInitializeSdk(string adUnitId, string advancedBiddersString,
+                                            string mediationSettingsJson, string networksToInitString) {}
+    private static bool _moPubIsSdkInitialized() { return false; }
+    private static void _moPubSetAdvancedBiddingEnabled(bool advancedBiddingEnabled) {}
+    private static bool _moPubIsAdvancedBiddingEnabled() { return false; }
+    private static string _moPubGetSDKVersion() { return null; }
+    private static void _moPubEnableLocationSupport(bool shouldUseLocation) {}
+    private static int _moPubGetLogLevel() { return -1; }
+    private static void _moPubSetLogLevel(int logLevel) {}
+    private static void _moPubForceWKWebView(bool shouldForce) {}
+    private static void _moPubReportApplicationOpen(string iTunesAppId) {}
+    private static bool _moPubCanCollectPersonalInfo() { return false; }
+    private static int _moPubCurrentConsentStatus() { return -1; }
+    private static int _moPubIsGDPRApplicable() { return -1; }
+    private static int _moPubForceGDPRApplicable() { return -1; }
+    private static bool _moPubShouldShowConsentDialog() { return false; }
+    private static bool _moPubIsConsentDialogLoaded() { return false; }
+    private static void _moPubLoadConsentDialog() {}
+    private static void _moPubShowConsentDialog() {}
+    private static string _moPubCurrentConsentPrivacyPolicyUrl(string isoLanguageCode = null) { return null; }
+    private static string _moPubCurrentConsentVendorListUrl(string isoLanguageCode = null) { return null; }
+    private static void _moPubGrantConsent() {}
+    private static void _moPubRevokeConsent() {}
+    private static string _moPubCurrentConsentIabVendorListFormat() { return null; }
+    private static string _moPubCurrentConsentPrivacyPolicyVersion() { return null; }
+    private static string _moPubCurrentConsentVendorListVersion() { return null; }
+    private static string _moPubPreviouslyConsentedIabVendorListFormat() { return null; }
+    private static string _moPubPreviouslyConsentedPrivacyPolicyVersion() { return null; }
+    private static string _moPubPreviouslyConsentedVendorListVersion() { return null; }
+#else
     [DllImport("__Internal")]
     private static extern void _moPubInitializeSdk(string adUnitId, string advancedBiddersString,
                                                    string mediationSettingsJson, string networksToInitString);
@@ -585,6 +615,6 @@ public class MoPubiOS : MoPubBase
 
     [DllImport("__Internal")]
     private static extern string _moPubPreviouslyConsentedVendorListVersion();
-
+#endif
     #endregion DllImports
 }
