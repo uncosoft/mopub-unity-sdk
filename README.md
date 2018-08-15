@@ -10,12 +10,8 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.2.0 - July 11, 2018)
-- A new MoPub Preferences pane has been added to Unity Preferences, with optional Beta features.
-- A Beta MoPub Menu has been added, including build commands for the MoPub wrappers. Please see the [developer support site](https://developers.mopub.com/docs/unity/getting-started/) for details.
-- A Beta of the experimental MoPub Native Ad format has been included. Please see the [developer support site](https://developers.mopub.com/docs/unity/getting-started/) for details.
-- Fixed an issue when building for Android with IL2CPP.
-- The MoPub Unity Plugin now includes versions 5.2.0 of the MoPub Android SDK and the MoPub iOS SDK.
+## New in This Version (5.3.0 - August 15, 2018)
+- The MoPub Unity Plugin now includes versions 5.3.0 of the MoPub Android SDK and the MoPub iOS SDK.
 
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 

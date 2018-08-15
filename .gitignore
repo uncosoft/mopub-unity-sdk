@@ -7,3 +7,13 @@
 
 # extra logging from build and export scripts
 scripts/*log.txt
+
+# internal SDK submodules
+mopub-android/
+mopub-ios/
+
+# internal scripts
+scripts/private/
+
+# third-party dependencies
+*unity*.jar

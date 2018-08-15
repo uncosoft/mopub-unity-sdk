@@ -1,3 +1,6 @@
+## Version 5.3.0 (August 15, 2018)
+- The MoPub Unity Plugin now includes versions 5.3.0 of the MoPub Android SDK and the MoPub iOS SDK.
+
 ## Version 5.2.0 (July 11, 2018)
 - A new MoPub Preferences pane has been added to Unity Preferences, with optional Beta features.
 - A Beta MoPub Menu has been added, including build commands for the MoPub wrappers. Please see the [developer support site](https://developers.mopub.com/docs/unity/getting-started/) for details.
