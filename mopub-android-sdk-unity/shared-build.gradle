@@ -10,12 +10,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
     buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 28
     }
 
     // ensure build outputs to release/ instead of default/

@@ -1,3 +1,9 @@
+## Version 5.4.0 (October 9, 2018)
+- The MoPub Unity Plugin now includes versions 5.4.0 of the MoPub Android SDK and the MoPub iOS SDK.
+- The MoPub menu now has more features: About, Documentation, Report Issue, and SDK Manager
+- The SDK Manager dialog allows checking for and updating to new versions of the SDK.
+- The SDK directory structure has changed:  All files are now collected under Assets/MoPub.  See the README file for notes on migration.
+
 ## Version 5.3.0 (August 15, 2018)
 - The MoPub Unity Plugin now includes versions 5.3.0 of the MoPub Android SDK and the MoPub iOS SDK.
 

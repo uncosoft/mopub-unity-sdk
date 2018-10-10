@@ -32,37 +32,29 @@ mopub-android-sdk-unity/gradlew -p mopub-android-sdk-unity clean assembleRelease
 mv $SDK_VERSION_HOST_FILE.bak $SDK_VERSION_HOST_FILE
 validate
 
+CLASSES_JAR=build/intermediates/bundles/release/classes.jar
+UNITY_DIR=unity-sample-app/Assets/MoPub/Plugins/Android/MoPub.plugin
+
 # Copy the generated jars into the unity package:
-#   * mopub-unity-plugins.jar: unity plugins for banner, interstitial, and rewarded video
-#   * mopub-sdk-*.jar: modularized SDK jars (excluding native-static and native-video)
-cp mopub-android-sdk-unity/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-unity-plugins.jar
+#   * classes.jar: unity plugins for banner, interstitial, and rewarded video
+#   * mopub-sdk-*.jar: modularized SDK jars (excluding native-video)
+cp mopub-android-sdk-unity/$CLASSES_JAR $UNITY_DIR/libs/mopub-unity-wrappers.jar
 validate
-cp $SDK_DIR/mopub-sdk/mopub-sdk-base/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-base.jar
-validate
-cp $SDK_DIR/mopub-sdk/mopub-sdk-banner/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-banner.jar
-validate
-cp $SDK_DIR/mopub-sdk/mopub-sdk-interstitial/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-interstitial.jar
-validate
-cp $SDK_DIR/mopub-sdk/mopub-sdk-rewardedvideo/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-rewardedvideo.jar
-validate
+for lib in base banner interstitial rewardedvideo native-static; do
+  cp $SDK_DIR/mopub-sdk/mopub-sdk-$lib/$CLASSES_JAR $UNITY_DIR/libs/mopub-sdk-$lib.jar
+  validate
+done
 
-# Copy Native Ads jar into placeholder directory and add/remove from Plugins as needed
-cp $SDK_DIR/mopub-sdk/mopub-sdk-native-static/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/MoPub/Extras/mopub-sdk-native-static.jar
-validate
-NATIVE_BETA=$(grep -oe mopub_native_beta unity-sample-app/ProjectSettings/ProjectSettings.asset)
-if [ -z "$NATIVE_BETA" ]; then
-  rm -f unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-native*
-else
-  cp $SDK_DIR/mopub-sdk/mopub-sdk-native-static/build/intermediates/bundles/release/classes.jar unity-sample-app/Assets/Plugins/Android/mopub/libs/mopub-sdk-native-static.jar
-fi
-
+PLUGINS_DIR=unity-sample-app/Assets/Plugins/Android
 # Copy MoPub SDK dependency jars/aars
 if [ -f $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar ]; then
-  # jars go under Plugins/Android/mopub/libs/
-  cp $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar unity-sample-app/Assets/Plugins/Android/libs/android-support-v4-23.1.1.jar
+  # jars go under Plugins/Android/MoPub/libs/
+  cp $ANDROID_HOME/extras/android/support/v4/android-support-v4.jar \
+     $PLUGINS_DIR/libs/android-support-v4-23.1.1.jar
 else
   # aars go under Plugins/Android/
-  cp $ANDROID_HOME/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar unity-sample-app/Assets/Plugins/Android/android-support-v4-23.1.1.aar
+  cp $ANDROID_HOME/extras/android/m2repository/com/android/support/support-v4/23.1.1/support-v4-23.1.1.aar \
+     $PLUGINS_DIR/android-support-v4-23.1.1.aar
 fi
 validate
 

@@ -10,10 +10,21 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.3.0 - August 15, 2018)
-- The MoPub Unity Plugin now includes versions 5.3.0 of the MoPub Android SDK and the MoPub iOS SDK.
+## New in This Version (5.4.0 - October 9, 2018)
+## Version 5.4.0 (October 9, 2018)
+- The MoPub Unity Plugin now includes versions 5.4.0 of the MoPub Android SDK and the MoPub iOS SDK.
+- The MoPub menu now has more features: About, Documentation, Report Issue, and SDK Manager
+- The SDK Manager dialog allows checking for and updating to new versions of the SDK.
+- The SDK directory structure has changed:  All files are now collected under Assets/MoPub.  See below for notes on migration.
 
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
+
+## Upgrading to SDK 5.4
+
+Starting in MoPub Unity Plugin 5.4, the SDK Manager (opened via the previously-beta MoPub menu) automatically detects if there are directories or files in the legacy plugin structure, and displays a “Migrate” button.
+NOTE: Performing the migration is optional as it simply organizes all MoPub code within the same directory, and doing it (or not) should not have any adverse effect.
+
+for more details, see https://developers.mopub.com/docs/unity/getting-started/#migrating-to-54
 
 ## Upgrading to SDK 5.0
 

@@ -49,23 +49,26 @@ echo "done"
 mv $SDK_VERSION_HOST_FILE.bak $SDK_VERSION_HOST_FILE
 validate
 
+UNITY_DIR=unity-sample-app/Assets/MoPub/Plugins/iOS
+
 # copy build artifacts to unity project, deleting any now-missing files from the destination 
 # to account for file moves and renames.  (.meta files excluded, unity will handle them.)
 echo -n "Copying build artifacts into unity project... "
-rsync -r -v --delete --exclude='*.meta' mopub-ios-sdk-unity/bin/* unity-sample-app/Assets/Plugins/iOS >> $XCODEBUILD_LOG_FILE
+rsync -r -v --delete --exclude='*.meta' mopub-ios-sdk-unity/bin/* $UNITY_DIR >> $XCODEBUILD_LOG_FILE
 validate "Copying iOS wrapper build artifacts has failed, please check $XCODEBUILD_LOG_FILE"
 echo "done"
 
 # copy in the html and png files from the original source
 # TODO (ADF-3528): not clear why this is needed, as the framework already has these files?
 echo -n "Copying additional artifacts into unity project... "
-rsync -r -v --delete --exclude='*.meta' $SDK_DIR/MoPubSDK/Resources/*.{html,png} unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework >> $XCODEBUILD_LOG_FILE
+rsync -r -v --delete --exclude='*.meta' $SDK_DIR/MoPubSDK/Resources/*.{html,png} $UNITY_DIR/MoPubSDKFramework.framework >> $XCODEBUILD_LOG_FILE
 validate "Copying iOS wrapper build artifacts has failed, please check $XCODEBUILD_LOG_FILE"
 echo "done"
 
 # Due to the treatment of .js files as source code in unity, we must change the extension to something it won't try to compile. 
 # The extension gets changed back by the ios post build script within the unity plugin. 
-mv unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework/MRAID.bundle/mraid.js unity-sample-app/Assets/Plugins/iOS/MoPubSDKFramework.framework/MRAID.bundle/mraid.js.prevent_unity_compilation
+mv $UNITY_DIR/MoPubSDKFramework.framework/MRAID.bundle/mraid.js \
+   $UNITY_DIR/MoPubSDKFramework.framework/MRAID.bundle/mraid.js.prevent_unity_compilation
 
 # Clean up submodule
 cd $SDK_DIR
