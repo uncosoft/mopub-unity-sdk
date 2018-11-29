@@ -249,7 +249,7 @@ public class MoPubBase
         public static readonly AdvancedBidder AdMob = new AdvancedBidder(android: "GooglePlayServices", ios: "MPGoogleAdMob");
         public static readonly AdvancedBidder AppLovin = new AdvancedBidder("AppLovin");
         public static readonly AdvancedBidder Facebook = new AdvancedBidder("Facebook");
-        public static readonly AdvancedBidder OnebyAOL = new AdvancedBidder(android: "Millenial", ios: "MPMillennial");
+        public static readonly AdvancedBidder OnebyAOL = new AdvancedBidder(android: "Millennial", ios: "MPMillennial");
         public static readonly AdvancedBidder Tapjoy = new AdvancedBidder("Tapjoy");
         public static readonly AdvancedBidder Unity = new AdvancedBidder(android: "Unity", ios: "UnityAds");
         public static readonly AdvancedBidder Vungle = new AdvancedBidder("Vungle");
@@ -274,7 +274,7 @@ public class MoPubBase
         public static readonly RewardedNetwork Chartboost = new RewardedNetwork("Chartboost");
         public static readonly RewardedNetwork Facebook = new RewardedNetwork("Facebook");
         public static readonly RewardedNetwork IronSource = new RewardedNetwork("IronSource");
-        public static readonly RewardedNetwork OnebyAOL = new RewardedNetwork(android: "Millenial", ios: "MPMillennial");
+        public static readonly RewardedNetwork OnebyAOL = new RewardedNetwork(android: "Millennial", ios: "MPMillennial");
         public static readonly RewardedNetwork Tapjoy = new RewardedNetwork("Tapjoy");
         public static readonly RewardedNetwork Unity = new RewardedNetwork(android: "Unity", ios: "UnityAds");
         public static readonly RewardedNetwork Vungle = new RewardedNetwork("Vungle");

@@ -1,3 +1,10 @@
+## Version 5.4.1 (November 28, 2018)
+- The MoPub Unity Plugin now includes versions 5.4.1 of the MoPub Android SDK and the MoPub iOS SDK.
+- Fixed Unity 5.3 sample app crash when attempting to show MRAID rich media ads on Android 9 devices.
+- Fixed typo "Millenial" to "Millennial" in Rewarded Video.
+- Fixed SDK Manager version comparisons.
+- NOTE: The SDK Manager can not update to 5.4.1, so please update manually.
+
 ## Version 5.4.0 (October 9, 2018)
 - The MoPub Unity Plugin now includes versions 5.4.0 of the MoPub Android SDK and the MoPub iOS SDK.
 - The MoPub menu now has more features: About, Documentation, Report Issue, and SDK Manager

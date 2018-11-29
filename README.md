@@ -10,12 +10,12 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.4.0 - October 9, 2018)
-## Version 5.4.0 (October 9, 2018)
-- The MoPub Unity Plugin now includes versions 5.4.0 of the MoPub Android SDK and the MoPub iOS SDK.
-- The MoPub menu now has more features: About, Documentation, Report Issue, and SDK Manager
-- The SDK Manager dialog allows checking for and updating to new versions of the SDK.
-- The SDK directory structure has changed:  All files are now collected under Assets/MoPub.  See below for notes on migration.
+## New in This Version (5.4.1 - November 28, 2018)
+- The MoPub Unity Plugin now includes versions 5.4.1 of the MoPub Android SDK and the MoPub iOS SDK.
+- Fixed Unity 5.3 sample app crash when attempting to show MRAID rich media ads on Android 9 devices.
+- Fixed typo "Millenial" to "Millennial" in Rewarded Video.
+- Fixed SDK Manager version comparisons.
+- NOTE: The SDK Manager can not update to 5.4.1, so please update manually.
 
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 

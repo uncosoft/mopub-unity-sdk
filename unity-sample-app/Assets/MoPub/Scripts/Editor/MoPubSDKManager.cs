@@ -111,7 +111,7 @@ public class MoPubSDKManager : EditorWindow
     void OnGUI()
     {
         // New SDK to install?
-        var canInstall = latest != null && (current == null || Version.Compare(current, latest) > 0);
+        var canInstall = latest != null && (current == null || Version.Compare(current, latest) < 0);
         // Legacy MoPub directory structure found and no update available
         var canMigrate = legacyMoPub && !canInstall;
         // Is any async job in progress?

@@ -36,7 +36,7 @@ public class MoPubDemoGUI : MonoBehaviour
     private readonly string[] _bannerAdUnits = { "b195f8dd8ded45fe847ad89ed1d016da" };
     private readonly string[] _interstitialAdUnits = { "24534e1901884e398f1253216226017e" };
     private readonly string[] _rewardedVideoAdUnits = { "920b6145fb1546cf8b5cf2ac34638bb7" };
-    private readonly string[] _rewardedRichMediaAdUnits = { "15173ac6d3e54c9389b9a5ddca69b34b" };
+    private readonly string[] _rewardedRichMediaAdUnits = { "a96ae2ef41d44822af45c6328c4e1eb1" };
 #endif
 
 #if mopub_native_beta

@@ -3,6 +3,10 @@
     <uses-sdk android:minSdkVersion="16"/>
 
     <application>
+        <uses-library
+          android:name="org.apache.http.legacy"
+          android:required="false" />
+
         <!-- MoPub SDK activities. -->
         <activity android:name="com.mopub.mobileads.MoPubActivity"
                   android:configChanges="keyboardHidden|orientation|screenSize"/>
@@ -63,7 +67,7 @@
                   android:hardwareAccelerated="true"
                   android:theme="@android:style/Theme.Translucent" />
 
-        <!-- Millenial (OneByAOL) network SDK activities.  You may remove if unused. -->
+        <!-- Millennial (OneByAOL) network SDK activities.  You may remove if unused. -->
         <activity android:name="com.millennialmedia.android.MMActivity"
                   android:configChanges="keyboardHidden|orientation|keyboard"
                   android:theme="@android:style/Theme.Translucent.NoTitleBar"/>

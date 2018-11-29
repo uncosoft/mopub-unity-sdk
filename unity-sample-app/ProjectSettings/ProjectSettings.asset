@@ -118,7 +118,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 5.4.0
+  bundleVersion: 5.4.1
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -157,8 +157,8 @@ PlayerSettings:
     iOS: com.mopub.sampleapp
     tvOS: com.mopub.SampleApp55
   buildNumber:
-    iOS: 5.4.0
-  AndroidBundleVersionCode: 0
+    iOS: 5401
+  AndroidBundleVersionCode: 5401
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
