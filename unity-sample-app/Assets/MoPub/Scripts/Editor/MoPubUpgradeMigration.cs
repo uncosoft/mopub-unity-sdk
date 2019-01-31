@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,8 +27,6 @@ public static class MoPubUpgradeMigration
         { "Plugins/iOS/MoPubManager.h", "MoPub/Plugins/iOS/MoPubManager.h" },
         { "Plugins/iOS/MoPubManager.mm", "MoPub/Plugins/iOS/MoPubManager.mm" },
         { "Plugins/iOS/MoPubSDKFramework.framework", "MoPub/Plugins/iOS/MoPubSDKFramework.framework" },
-        // Mediation directories will be handled on later releases
-        //{ "Plugins/Android/mopub-support", "MoPub/Plugins/Android/MoPub.plugin/" }
     };
     private static readonly Dictionary<string,string> ManualMapping = new Dictionary<string, string>
     {
@@ -36,6 +35,7 @@ public static class MoPubUpgradeMigration
         { "Plugins/Android/res/values/ic_launcher_background.xml", "MoPub/Plugins/Android/MoPub.plugin/res/values/" },
     };
     private const string RedundantDir = "Assets/MoPub/Extras/";
+    private const string RedundantJar = "Assets/Plugins/Android/libs/android-support-v4-23.1.1.jar";
     private const string MigrationBegin = "==========> Beginning MoPub Upgrade Migration";
     private const string MigrationEnd = "==========> Finished MoPub Upgrade Migration";
     private const string ManualMigrationNote =
@@ -45,14 +45,27 @@ public static class MoPubUpgradeMigration
 
     public static bool LegacyMoPubPresent()
     {
-        return LocationMapping.Keys.Select(p => DoesExist("Assets/" + p)).Any(p => p);
+        return DoesExist(RedundantJar) || LocationMapping.Keys.Select(p => DoesExist("Assets/" + p)).Any(p => p);
     }
 
-    public static void DoMigration()
+    public static bool LegacyMediationPresent()
+    {
+        return DoesExist("Assets/Plugins/Android/mopub-support")
+            || DoesExist("Assets/Plugins/iOS/MoPub-Mediation-Adapters")
+            || DoesExist("Assets/MoPub/Plugins/iOS/MoPubSDKFramework.framework");
+    }
+
+    public static void DoSDKMigration()
     {
         Debug.Log(MigrationBegin);
 
-        if (Directory.Exists(RedundantDir)) OS.RmDir(RedundantDir);
+        if (DoesExist(RedundantDir)) OS.RmDir(RedundantDir);
+        if (DoesExist(RedundantJar)) {
+            OS.Rm(RedundantJar);
+            var redundantJarDir = RedundantJar.Remove(RedundantJar.LastIndexOf("/", StringComparison.Ordinal)) + "/";
+            var redundantJarDirContents = OS.GetFileSystemEntries(redundantJarDir);
+            if (!redundantJarDirContents.Any()) OS.RmDir(redundantJarDir);
+        }
 
         var allSucceeded = true;
 

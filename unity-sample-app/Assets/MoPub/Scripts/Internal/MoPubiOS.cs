@@ -27,18 +27,21 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.InitializeSdk(string)"/>
     public static void InitializeSdk(string anyAdUnitId)
     {
+        MoPubLog.Log("InitializeSdk", MoPubLog.SdkLogEvent.InitStarted);
         ValidateAdUnitForSdkInit(anyAdUnitId);
         InitializeSdk(new SdkConfiguration { AdUnitId = anyAdUnitId });
     }
 
 
-    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.InitializeSdk(MoPubBase.SdkConfiguration)"/>
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.InitializeSdk(MoPub.SdkConfiguration)"/>
     public static void InitializeSdk(SdkConfiguration sdkConfiguration)
     {
+        logLevel = sdkConfiguration.LogLevel;
         ValidateAdUnitForSdkInit(sdkConfiguration.AdUnitId);
-        _moPubInitializeSdk(
-            sdkConfiguration.AdUnitId, sdkConfiguration.AdvancedBiddersString, sdkConfiguration.MediationSettingsJson,
-            sdkConfiguration.NetworksToInitString);
+        _moPubInitializeSdk(sdkConfiguration.AdUnitId, sdkConfiguration.AdditionalNetworksString,
+                            sdkConfiguration.MediationSettingsJson, sdkConfiguration.AllowLegitimateInterest,
+                            (int) sdkConfiguration.LogLevel, sdkConfiguration.NetworkConfigurationsJson,
+                            sdkConfiguration.MoPubRequestOptionsJson);
     }
 
 
@@ -78,14 +81,6 @@ public class MoPubiOS : MoPubBase
     }
 
 
-    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.AdvancedBiddingEnabled"/>
-    public static bool AdvancedBiddingEnabled {
-        get { return _moPubIsAdvancedBiddingEnabled(); }
-
-        set { _moPubSetAdvancedBiddingEnabled(value); }
-    }
-
-
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.EnableLocationSupport(bool)"/>
     public static void EnableLocationSupport(bool shouldUseLocation)
     {
@@ -100,6 +95,23 @@ public class MoPubiOS : MoPubBase
     }
 
 
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.AllowLegitimateInterest"/>
+    public static bool AllowLegitimateInterest {
+        get { return _moPubAllowLegitimateInterest(); }
+        set { _moPubSetAllowLegitimateInterest(value);}
+    }
+
+
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.SdkLogLevel"/>
+    public static LogLevel SdkLogLevel {
+        get { return (LogLevel) _moPubGetLogLevel(); }
+        set {
+            logLevel = value;
+            _moPubSetLogLevel((int) value);
+        }
+    }
+
+
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.GetSdkName"/>
     protected static string GetSdkName()
     {
@@ -110,7 +122,7 @@ public class MoPubiOS : MoPubBase
     private static void LoadPluginsForAdUnits(string[] adUnitIds)
     {
         foreach (var adUnitId in adUnitIds)
-            PluginsDict.Add(adUnitId, new MP(adUnitId));
+            PluginsDict[adUnitId] = new MP(adUnitId);
         Debug.Log(adUnitIds.Length + " AdUnits loaded for plugins:\n" + string.Join(", ", adUnitIds));
     }
 
@@ -118,16 +130,6 @@ public class MoPubiOS : MoPubBase
 
 
     #region iOSOnly
-
-    /// <summary>
-    /// MoPub SDK log level. The default value is `MPLogLevelInfo`.
-    /// See MoPubBase.<see cref="MoPubBase.LogLevel"/> for all possible options.
-    /// </summary>
-    public static LogLevel SdkLogLevel {
-        get { return (LogLevel) _moPubGetLogLevel(); }
-        set { _moPubSetLogLevel((int) value); }
-    }
-
 
     /// <summary>
     /// Forces the usage of WKWebView, if able.
@@ -147,6 +149,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.CreateBanner(string,MoPubBase.AdPosition,MoPubBase.BannerType)"/>
     public static void CreateBanner(string adUnitId, AdPosition position, BannerType bannerType = BannerType.Size320x50)
     {
+        MoPubLog.Log("CreateBanner", MoPubLog.AdLogEvent.LoadAttempted);
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.CreateBanner(bannerType, position);
@@ -158,6 +161,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ShowBanner(string,bool)"/>
     public static void ShowBanner(string adUnitId, bool shouldShow)
     {
+        MoPubLog.Log("ShowBanner", MoPubLog.AdLogEvent.ShowAttempted);
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.ShowBanner(shouldShow);
@@ -169,6 +173,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.RefreshBanner(string,string,string)"/>
     public static void RefreshBanner(string adUnitId, string keywords, string userDataKeywords = "")
     {
+        MoPubLog.Log("RefreshBanner", MoPubLog.AdLogEvent.ShowAttempted);
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.RefreshBanner(keywords, userDataKeywords);
@@ -191,6 +196,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ForceRefresh(string)"/>
     public void ForceRefresh(string adUnitId)
     {
+        MoPubLog.Log("ForceRefresh", MoPubLog.AdLogEvent.ShowAttempted);
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.ForceRefresh();
@@ -219,6 +225,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.RequestInterstitialAd(string,string,string)"/>
     public static void RequestInterstitialAd(string adUnitId, string keywords = "", string userDataKeywords = "")
     {
+        MoPubLog.Log("RequestInterstitialAd", MoPubLog.AdLogEvent.LoadAttempted);
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.RequestInterstitialAd(keywords, userDataKeywords);
@@ -230,6 +237,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ShowInterstitialAd(string)"/>
     public static void ShowInterstitialAd(string adUnitId)
     {
+        MoPubLog.Log("ShowInterstitialAd", MoPubLog.AdLogEvent.ShowAttempted);
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.ShowInterstitialAd();
@@ -266,12 +274,13 @@ public class MoPubiOS : MoPubBase
     #region RewardedVideos
 
 
-    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.RequestRewardedVideo(string,System.Collections.Generic.List{MoPubBase.MediationSetting},string,string,double,double,string)"/>
-    public static void RequestRewardedVideo(string adUnitId, List<MediationSetting> mediationSettings = null,
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.RequestRewardedVideo(string,System.Collections.Generic.List{MoPubBase.LocalMediationSetting},string,string,double,double,string)"/>
+    public static void RequestRewardedVideo(string adUnitId, List<LocalMediationSetting> mediationSettings = null,
                                             string keywords = null, string userDataKeywords = null,
                                             double latitude = LatLongSentinel, double longitude = LatLongSentinel,
                                             string customerId = null)
     {
+        MoPubLog.Log("RequestRewardedVideo", MoPubLog.AdLogEvent.LoadAttempted);
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.RequestRewardedVideo(mediationSettings, keywords, userDataKeywords, latitude, longitude, customerId);
@@ -283,6 +292,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ShowRewardedVideo(string,string)"/>
     public static void ShowRewardedVideo(string adUnitId, string customData = null)
     {
+        MoPubLog.Log("ShowRewardedVideo", MoPubLog.AdLogEvent.ShowAttempted);
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.ShowRewardedVideo(customData);
@@ -366,6 +376,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.LoadConsentDialog()"/>
     public static void LoadConsentDialog()
     {
+        MoPubLog.Log("LoadConsentDialog", MoPubLog.ConsentLogEvent.LoadAttempted);
         _moPubLoadConsentDialog();
     }
 
@@ -385,6 +396,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ShowConsentDialog()"/>
     public static void ShowConsentDialog()
     {
+        MoPubLog.Log("ShowConsentDialog", MoPubLog.ConsentLogEvent.ShowAttempted);
         _moPubShowConsentDialog();
     }
 
@@ -480,13 +492,15 @@ public class MoPubiOS : MoPubBase
     #region DllImports
 #if ENABLE_IL2CPP && UNITY_ANDROID
     // IL2CPP on Android scrubs DllImports, so we need to provide stubs to unblock compilation
-    private static void _moPubInitializeSdk(string adUnitId, string advancedBiddersString,
-                                            string mediationSettingsJson, string networksToInitString) {}
+    private static void _moPubInitializeSdk(string adUnitId, string additionalNetworksJson,
+                                            string mediationSettingsJson, bool allowLegitimateInterest,
+                                            int logLevel, string adapterConfigJson,
+                                            string moPubRequestOptionsJson) {}
     private static bool _moPubIsSdkInitialized() { return false; }
-    private static void _moPubSetAdvancedBiddingEnabled(bool advancedBiddingEnabled) {}
-    private static bool _moPubIsAdvancedBiddingEnabled() { return false; }
-    private static string _moPubGetSDKVersion() { return null; }
+=    private static string _moPubGetSDKVersion() { return null; }
     private static void _moPubEnableLocationSupport(bool shouldUseLocation) {}
+    private static void _moPubSetAllowLegitimateInterest(bool allowLegitimateInterest) {}
+    private static bool _moPubAllowLegitimateInterest() { return false; }
     private static int _moPubGetLogLevel() { return -1; }
     private static void _moPubSetLogLevel(int logLevel) {}
     private static void _moPubForceWKWebView(bool shouldForce) {}
@@ -511,20 +525,14 @@ public class MoPubiOS : MoPubBase
     private static string _moPubPreviouslyConsentedVendorListVersion() { return null; }
 #else
     [DllImport("__Internal")]
-    private static extern void _moPubInitializeSdk(string adUnitId, string advancedBiddersString,
-                                                   string mediationSettingsJson, string networksToInitString);
+    private static extern void _moPubInitializeSdk(string adUnitId, string additionalNetworksJson,
+                                                   string mediationSettingsJson, bool allowLegitimateInterest,
+                                                   int logLevel, string adapterConfigJson,
+                                                   string moPubRequestOptionsJson);
 
 
     [DllImport("__Internal")]
     private static extern bool _moPubIsSdkInitialized();
-
-
-    [DllImport("__Internal")]
-    private static extern void _moPubSetAdvancedBiddingEnabled(bool advancedBiddingEnabled);
-
-
-    [DllImport("__Internal")]
-    private static extern bool _moPubIsAdvancedBiddingEnabled();
 
 
     [DllImport("__Internal")]
@@ -534,6 +542,13 @@ public class MoPubiOS : MoPubBase
     [DllImport("__Internal")]
     private static extern void _moPubEnableLocationSupport(bool shouldUseLocation);
 
+
+    [DllImport("__Internal")]
+    private static extern void _moPubSetAllowLegitimateInterest(bool allowLegitimateInterest);
+
+
+    [DllImport("__Internal")]
+    private static extern bool _moPubAllowLegitimateInterest();
 
     [DllImport("__Internal")]
     private static extern int _moPubGetLogLevel();

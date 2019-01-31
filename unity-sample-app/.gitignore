@@ -21,6 +21,11 @@
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
+# .jar/.aar files downloaded by Unity Jar Resolver
+Assets/Plugins/Android/
+ProjectSettings/GvhProjectSettings.xml
+ProjectSettings/AndroidResolverDependencies.xml
+
 # JetBrains Rider Plugin
 Assets/Plugins/Editor*
 

@@ -225,7 +225,10 @@ public static class MoPubSDKBuild
         }
 
         Debug.Log("Exporting package");
-        AssetDatabase.ExportPackage(new[] {"Assets/MoPub"},
+        // NOTE: This may not work as expected since PlayServicesResolver says we need the -gvh_disable command
+        // line flag, and there's no way to specify that (or an equivalent) in this call.  However, if we don't use
+        // it's version-control features, this may be a non-issue.
+        AssetDatabase.ExportPackage(new[] {"Assets/MoPub", "Assets/PlayServicesResolver"},
             GetFullPath("mopub-unity-plugin/MoPubUnity.unitypackage"),
             ExportPackageOptions.Recurse | ExportPackageOptions.IncludeDependencies);
         return true;

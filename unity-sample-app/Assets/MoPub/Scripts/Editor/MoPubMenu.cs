@@ -28,10 +28,18 @@ public class MoPubMenu
         Application.OpenURL("https://github.com/mopub/mopub-unity-sdk/issues");
     }
 
-    [MenuItem("MoPub/Manage SDKs...", false, 3)]
-    public static void SdkManager()
+#if mopub_developer
+    [MenuItem("MoPub/Manage SDKs (Staging)...", false, 3)]
+    public static void SdkManagerStaging()
     {
-        MoPubSDKManager.ShowSDKManager();
+        MoPubSDKManager.ShowSDKManager(stage:true);
+    }
+#endif
+
+    [MenuItem("MoPub/Manage SDKs...", false, 4)]
+    public static void SdkManagerProd()
+    {
+        MoPubSDKManager.ShowSDKManager(stage:false);
     }
 
 

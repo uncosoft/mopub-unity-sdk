@@ -27,7 +27,7 @@ static char* cStringCopy(NSString* input)
     return string ? strdup(string) : NULL;
 }
 
-static NSArray* extractNetworkClasses(const char* networkClassesString) {
+static NSArray<Class<MPAdapterConfiguration>>* extractNetworkClasses(const char* networkClassesString) {
     NSString* networksString = GetStringParam(networkClassesString);
     if (networksString.length == 0)
         return nil;
@@ -35,44 +35,70 @@ static NSArray* extractNetworkClasses(const char* networkClassesString) {
     NSMutableArray* networks = [NSMutableArray array];
     for (NSString* network in [networksString componentsSeparatedByString:@","]) {
         Class networkClass = NSClassFromString(network);
-        if (networkClass != nil)
+        if (networkClass != Nil && [networkClass conformsToProtocol:@protocol(MPAdapterConfiguration)])
             [networks addObject:networkClass];
         else
-            NSLog(@"No class found for network name %@", network);
+            NSLog(@"No AdapterConfiguration class found for network class name %@", network);
     }
    return networks;
 }
 
-static NSArray* extractMediationSettings(const char* mediationSettingsJson, BOOL isInstance) {
+static NSArray<id<MPMediationSettingsProtocol>>* extractMediationSettings(const char* mediationSettingsJson) {
     NSString* jsonString = GetStringParam(mediationSettingsJson);
     if (jsonString.length == 0)
         return nil;
-
-    NSMutableArray* mediationSettings = [NSMutableArray array];
-    for (NSMutableDictionary* dict in [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
-                                                                      options:NSJSONReadingMutableContainers
-                                                                        error:nil]) {
-        NSString* adVendor = [dict objectForKey:@"adVendor"];
-        // We use this key to distinguish the target network, so don't pass it through
-        [dict removeObjectForKey:@"adVendor"];
-        NSString* mediationSettingClassName =
-            [adVendor stringByAppendingString:isInstance ? @"InstanceMediationSettings" : @"GlobalMediationSettings"];
-        Class mediationSettingClass = NSClassFromString(mediationSettingClassName);
-        if (!mediationSettingClass) {
-            NSLog(@"No class found for mediation settings name %@", mediationSettingClassName);
+    NSDictionary* dict = [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                                         options:0
+                                                           error:nil];
+    if (dict.count == 0)
+        return nil;
+    NSMutableArray<id<MPMediationSettingsProtocol>>* mediationSettings = [NSMutableArray array];
+    for (NSString* className in dict) {
+        Class mediationSettingClass = NSClassFromString(className);
+        if (mediationSettingClass == Nil || ![mediationSettingClass conformsToProtocol:@protocol(MPMediationSettingsProtocol)]) {
+            NSLog(@"No MediationSettings class found for mediation settings class name %@", className);
             continue;
         }
         @try {
-            NSObject* mediationSetting = [mediationSettingClass new];
-            [mediationSetting setValuesForKeysWithDictionary:dict];
+            NSObject<MPMediationSettingsProtocol>* mediationSetting = [mediationSettingClass new];
+            NSDictionary* settings = dict[className];
+            [mediationSetting setValuesForKeysWithDictionary:settings];
             [mediationSettings addObject:mediationSetting];
-            NSLog(@"adding mediation settings %@ for mediation class [%@]", dict, mediationSettingClass);
+            NSLog(@"adding mediation settings %@ for mediation class [%@]", settings, mediationSettingClass);
         }
         @catch (NSException* e) {
             NSLog(@"Error adding mediation setting for mediation class [%@]: %@", mediationSettingClass, e);
         }
     }
     return mediationSettings;
+}
+
+
+static NSMutableDictionary<NSString*, NSDictionary<NSString*, id>*>* extractNetworkConfigurations(const char* networkConfigurationJson)
+{
+    NSString* jsonString = GetStringParam(networkConfigurationJson);
+    if (jsonString.length == 0)
+        return nil;
+    NSMutableDictionary<NSString*, NSDictionary<NSString*, id>*>* dict =
+        [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                        options:NSJSONReadingMutableContainers
+                                          error:nil];
+    // TODO: Check that the decoded object is actually the correct type.
+    return dict.count > 0 ? dict : nil;
+}
+
+
+static NSMutableDictionary<NSString*, NSDictionary<NSString*, NSString*>*>* extractMoPubRequestOptions(const char* moPubRequestOptionsJson)
+{
+    NSString* jsonString = GetStringParam(moPubRequestOptionsJson);
+    if (jsonString.length == 0)
+        return nil;
+    NSMutableDictionary<NSString*, NSDictionary<NSString*, NSString*>*>* dict =
+        [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                        options:NSJSONReadingMutableContainers
+                                          error:nil];
+    // TODO: Check that the decoded object is actually the correct type.
+    return dict.count > 0 ? dict : nil;
 }
 
 
@@ -95,21 +121,27 @@ static void subscribeToConsentNotifications()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - SDK Setup
 
-void _moPubInitializeSdk(const char* adUnitIdString, const char* advancedBiddersString,
-                         const char* mediationSettingsJson, const char* networksToInitString)
+void _moPubInitializeSdk(const char* adUnitIdString,
+                         const char* additionalNetworksString,
+                         const char* mediationSettingsJson,
+                         bool allowLegitimateInterest,
+                         int logLevel,
+                         const char* networkConfigurationJson,
+                         const char* moPubRequestOptionsJson)
 {
     subscribeToConsentNotifications();
 
     NSString* adUnitId = GetStringParam(adUnitIdString);
     MPMoPubConfiguration* config = [[MPMoPubConfiguration alloc] initWithAdUnitIdForAppInitialization:adUnitId];
-    config.advancedBidders = extractNetworkClasses(advancedBiddersString);
-    config.globalMediationSettings = extractMediationSettings(mediationSettingsJson, NO);
-    config.mediatedNetworks = extractNetworkClasses(networksToInitString);
-    if (config.mediatedNetworks.count == 0)
-        config.mediatedNetworks = MoPub.sharedInstance.allCachedNetworks;
-
+    config.additionalNetworks = extractNetworkClasses(additionalNetworksString);
+    config.globalMediationSettings = extractMediationSettings(mediationSettingsJson);
+    config.allowLegitimateInterest = allowLegitimateInterest;
+    config.loggingLevel = (MPLogLevel) logLevel;
+    config.mediatedNetworkConfigurations = extractNetworkConfigurations(networkConfigurationJson);
+    config.moPubRequestOptions = extractMoPubRequestOptions(moPubRequestOptionsJson);
+    NSString* logLevelString = [[NSNumber numberWithInt:logLevel] stringValue];
     [[MoPub sharedInstance] initializeSdkWithConfiguration:config completion:^{
-        [MoPubManager sendUnityEvent:@"EmitSdkInitializedEvent" withArgs:@[adUnitId]];
+        [MoPubManager sendUnityEvent:@"EmitSdkInitializedEvent" withArgs:@[adUnitId, logLevelString]];
     }];
 }
 
@@ -118,27 +150,29 @@ bool _moPubIsSdkInitialized()
     return MoPub.sharedInstance.isSdkInitialized;
 }
 
-void _moPubSetAdvancedBiddingEnabled(bool enabled) {
-    [[MoPub sharedInstance] setEnableAdvancedBidding:enabled];
-}
-
-bool _moPubIsAdvancedBiddingEnabled() {
-    return [[MoPub sharedInstance] enableAdvancedBidding];
-}
-
 const char* _moPubGetSDKVersion()
 {
     return cStringCopy([MoPub sharedInstance].version);
 }
 
+void _moPubSetAllowLegitimateInterest(bool allowLegitimateInterest)
+{
+    [[MoPub sharedInstance] setAllowLegitimateInterest:allowLegitimateInterest];
+}
+
+bool _moPubAllowLegitimateInterest()
+{
+    return MoPub.sharedInstance.allowLegitimateInterest;
+}
+
 void _moPubSetLogLevel(MPLogLevel logLevel)
 {
-    [MoPub sharedInstance].logLevel = logLevel;
+    MPLogging.consoleLogLevel = logLevel;
 }
 
 int _moPubGetLogLevel()
 {
-    return [MoPub sharedInstance].logLevel;
+    return MPLogging.consoleLogLevel;
 }
 
 void _moPubEnableLocationSupport(bool shouldUseLocation)
@@ -241,7 +275,7 @@ void _moPubDestroyInterstitialAd(const char* adUnitId)
 
 void _moPubRequestRewardedVideo(const char* adUnitIdStr, const char* json, const char* keywords, const char* userDataKeywords, double latitude, double longitude, const char* customerId)
 {
-    NSArray* mediationSettings = extractMediationSettings(json, YES);
+    NSArray* mediationSettings = extractMediationSettings(json);
     CLLocation* location = nil;
     if (latitude != LAT_LONG_SENTINEL && longitude != LAT_LONG_SENTINEL)
         location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];

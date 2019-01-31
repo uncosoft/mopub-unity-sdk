@@ -1,0 +1,5 @@
+<dependencies>
+  <androidPackages>
+    <androidPackage spec="com.android.support:support-v4:23.1.1"/>
+  </androidPackages>
+</dependencies>

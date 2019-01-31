@@ -2,9 +2,6 @@
 my_dir="$(dirname "$0")"
 source "$my_dir/validate.sh"
 
-git submodule update
-validate "Updating git submodules failed, fix before continuing."
-
 $my_dir/mopub-android-sdk-unity-build.sh
 validate "Android build failed, fix before continuing."
 

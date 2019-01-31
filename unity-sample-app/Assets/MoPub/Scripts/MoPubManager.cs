@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using MoPubInternal.ThirdParty.MiniJSON;
 using UnityEngine;
 
+[SuppressMessage("ReSharper", "AccessToStaticMemberViaDerivedType")]
 public class MoPubManager : MonoBehaviour
 {
     public static MoPubManager Instance { get; private set; }
@@ -140,7 +142,18 @@ public class MoPubManager : MonoBehaviour
     {
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
+        var logLevel = MoPub.LogLevel.MPLogLevelNone;
+        if (args.Length > 1) {
+            try {
+                logLevel = (MoPub.LogLevel) Enum.Parse(typeof(MoPub.LogLevel), args[1]);
+            } catch (ArgumentException) {
+                Debug.LogWarning("Invalid LogLevel received: " + args[1]);
+            }
+        } else {
+            Debug.LogWarning("No LogLevel received");
+        }
 
+        MoPubLog.Log("EmitSdkInitializedEvent", MoPubLog.SdkLogEvent.InitFinished, logLevel);
         var evt = OnSdkInitializedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -151,8 +164,10 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min:3);
         var oldConsent = MoPub.Consent.FromString(args[0]);
         var newConsent = MoPub.Consent.FromString(args[1]);
-        bool canCollectPersonalInfo = args[2].ToLower() == "true";
+        var canCollectPersonalInfo = args[2].ToLower() == "true";
 
+        MoPubLog.Log("EmitConsentStatusChangedEvent", MoPubLog.ConsentLogEvent.Updated, newConsent,
+            canCollectPersonalInfo);
         var evt = OnConsentStatusChangedEvent;
         if (evt != null) evt(oldConsent, newConsent, canCollectPersonalInfo);
     }
@@ -160,6 +175,7 @@ public class MoPubManager : MonoBehaviour
 
     public void EmitConsentDialogLoadedEvent()
     {
+        MoPubLog.Log("EmitConsentDialogLoadedEvent", MoPubLog.ConsentLogEvent.LoadSuccess);
         var evt = OnConsentDialogLoadedEvent;
         if (evt != null) evt();
     }
@@ -170,6 +186,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var err = args[0];
 
+        MoPubLog.Log("EmitConsentDialogFailedEvent", MoPubLog.ConsentLogEvent.LoadFailed, err);
         var evt = OnConsentDialogFailedEvent;
         if (evt != null) evt(err);
     }
@@ -177,6 +194,7 @@ public class MoPubManager : MonoBehaviour
 
     public void EmitConsentDialogShownEvent()
     {
+        MoPubLog.Log("EmitConsentDialogShownEvent", MoPubLog.ConsentLogEvent.ShowSuccess);
         var evt = OnConsentDialogShownEvent;
         if (evt != null) evt();
     }
@@ -191,6 +209,8 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var heightStr = args[1];
 
+        MoPubLog.Log("EmitAdLoadedEvent", MoPubLog.AdLogEvent.LoadSuccess);
+        MoPubLog.Log("EmitAdLoadedEvent", MoPubLog.AdLogEvent.ShowSuccess);
         var evt = OnAdLoadedEvent;
         if (evt != null) evt(adUnitId, float.Parse(heightStr));
     }
@@ -202,6 +222,7 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var error = args[1];
 
+        MoPubLog.Log("EmitAdFailedEvent", MoPubLog.AdLogEvent.LoadFailed, error);
         var evt = OnAdFailedEvent;
         if (evt != null) evt(adUnitId, error);
     }
@@ -212,6 +233,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitAdClickedEvent", MoPubLog.AdLogEvent.Tapped);
         var evt = OnAdClickedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -222,6 +244,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitAdExpandedEvent", MoPubLog.AdLogEvent.Expanded);
         var evt = OnAdExpandedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -232,6 +255,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitAdCollapsedEvent", MoPubLog.AdLogEvent.Collapsed);
         var evt = OnAdCollapsedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -245,6 +269,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitInterstitialLoadedEvent", MoPubLog.AdLogEvent.LoadSuccess);
         var evt = OnInterstitialLoadedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -256,6 +281,7 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var error = args[1];
 
+        MoPubLog.Log("EmitInterstitialFailedEvent", MoPubLog.AdLogEvent.LoadFailed, error);
         var evt = OnInterstitialFailedEvent;
         if (evt != null) evt(adUnitId, error);
     }
@@ -266,6 +292,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitInterstitialDismissedEvent", MoPubLog.AdLogEvent.Dismissed);
         var evt = OnInterstitialDismissedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -276,6 +303,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitInterstitialDidExpireEvent", MoPubLog.AdLogEvent.Expired);
         var evt = OnInterstitialExpiredEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -286,6 +314,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitInterstitialShownEvent", MoPubLog.AdLogEvent.ShowSuccess);
         var evt = OnInterstitialShownEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -296,6 +325,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitInterstitialClickedEvent", MoPubLog.AdLogEvent.Tapped);
         var evt = OnInterstitialClickedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -309,6 +339,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitRewardedVideoLoadedEvent", MoPubLog.AdLogEvent.LoadSuccess);
         var evt = OnRewardedVideoLoadedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -320,6 +351,7 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var error = args[1];
 
+        MoPubLog.Log("EmitRewardedVideoFailedEvent", MoPubLog.AdLogEvent.LoadFailed, error);
         var evt = OnRewardedVideoFailedEvent;
         if (evt != null) evt(adUnitId, error);
     }
@@ -330,6 +362,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitRewardedVideoExpiredEvent", MoPubLog.AdLogEvent.Expired);
         var evt = OnRewardedVideoExpiredEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -340,6 +373,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitRewardedVideoShownEvent", MoPubLog.AdLogEvent.ShowSuccess);
         var evt = OnRewardedVideoShownEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -350,6 +384,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitRewardedVideoClickedEvent", MoPubLog.AdLogEvent.Tapped);
         var evt = OnRewardedVideoClickedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -373,6 +408,7 @@ public class MoPubManager : MonoBehaviour
         var label = args[1];
         var amountStr = args[2];
 
+        MoPubLog.Log("EmitRewardedVideoReceivedRewardEvent", MoPubLog.AdLogEvent.ShouldReward);
         var evt = OnRewardedVideoReceivedRewardEvent;
         if (evt != null) evt(adUnitId, label, float.Parse(amountStr));
     }
@@ -383,6 +419,7 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 1);
         var adUnitId = args[0];
 
+        MoPubLog.Log("EmitRewardedVideoClosedEvent", MoPubLog.AdLogEvent.Dismissed);
         var evt = OnRewardedVideoClosedEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -404,6 +441,8 @@ public class MoPubManager : MonoBehaviour
         var args = DecodeArgs(argsJson, min: 2);
         var adUnitId = args[0];
         var data = AbstractNativeAd.Data.FromJson(args[1]);
+
+        MoPubLog.Log("EmitNativeLoadEvent", MoPubLog.AdLogEvent.LoadSuccess);
         EmitNativeLoadEvent(adUnitId, data);
     }
 
@@ -414,6 +453,7 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var error = args[1];
 
+        MoPubLog.Log("EmitNativeFailEvent", MoPubLog.AdLogEvent.LoadFailed, error);
         var evt = OnNativeFailEvent;
         if (evt != null) evt(adUnitId, error);
     }
@@ -428,6 +468,7 @@ public class MoPubManager : MonoBehaviour
 
     public void EmitNativeImpressionEvent(string adUnitId)
     {
+        MoPubLog.Log("EmitNativeImpressionEvent", MoPubLog.AdLogEvent.ShowSuccess);
         var evt = OnNativeImpressionEvent;
         if (evt != null) evt(adUnitId);
     }
@@ -435,6 +476,7 @@ public class MoPubManager : MonoBehaviour
 
     public void EmitNativeClickEvent(string adUnitId)
     {
+        MoPubLog.Log("EmitNativeClickEvent", MoPubLog.AdLogEvent.Tapped);
         var evt = OnNativeClickEvent;
         if (evt != null) evt(adUnitId);
     }

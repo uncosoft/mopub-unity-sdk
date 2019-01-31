@@ -78,11 +78,11 @@ public class MoPubBinding
     }
 
 
-    public void RequestRewardedVideo(List<MoPub.MediationSetting> mediationSettings = null, string keywords = null,
+    public void RequestRewardedVideo(List<MoPub.LocalMediationSetting> mediationSettings = null, string keywords = null,
                                      string userDataKeywords = null, double latitude = MoPub.LatLongSentinel,
                                      double longitude = MoPub.LatLongSentinel, string customerId = null)
     {
-        var json = mediationSettings != null ? Json.Serialize(mediationSettings) : null;
+        var json = MoPub.LocalMediationSetting.ToJson(mediationSettings);
         _moPubRequestRewardedVideo(_adUnitId, json, keywords, userDataKeywords, latitude, longitude, customerId);
     }
 

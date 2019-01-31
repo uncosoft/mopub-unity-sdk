@@ -1,10 +1,3 @@
-﻿public class MoPubSDKVersion : Version
-{
-    private const string _number = "5.4.1";
-
-
-    public override string Number
-    {
-        get { return _number; }
-    }
-}
+﻿/*
+ * This file has been deprecated in the MoPub SDK 5.5.0 update and will be eventually removed.
+ */

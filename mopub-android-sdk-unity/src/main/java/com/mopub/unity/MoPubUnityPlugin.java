@@ -9,9 +9,9 @@ import android.util.Log;
 
 import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPub;
-import com.mopub.common.MoPubAdvancedBidder;
 import com.mopub.common.SdkConfiguration;
 import com.mopub.common.SdkInitializationListener;
+import com.mopub.common.logging.MoPubLog;
 import com.mopub.common.privacy.ConsentData;
 import com.mopub.common.privacy.ConsentDialogListener;
 import com.mopub.common.privacy.ConsentStatus;
@@ -31,9 +31,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -86,7 +86,6 @@ public class MoPubUnityPlugin {
             JSONArray array = new JSONArray();
             for (String arg: args) { array.put(arg); }
             String argstr = array.toString();
-            Log.d(TAG, "Sending message to Unity: MoPubManager#" + name + argstr);
             UnityPlayer.UnitySendMessage("MoPubManager", name, argstr);
         }
     }
@@ -144,22 +143,36 @@ public class MoPubUnityPlugin {
      * initialized once.
      *
      * @param adUnitId String with any ad unit id used by this app.
-     * @param advancedBiddersString String of comma-separated advanced bidder adapter classes.
-     * @param mediationSettingsJson String with JSON containing third-party network specific settings.
-     * @param networksToInitString String of comma-separated network rewarded video adapter classes.
+     * @param adapterConfigurationClassesString String of comma-separated custom adapter
+     *                                          configuration classes.
+     * @param mediationSettingsJson String with JSON containing third-party network specific
+     *                              settings.
+     * @param allowLegitimateInterest Flag to allow networks to gather user data.
+     * @param logLevel The log level enum name.
+     * @param mediatedNetworkConfigurationsJson String with JSON containing adapter configuration
+     *                                          options used to initialize third-party networks.
+     * @param moPubRequestOptionsJson String with JSON containing adapter configuration options
      */
-    public static void initializeSdk(final String adUnitId, final String advancedBiddersString,
-            final String mediationSettingsJson, final String networksToInitString) {
-        final SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(adUnitId)
-                .withAdvancedBidders(extractAdvancedBiddersClasses(advancedBiddersString))
+    public static void initializeSdk(final String adUnitId,
+                                     final String adapterConfigurationClassesString,
+                                     final String mediationSettingsJson,
+                                     final boolean allowLegitimateInterest,
+                                     final int logLevel,
+                                     final String mediatedNetworkConfigurationsJson,
+                                     final String moPubRequestOptionsJson) {
+        final SdkConfiguration.Builder sdkConfigurationBuilder = new SdkConfiguration.Builder(adUnitId)
                 .withMediationSettings(extractMediationSettingsFromJson(mediationSettingsJson, false))
-                .withNetworksToInit(Arrays.asList(networksToInitString.split(",")))
-                .build();
+                .withLegitimateInterestAllowed(allowLegitimateInterest)
+                .withLogLevel(MoPubLog.LogLevel.valueOf(logLevel));
+        addAdapterConfigurationClasses(adapterConfigurationClassesString, sdkConfigurationBuilder);
+        addMediatedNetworkConfigurations(mediatedNetworkConfigurationsJson, sdkConfigurationBuilder);
+        addMoPubRequestOptions(moPubRequestOptionsJson, sdkConfigurationBuilder);
+        final SdkConfiguration sdkConfiguration = sdkConfigurationBuilder.build();
 
         final SdkInitializationListener initListener = new SdkInitializationListener() {
             @Override
             public void onInitializationFinished() {
-                UnityEvent.SdkInitialized.Emit(adUnitId);
+                UnityEvent.SdkInitialized.Emit(adUnitId, Integer.toString(logLevel));
             }
         };
 
@@ -177,17 +190,22 @@ public class MoPubUnityPlugin {
 
     public static boolean isSdkInitialized() { return mIsSdkInitialized; }
 
-    public static void setAdvancedBiddingEnabled(final boolean advancedBiddingEnabled) {
-        runSafelyOnUiThread(new Runnable() {
-            public void run() {
-                MoPub.setAdvancedBiddingEnabled(advancedBiddingEnabled);
-            }
-        });
+
+    public static boolean shouldAllowLegitimateInterest() {
+        return MoPub.shouldAllowLegitimateInterest();
+    }
+
+    public static void setAllowLegitimateInterest(boolean allowLegitimateInterest) {
+        MoPub.setAllowLegitimateInterest(allowLegitimateInterest);
     }
 
 
-    public static boolean isAdvancedBiddingEnabled() {
-        return MoPub.isAdvancedBiddingEnabled();
+    public static int getLogLevel() {
+        return MoPubLog.getLogLevel().intValue();
+    }
+
+    public static void setLogLevel(int logLevel) {
+        MoPubLog.setLogLevel(MoPubLog.LogLevel.valueOf(logLevel));
     }
 
 
@@ -461,27 +479,6 @@ public class MoPubUnityPlugin {
         Log.e(TAG, sw.toString());
     }
 
-    @NonNull
-    protected static List<Class<? extends MoPubAdvancedBidder>> extractAdvancedBiddersClasses(
-            String advancedBiddersString) {
-        // Extract classes from advanced bidder strings
-        final List<Class<? extends MoPubAdvancedBidder>> advancedBidders = new LinkedList<>();
-        if (!TextUtils.isEmpty(advancedBiddersString)) {
-            String[] advancedBiddersArray = advancedBiddersString.split(",");
-            for (String advancedBidderString : advancedBiddersArray) {
-                try {
-                    Class<? extends MoPubAdvancedBidder> advancedBidderClass =
-                            Class.forName(advancedBidderString).asSubclass(MoPubAdvancedBidder.class);
-                    advancedBidders.add(advancedBidderClass);
-                } catch (ClassNotFoundException e) {
-                    Log.w(TAG, "Class not found for attempted network adapter class name: "
-                            + advancedBidderString);
-                }
-            }
-        }
-        return advancedBidders;
-    }
-
     protected static MediationSettings[] extractMediationSettingsFromJson(String json, boolean isInstance) {
         if (TextUtils.isEmpty(json))
             return new MediationSettings[0];
@@ -489,10 +486,11 @@ public class MoPubUnityPlugin {
         ArrayList<MediationSettings> settings = new ArrayList<MediationSettings>();
 
         try {
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObj = jsonArray.getJSONObject(i);
-                String adVendor = jsonObj.getString("adVendor");
+            JSONObject dict = new JSONObject(json);
+            Iterator<String> adVendors = dict.keys();
+            while (adVendors.hasNext()) {
+                String adVendor = adVendors.next();
+                JSONObject jsonObj = dict.getJSONObject(adVendor);
                 Log.i(TAG, "adding MediationSettings for ad vendor: " + adVendor);
                 if (adVendor.equalsIgnoreCase("chartboost")) {
                     if (jsonObj.has("customId")) {
@@ -620,6 +618,65 @@ public class MoPubUnityPlugin {
         }
 
         return settings.toArray(new MediationSettings[settings.size()]);
+    }
+    
+    private static void addAdapterConfigurationClasses(final String adapterConfigurationClassesString,
+                                                       final SdkConfiguration.Builder sdkConfigurationBuilder) {
+        final String[] adapterConfigurationClasses = adapterConfigurationClassesString.split("\\s*,\\s*");
+        for (String adapterConfigurationClass : adapterConfigurationClasses) {
+            sdkConfigurationBuilder.withAdditionalNetwork(adapterConfigurationClass.trim());
+        }
+    }
+
+    private static void addMediatedNetworkConfigurations(final String mediatedNetworkConfigurationsJson,
+                                                         final SdkConfiguration.Builder sdkConfigurationBuilder) {
+        try {
+            final JSONObject json = new JSONObject(mediatedNetworkConfigurationsJson);
+            final JSONArray keys = json.names();
+            if (keys == null) return;
+            for (int i = 0; i < keys.length(); i++) {
+                final String adapterConfigurationClass = keys.getString(i);
+                Log.i(TAG, "adding Mediated Network Configuration for Adapter Configuration Class: " + adapterConfigurationClass);
+                sdkConfigurationBuilder.withMediatedNetworkConfiguration(adapterConfigurationClass,
+                        extractMapFromJson(adapterConfigurationClass, json));
+            }
+        } catch (JSONException e) {
+            printExceptionStackTrace(e);
+        }
+    }
+
+    private static void addMoPubRequestOptions(final String moPubRequestOptionsJson,
+                                               final SdkConfiguration.Builder sdkConfigurationBuilder) {
+        try {
+            final JSONObject json = new JSONObject(moPubRequestOptionsJson);
+            final JSONArray keys = json.names();
+            if (keys == null) return;
+            for (int i = 0; i < keys.length(); i++) {
+                final String adapterConfigurationClass = keys.getString(i);
+                Log.i(TAG, "adding MoPub Request Options for Adapter Configuration Class: " + adapterConfigurationClass);
+                sdkConfigurationBuilder.withMoPubRequestOptions(adapterConfigurationClass,
+                        extractMapFromJson(adapterConfigurationClass, json));
+            }
+        } catch (JSONException e) {
+            printExceptionStackTrace(e);
+        }
+    }
+
+    private static Map<String, String> extractMapFromJson(final String entry, final JSONObject json) {
+        final Map<String, String> map = new HashMap<>();
+        try {
+            final JSONObject jsonObject = json.getJSONObject(entry);
+            final JSONArray keys = jsonObject.names();
+            if (keys == null) return map;
+            for (int i = 0; i < keys.length(); i++) {
+                final String key = keys.getString(i);
+                final String value = jsonObject.getString(key);
+                map.put(key, value);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 
     private static final ConsentData NULL_CONSENT_DATA = new NullConsentData();

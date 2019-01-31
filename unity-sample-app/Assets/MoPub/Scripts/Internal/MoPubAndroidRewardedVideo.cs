@@ -7,9 +7,6 @@ using UnityEngine;
 [SuppressMessage("ReSharper", "AccessToStaticMemberViaDerivedType")]
 public class MoPubAndroidRewardedVideo
 {
-    private static readonly AndroidJavaClass PluginClass =
-        new AndroidJavaClass("com.mopub.unity.MoPubRewardedVideoUnityPlugin");
-
     private readonly AndroidJavaObject _plugin;
 
     private readonly Dictionary<MoPub.Reward, AndroidJavaObject> _rewardsDict =
@@ -22,33 +19,12 @@ public class MoPubAndroidRewardedVideo
     }
 
 
-    public static void InitializeRewardedVideo()
-    {
-        PluginClass.CallStatic("initializeRewardedVideo");
-    }
-
-
-    public static void InitializeRewardedVideoWithSdkConfiguration(MoPubBase.SdkConfiguration sdkConfiguration)
-    {
-        PluginClass.CallStatic(
-            "initializeRewardedVideoWithSdkConfiguration", sdkConfiguration.AdUnitId,
-            sdkConfiguration.AdvancedBiddersString, sdkConfiguration.MediationSettingsJson,
-            sdkConfiguration.NetworksToInitString);
-    }
-
-
-    public static void InitializeRewardedVideoWithNetworks(IEnumerable<string> networks)
-    {
-        PluginClass.CallStatic("initializeRewardedVideoWithNetworks", string.Join(",", networks.ToArray()));
-    }
-
-
-    public void RequestRewardedVideo(List<MoPub.MediationSetting> mediationSettings = null,
+    public void RequestRewardedVideo(List<MoPub.LocalMediationSetting> mediationSettings = null,
                                      string keywords = null, string userDataKeywords = null,
                                      double latitude = MoPub.LatLongSentinel, double longitude = MoPub.LatLongSentinel,
                                      string customerId = null)
     {
-        var json = mediationSettings != null ? Json.Serialize(mediationSettings) : null;
+        var json = MoPub.LocalMediationSetting.ToJson(mediationSettings);
         _plugin.Call("requestRewardedVideo", json, keywords, userDataKeywords, latitude, longitude, customerId);
     }
 

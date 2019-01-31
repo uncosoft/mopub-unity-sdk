@@ -30,7 +30,7 @@ public class MoPubOSCommands {
             RedirectStandardError = true,
         }};
         foreach (var vv in vars.Select(v => v.Split('='))) {
-            proc.StartInfo.EnvironmentVariables.Add(vv[0], vv[1]);
+            proc.StartInfo.EnvironmentVariables[vv[0]] = vv[1];
         }
 
         if (stdout != null)

@@ -396,7 +396,6 @@ extern "C" {
 */
 - (void)willPresentModalViewForAd:(MPAdView*)view
 {
-    NSLog(@"willPresentModalViewForAd");
     [self sendUnityEvent:@"EmitAdExpandedEvent"];
     UnityPause(true);
 }
@@ -404,7 +403,6 @@ extern "C" {
 
 - (void)didDismissModalViewForAd:(MPAdView*)view
 {
-    NSLog(@"didDismissModalViewForAd");
     [self sendUnityEvent:@"EmitAdCollapsedEvent"];
     UnityPause(false);
 }
@@ -423,7 +421,6 @@ extern "C" {
 
 - (void)adViewShouldClose:(MPAdView*)view
 {
-    NSLog(@"adViewShouldClose");
     UnityPause(false);
     [self hideBanner:YES];
 }
@@ -440,7 +437,6 @@ extern "C" {
 
 - (void)interstitialDidFailToLoadAd:(MPInterstitialAdController*)interstitial withError:(NSError*)error
 {
-    NSLog(@"interstitialDidFailToLoadAd adUnit: %@ error: %@", _adUnitId, error);
     [[self class] sendUnityEvent:@"EmitInterstitialFailedEvent" withArgs:@[_adUnitId, error.localizedDescription]];
 }
 
@@ -460,14 +456,12 @@ extern "C" {
 
 - (void)interstitialWillDisappear:(MPInterstitialAdController*)interstitial
 {
-    NSLog(@"interstitialWillDisappear");
     UnityPause(false);
 }
 
 
 - (void)interstitialDidDisappear:(MPInterstitialAdController*)interstitial
 {
-    NSLog(@"interstitialDidDisappear");
     UnityPause(false);
     [self sendUnityEvent:@"EmitInterstitialDismissedEvent"];
 }
@@ -475,7 +469,6 @@ extern "C" {
 
 - (void)interstitialDidReceiveTapEvent:(MPInterstitialAdController*)interstitial
 {
-    NSLog(@"interstitialDidReceiveTapEvent");
     [self sendUnityEvent:@"EmitInterstitialClickedEvent"];
 }
 
@@ -499,35 +492,30 @@ extern "C" {
 
 - (void)rewardedVideoAdDidLoadForAdUnitID:(NSString*)adUnitID
 {
-    NSLog(@"rewardedVideoAdDidLoadForAdUnitID");
     [self sendUnityEvent:@"EmitRewardedVideoLoadedEvent"];
 }
 
 
 - (void)rewardedVideoAdDidFailToLoadForAdUnitID:(NSString*)adUnitID error:(NSError*)error
 {
-    NSLog(@"rewardedVideoAdDidFailToLoadForAdUnitID adUnit: %@ error: %@", adUnitID, error);
     [[self class] sendUnityEvent:@"EmitRewardedVideoFailedEvent" withArgs:@[adUnitID, error.localizedDescription]];
 }
 
 
 - (void)rewardedVideoAdDidExpireForAdUnitID:(NSString*)adUnitID
 {
-    NSLog(@"rewardedVideoAdDidExpireForAdUnitID");
     [self sendUnityEvent:@"EmitRewardedVideoExpiredEvent"];
 }
 
 
 - (void)rewardedVideoAdDidFailToPlayForAdUnitID:(NSString*)adUnitID error:(NSError*)error
 {
-    NSLog(@"rewardedVideoAdDidFailToPlayForAdUnitID adUnit: %@ error: %@", _adUnitId, error);
     [[self class] sendUnityEvent:@"EmitRewardedVideoFailedToPlayEvent" withArgs:@[adUnitID, error.localizedDescription]];
 }
 
 
 - (void)rewardedVideoAdDidAppearForAdUnitID:(NSString*)adUnitID
 {
-    NSLog(@"rewardedVideoAdDidAppearForAdUnitID");
     UnityPause(true);
     [self sendUnityEvent:@"EmitRewardedVideoShownEvent"];
 }
@@ -537,7 +525,6 @@ extern "C" {
 
 - (void)rewardedVideoAdDidDisappearForAdUnitID:(NSString*)adUnitID
 {
-    NSLog(@"rewardedVideoAdDidDisappearForAdUnitID");
     UnityPause(false);
     [self sendUnityEvent:@"EmitRewardedVideoClosedEvent"];
 }
@@ -547,20 +534,17 @@ extern "C" {
 
 - (void)rewardedVideoAdDidReceiveTapEventForAdUnitID:(NSString*)adUnitID
 {
-    NSLog(@"rewardedVideoAdDidReceiveTapEventForAdUnitID");
     [self sendUnityEvent:@"EmitRewardedVideoClickedEvent"];
 }
 
 - (void)rewardedVideoAdWillLeaveApplicationForAdUnitID:(NSString*)adUnitID
 {
-    NSLog(@"rewardedVideoAdWillLeaveApplicationForAdUnitID");
     [self sendUnityEvent:@"EmitRewardedVideoLeavingApplicationEvent"];
 }
 
 
 - (void)rewardedVideoAdShouldRewardForAdUnitID:(NSString*)adUnitID reward:(MPRewardedVideoReward*)reward
 {
-    NSLog(@"rewardedVideoAdShouldRewardForAdUnitID");
     [[self class] sendUnityEvent:@"EmitRewardedVideoReceivedRewardEvent"
                         withArgs:@[adUnitID, reward.currencyType, reward.amount]];
 }

@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
-import com.unity3d.player.UnityPlayer;
 
 
 /**

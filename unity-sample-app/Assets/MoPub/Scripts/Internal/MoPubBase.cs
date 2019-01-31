@@ -110,17 +110,11 @@ public class MoPubBase
     }
 
 
-    // Currently used only for iOS
     public enum LogLevel
     {
-        MPLogLevelAll = 0,
-        MPLogLevelTrace = 10,
         MPLogLevelDebug = 20,
         MPLogLevelInfo = 30,
-        MPLogLevelWarn = 40,
-        MPLogLevelError = 50,
-        MPLogLevelFatal = 60,
-        MPLogLevelOff = 70
+        MPLogLevelNone = 70
     }
 
 
@@ -135,43 +129,94 @@ public class MoPubBase
         public string AdUnitId;
 
         /// <summary>
-        /// List of the class names of advanced bidders to initialize.
-        /// </summary>
-        public AdvancedBidder[] AdvancedBidders;
-
-        /// <summary>
         /// Used for rewarded video initialization. This holds each custom event's unique settings.
         /// </summary>
-        public MediationSetting[] MediationSettings;
+        public MediatedNetwork[] MediatedNetworks;
 
         /// <summary>
-        /// List of class names of rewarded video custom events to initialize. These classes must extend
-        /// CustomEventRewardedVideo (in the respective Android/iOS native SDKs).
+        /// Allow supported SDK networks to collect user information on the basis of legitimate interest.
         /// </summary>
-        public RewardedNetwork[] NetworksToInit;
+        public bool AllowLegitimateInterest;
 
-
-        public string AdvancedBiddersString {
-            get { return AdvancedBidders != null ?
-                             string.Join(",", AdvancedBidders.Select(b => b.ToString()).ToArray()) : string.Empty; }
+        /// <summary>
+        /// MoPub SDK log level. Defaults to MoPub.<see cref="MoPubBase.LogLevel.MPLogLevelNone"/>
+        /// </summary>
+        public LogLevel LogLevel
+        {
+            get { return _logLevel != 0 ? _logLevel : LogLevel.MPLogLevelNone; }
+            set { _logLevel = value; }
         }
 
-        public string MediationSettingsJson {
-            get { return MediationSettings != null ? Json.Serialize(MediationSettings) : string.Empty; }
+        private LogLevel _logLevel;
+
+
+        public string AdditionalNetworksString
+        {
+            get {
+                var cn = from n in MediatedNetworks ?? Enumerable.Empty<MediatedNetwork>()
+                         where n is MediatedNetwork && !(n is SupportedNetwork)
+                         where !string.IsNullOrEmpty(n.AdapterConfigurationClassName)
+                         select n.AdapterConfigurationClassName;
+                return string.Join(",", cn.ToArray());
+            }
         }
 
-        public string NetworksToInitString {
-            get { return NetworksToInit != null ?
-                             string.Join(",", NetworksToInit.Select(b => b.ToString()).ToArray()) : string.Empty; }
+
+        public string NetworkConfigurationsJson
+        {
+            get {
+                var nc = from n in MediatedNetworks ?? Enumerable.Empty<MediatedNetwork>()
+                         where n.NetworkConfiguration != null
+                         where !string.IsNullOrEmpty(n.AdapterConfigurationClassName)
+                         select n;
+                return Json.Serialize(nc.ToDictionary(n => n.AdapterConfigurationClassName,
+                                                      n => n.NetworkConfiguration));
+            }
+        }
+
+        public string MediationSettingsJson
+        {
+            get {
+                var ms = from n in MediatedNetworks ?? Enumerable.Empty<MediatedNetwork>()
+                         where n.MediationSettings != null
+                         where !string.IsNullOrEmpty(n.MediationSettingsClassName)
+                         select n;
+                return Json.Serialize(ms.ToDictionary(n => n.MediationSettingsClassName,
+                                                      n => n.MediationSettings));
+            }
+        }
+
+
+        public string MoPubRequestOptionsJson
+        {
+            get {
+                var ro = from n in MediatedNetworks ?? Enumerable.Empty<MediatedNetwork>()
+                         where n.MoPubRequestOptions != null
+                         where !string.IsNullOrEmpty(n.AdapterConfigurationClassName)
+                         select n;
+                return Json.Serialize(ro.ToDictionary(n => n.AdapterConfigurationClassName,
+                                                      n => n.MoPubRequestOptions));
+            }
         }
     }
 
 
-    public class MediationSetting : Dictionary<string, object>
+    public class LocalMediationSetting : Dictionary<string, object>
     {
-        public MediationSetting(string adVendor) { Add("adVendor", adVendor); }
+        public string MediationSettingsClassName { get; set; }
 
-        public MediationSetting(string android, string ios) :
+        public LocalMediationSetting() { }
+
+        public LocalMediationSetting(string adVendor)
+        {
+#if UNITY_IOS
+            MediationSettingsClassName = adVendor + "InstanceMediationSettings";
+#else
+            MediationSettingsClassName = adVendor;    // The correct value is computed from this inside the Android wrapper code.
+#endif
+        }
+
+        public LocalMediationSetting(string android, string ios) :
 #if UNITY_IOS
             this(ios)
 #else
@@ -180,11 +225,72 @@ public class MoPubBase
             {}
 
 
+        public static string ToJson(IEnumerable<LocalMediationSetting> localMediationSettings)
+        {
+            var ms = from n in localMediationSettings ?? Enumerable.Empty<LocalMediationSetting>()
+                     where n != null && !string.IsNullOrEmpty(n.MediationSettingsClassName)
+                     select n;
+            return Json.Serialize(ms.ToDictionary(n => n.MediationSettingsClassName, n => n));
+        }
+
+
         // Shortcut class names so you don't have to remember the right ad vendor string (also to not misspell it).
-        public class AdColony : MediationSetting { public AdColony() : base("AdColony") { } }
-        public class AdMob : MediationSetting { public AdMob() : base(android: "GooglePlayServices", ios: "MPGoogle") { } }
-        public class Chartboost : MediationSetting { public Chartboost() : base("Chartboost") { } }
-        public class Vungle : MediationSetting { public Vungle() : base("Vungle") { } }
+        public class AdColony   : LocalMediationSetting { public AdColony()   : base("AdColony") { } }
+        public class AdMob      : LocalMediationSetting { public AdMob()      : base(android: "GooglePlayServices",
+                                                                                     ios:     "MPGoogle") { } }
+        public class Chartboost : LocalMediationSetting { public Chartboost() : base("Chartboost") { } }
+        public class Vungle     : LocalMediationSetting { public Vungle()     : base("Vungle") { } }
+    }
+
+
+    // Data structure to register and initialize a mediated network.
+    public class MediatedNetwork
+    {
+        public string AdapterConfigurationClassName { get; set; }
+        public string MediationSettingsClassName    { get; set; }
+
+        public Dictionary<string,object> NetworkConfiguration { get; set; }
+        public Dictionary<string,object> MediationSettings    { get; set; }
+        public Dictionary<string,object> MoPubRequestOptions  { get; set; }
+    }
+
+
+    // Networks that are supported by MoPub.
+    public class SupportedNetwork : MediatedNetwork
+    {
+        protected SupportedNetwork(string adVendor)
+        {
+#if UNITY_IOS
+            AdapterConfigurationClassName = adVendor + "AdapterConfiguration";
+            MediationSettingsClassName    = adVendor + "GlobalMediationSettings";
+#else
+            AdapterConfigurationClassName = "com.mopub.mobileads." + adVendor + "AdapterConfiguration";
+            MediationSettingsClassName    = adVendor;    // The correct value is computed from this inside the Android wrapper code.
+#endif
+        }
+
+        protected SupportedNetwork(string android, string ios) :
+#if UNITY_IOS
+            this(ios)
+#else
+            this(android)
+#endif
+        {}
+
+
+        public class AdColony   : SupportedNetwork { public AdColony()   : base("AdColony") { } }
+        public class AdMob      : SupportedNetwork { public AdMob()      : base(android: "GooglePlayServices",
+                                                                                ios:     "MPGoogle") { } }
+        public class AppLovin   : SupportedNetwork { public AppLovin()   : base("AppLovin") { } }
+        public class Chartboost : SupportedNetwork { public Chartboost() : base("Chartboost") { } }
+        public class Facebook   : SupportedNetwork { public Facebook()   : base("Facebook") { } }
+        public class IronSource : SupportedNetwork { public IronSource() : base("IronSource") { } }
+        public class OnebyAOL   : SupportedNetwork { public OnebyAOL()   : base(android: "Millennial",
+                                                                                ios:     "MPMillennial") { } }
+        public class Tapjoy     : SupportedNetwork { public Tapjoy()     : base("Tapjoy") { } }
+        public class Unity      : SupportedNetwork { public Unity()      : base(android: "Unity",
+                                                                                ios:     "UnityAds") { } }
+        public class Vungle     : SupportedNetwork { public Vungle()     : base("Vungle") { } }
     }
 
 
@@ -207,80 +313,6 @@ public class MoPubBase
     }
 
 
-    public abstract class ThirdPartyNetwork
-    {
-        private readonly string _name;
-
-
-        protected ThirdPartyNetwork(string name, string suffix)
-        {
-#if UNITY_ANDROID
-            _name = "com.mopub.mobileads." + name + suffix;
-#else
-            _name = name + suffix;
-#endif
-        }
-
-
-        protected ThirdPartyNetwork(string android, string ios, string suffix)
-#if UNITY_ANDROID
-            : this(android, suffix)
-#else
-            : this(ios, suffix)
-#endif
-            {}
-
-
-        public override string ToString()
-        {
-            return _name;
-        }
-    }
-
-
-    public class AdvancedBidder : ThirdPartyNetwork
-    {
-        private const string suffix = "AdvancedBidder";
-
-        public AdvancedBidder(string name) : base(name, suffix) { }
-        public AdvancedBidder(string android, string ios) : base(android, ios, suffix) { }
-
-        public static readonly AdvancedBidder AdColony = new AdvancedBidder("AdColony");
-        public static readonly AdvancedBidder AdMob = new AdvancedBidder(android: "GooglePlayServices", ios: "MPGoogleAdMob");
-        public static readonly AdvancedBidder AppLovin = new AdvancedBidder("AppLovin");
-        public static readonly AdvancedBidder Facebook = new AdvancedBidder("Facebook");
-        public static readonly AdvancedBidder OnebyAOL = new AdvancedBidder(android: "Millennial", ios: "MPMillennial");
-        public static readonly AdvancedBidder Tapjoy = new AdvancedBidder("Tapjoy");
-        public static readonly AdvancedBidder Unity = new AdvancedBidder(android: "Unity", ios: "UnityAds");
-        public static readonly AdvancedBidder Vungle = new AdvancedBidder("Vungle");
-    }
-
-
-    public class RewardedNetwork : ThirdPartyNetwork
-    {
-#if UNITY_ANDROID
-        private const string suffix = "RewardedVideo";
-#else
-        private const string suffix = "RewardedVideoCustomEvent";
-#endif
-
-        public RewardedNetwork(string name) : base(name, suffix) { }
-        public RewardedNetwork(string android, string ios) : base(android, ios, suffix) { }
-
-
-        public static readonly RewardedNetwork AdColony = new RewardedNetwork("AdColony");
-        public static readonly RewardedNetwork AdMob = new RewardedNetwork(android: "GooglePlayServices", ios: "MPGoogleAdMob");
-        public static readonly RewardedNetwork AppLovin = new RewardedNetwork("AppLovin");
-        public static readonly RewardedNetwork Chartboost = new RewardedNetwork("Chartboost");
-        public static readonly RewardedNetwork Facebook = new RewardedNetwork("Facebook");
-        public static readonly RewardedNetwork IronSource = new RewardedNetwork("IronSource");
-        public static readonly RewardedNetwork OnebyAOL = new RewardedNetwork(android: "Millennial", ios: "MPMillennial");
-        public static readonly RewardedNetwork Tapjoy = new RewardedNetwork("Tapjoy");
-        public static readonly RewardedNetwork Unity = new RewardedNetwork(android: "Unity", ios: "UnityAds");
-        public static readonly RewardedNetwork Vungle = new RewardedNetwork("Vungle");
-    }
-
-
     /// <summary>
     /// Set this to an ISO language code (e.g., "en-US") if you wish the next two URL properties to point
     /// to a web resource that is localized to a specific language.
@@ -291,11 +323,34 @@ public class MoPubBase
     public const double LatLongSentinel = 99999.0;
 
 
-    public static readonly string moPubSDKVersion = new MoPubSDKVersion().Number;
+    public static readonly string moPubSDKVersion = "5.5.0";
     private static string _pluginName;
+    private static bool _allowLegitimateInterest;
+    public static LogLevel logLevel { get; protected set; }
 
     public static string PluginName {
         get { return _pluginName ?? (_pluginName = "MoPub Unity Plugin v" + moPubSDKVersion); }
+    }
+
+
+    /// <summary>
+    /// Compares two versions to see which is greater.
+    /// </summary>
+    /// <param name="a">Version to compare against second param</param>
+    /// <param name="b">Version to compare against first param</param>
+    /// <returns>-1 if the first version is smaller, 1 if the first version is greater, 0 if they are equal</returns>
+    public static int CompareVersions(string a, string b)
+    {
+        var versionA = VersionStringToInts(a);
+        var versionB = VersionStringToInts(b);
+        for (var i = 0; i < Mathf.Max(versionA.Length, versionB.Length); i++) {
+            if (VersionPiece(versionA, i) < VersionPiece(versionB, i))
+                return -1;
+            if (VersionPiece(versionA, i) > VersionPiece(versionB, i))
+                return 1;
+        }
+
+        return 0;
     }
 
 
@@ -321,6 +376,19 @@ public class MoPubBase
             Debug.LogError("Invalid URL: " + url);
             return null;
         }
+    }
+
+
+    private static int VersionPiece(IList<int> versionInts, int pieceIndex)
+    {
+        return pieceIndex < versionInts.Count ? versionInts[pieceIndex] : 0;
+    }
+
+
+    private static int[] VersionStringToInts(string version)
+    {
+        int piece;
+        return version.Split('.').Select(v => int.TryParse(v, out piece) ? piece : 0).ToArray();
     }
 
 

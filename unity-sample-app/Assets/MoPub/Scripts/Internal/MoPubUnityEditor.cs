@@ -55,20 +55,23 @@ public class MoPubUnityEditor : MoPubBase
     /// See <see cref="MoPubManager.OnSdkInitializedEvent"/> for the resulting triggered event.
     /// <para>
     /// For platform-specific implementations, see
-    /// MoPubAndroid.<see cref="MoPubAndroid.InitializeSdk(string)"/> and
-    /// MoPubiOS.<see cref="MoPubiOS.InitializeSdk(string)"/>.
+    /// MoPubAndroid.<see cref="MoPubAndroid.InitializeSdk(MoPub.SdkConfiguration)"/> and
+    /// MoPubiOS.<see cref="MoPubiOS.InitializeSdk(MoPub.SdkConfiguration)"/>.
     /// </para>
     /// </summary>
     /// <param name="sdkConfiguration">The configuration including at least an ad unit.
-    /// See <see cref="MoPubBase.SdkConfiguration"/> for details.</param>
+    /// See <see cref="MoPub.SdkConfiguration"/> for details.</param>
     /// <remarks>The MoPub SDK needs to be initialized on Start() to ensure all other objects have been enabled first.
     /// (Start() rather than Awake() so that MoPubManager has had time to Awake() and OnEnable() in order to receive
     /// event callbacks.)</remarks>
     public static void InitializeSdk(SdkConfiguration sdkConfiguration)
     {
+        logLevel = sdkConfiguration.LogLevel;
+        MoPubLog.Log("InitializeSdk", MoPubLog.SdkLogEvent.InitStarted);
         WaitOneFrame(() => {
             _isInitialized = true;
-            MoPubManager.Instance.EmitSdkInitializedEvent(ArgsToJson(sdkConfiguration.AdUnitId));
+            MoPubManager.Instance.EmitSdkInitializedEvent(ArgsToJson(sdkConfiguration.AdUnitId,
+                                                              ((int) sdkConfiguration.LogLevel).ToString()));
         });
     }
 
@@ -138,18 +141,6 @@ public class MoPubUnityEditor : MoPubBase
 
 
     /// <summary>
-    /// Flag indicating advanced bidding has been enabled.
-    /// <para>
-    /// For platform-specific implementations, see
-    /// MoPubAndroid.<see cref="MoPubAndroid.AdvancedBiddingEnabled"/> and
-    /// MoPubiOS.<see cref="MoPubiOS.AdvancedBiddingEnabled"/>.
-    /// </para>
-    /// </summary>
-    /// <returns>true if the SDK was initialized with advanced bidders; false otherwise.</returns>
-    public static bool AdvancedBiddingEnabled { get; /* Testing: */ set; }
-
-
-    /// <summary>
     /// Enables or disables location support for banners and interstitials.
     /// <para>
     /// For platform-specific implementations, see
@@ -171,6 +162,36 @@ public class MoPubUnityEditor : MoPubBase
     /// </summary>
     /// <param name="iTunesAppId">The app id on the App Store (only applicable to iOS).</param>
     public static void ReportApplicationOpen(string iTunesAppId = null) { }
+
+
+    /// <summary>
+    /// Allow supported SDK networks to collect user information on the basis of legitimate interest.
+    /// Can also be set via MoPub.<see cref="MoPub.SdkConfiguration"/> on
+    /// MoPub.<see cref="MoPubUnityEditor.InitializeSdk(MoPub.SdkConfiguration)"/>
+    /// <para>
+    /// For platform-specific implementations, see
+    /// MoPubAndroid.<see cref="MoPubAndroid.AllowLegitimateInterest"/> and
+    /// MoPubiOS.<see cref="MoPubiOS.AllowLegitimateInterest"/>.
+    /// </para>
+    /// </summary>
+    public static bool AllowLegitimateInterest { get; set; }
+
+
+    /// <summary>
+    /// MoPub SDK log level. The default value is: `MPLogLevelInfo` before SDK init, `MPLogLevelNone` after SDK init.
+    /// See MoPub.<see cref="MoPub.LogLevel"/> for all possible options. Can also be set via
+    /// MoPub.<see cref="MoPub.SdkConfiguration"/> on
+    /// MoPub.<see cref="MoPubUnityEditor.InitializeSdk(MoPub.SdkConfiguration)"/>
+    /// <para>
+    /// For platform-specific implementations, see
+    /// MoPubAndroid.<see cref="MoPubAndroid.SdkLogLevel"/> and
+    /// MoPubiOS.<see cref="MoPubiOS.SdkLogLevel"/>.
+    /// </para>
+    /// </summary>
+    public static LogLevel SdkLogLevel {
+        get { return logLevel; }
+        set { logLevel = value; }
+    }
 
 
     /// <summary>
@@ -209,6 +230,7 @@ public class MoPubUnityEditor : MoPubBase
     /// See <see cref="MoPubBase.BannerType"/>.</param>
     public static void CreateBanner(string adUnitId, AdPosition position, BannerType bannerType = BannerType.Size320x50)
     {
+        MoPubLog.Log("CreateBanner", MoPubLog.AdLogEvent.LoadAttempted);
         RequestAdUnit(adUnitId);
         ForceRefresh(adUnitId);
     }
@@ -227,6 +249,7 @@ public class MoPubUnityEditor : MoPubBase
     /// <remarks>Banners are automatically shown after first loading.</remarks>
     public static void ShowBanner(string adUnitId, bool shouldShow)
     {
+        MoPubLog.Log("ShowBanner", adUnitId, MoPubLog.AdLogEvent.ShowAttempted);
         CheckAdUnitRequested(adUnitId);
     }
 
@@ -275,6 +298,7 @@ public class MoPubUnityEditor : MoPubBase
     /// <param name="adUnitId">A string with the ad unit id.</param>
     public static void ForceRefresh(string adUnitId)
     {
+        MoPubLog.Log("ForceRefresh", MoPubLog.AdLogEvent.ShowAttempted);
         CheckAdUnitRequested(adUnitId);
         WaitOneFrame(() => { MoPubManager.Instance.EmitAdLoadedEvent(ArgsToJson(adUnitId, "50")); });
     }
@@ -318,6 +342,7 @@ public class MoPubUnityEditor : MoPubBase
     /// (See <see cref="CanCollectPersonalInfo"/>).</remarks>
     public static void RequestInterstitialAd(string adUnitId, string keywords = "", string userDataKeywords = "")
     {
+        MoPubLog.Log("RequestInterstitialAd", MoPubLog.AdLogEvent.LoadAttempted);
         RequestAdUnit(adUnitId);
         WaitOneFrame(() => { MoPubManager.Instance.EmitInterstitialLoadedEvent(ArgsToJson(adUnitId)); });
     }
@@ -335,6 +360,7 @@ public class MoPubUnityEditor : MoPubBase
     /// <remarks><see cref="MoPubManager.OnInterstitialLoadedEvent"/> must have been triggered already.</remarks>
     public static void ShowInterstitialAd(string adUnitId)
     {
+        MoPubLog.Log("ShowInterstitialAd", MoPubLog.AdLogEvent.ShowAttempted);
         if (CheckAdUnitRequested(adUnitId))
             WaitOneFrame(() => { MoPubManager.Instance.EmitInterstitialShownEvent(ArgsToJson(adUnitId)); });
     }
@@ -384,8 +410,8 @@ public class MoPubUnityEditor : MoPubBase
     /// <see cref="MoPubManager.OnRewardedVideoFailedEvent"/>.
     /// <para>
     /// For platform-specific implementations, see
-    /// MoPubAndroid.<see cref="MoPubAndroid.RequestRewardedVideo(string,System.Collections.Generic.List{MoPubBase.MediationSetting},string,string,double,double,string)"/> and
-    /// MoPubiOS.<see cref="MoPubiOS.RequestRewardedVideo(string,System.Collections.Generic.List{MoPubBase.MediationSetting},string,string,double,double,string)"/>.
+    /// MoPubAndroid.<see cref="MoPubAndroid.RequestRewardedVideo(string,System.Collections.Generic.List{MoPubBase.LocalMediationSetting},string,string,double,double,string)"/> and
+    /// MoPubiOS.<see cref="MoPubiOS.RequestRewardedVideo(string,System.Collections.Generic.List{MoPubBase.LocalMediationSetting},string,string,double,double,string)"/>.
     /// </para>
     /// </summary>
     /// <param name="adUnitId">A string with the ad unit id.</param>
@@ -398,11 +424,12 @@ public class MoPubUnityEditor : MoPubBase
     /// <remarks>If a user is in a General Data Protection Regulation (GDPR) region and MoPub doesn't obtain consent
     /// from the user, "keywords" will be sent to the server but "userDataKeywords" will be excluded.
     /// (See <see cref="CanCollectPersonalInfo"/>).</remarks>
-    public static void RequestRewardedVideo(string adUnitId, List<MediationSetting> mediationSettings = null,
+    public static void RequestRewardedVideo(string adUnitId, List<LocalMediationSetting> mediationSettings = null,
                                             string keywords = null, string userDataKeywords = null,
                                             double latitude = LatLongSentinel, double longitude = LatLongSentinel,
                                             string customerId = null)
     {
+        MoPubLog.Log("RequestRewardedVideo", MoPubLog.AdLogEvent.LoadAttempted);
         RequestAdUnit(adUnitId);
         WaitOneFrame(() => { MoPubManager.Instance.EmitRewardedVideoLoadedEvent(ArgsToJson(adUnitId)); });
     }
@@ -421,6 +448,7 @@ public class MoPubUnityEditor : MoPubBase
     /// <remarks><see cref="MoPubManager.OnRewardedVideoLoadedEvent"/> must have been triggered already.</remarks>
     public static void ShowRewardedVideo(string adUnitId, string customData = null)
     {
+        MoPubLog.Log("ShowRewardedVideo", MoPubLog.AdLogEvent.ShowAttempted);
         if (CheckAdUnitRequested(adUnitId))
             WaitOneFrame(() => { MoPubManager.Instance.EmitRewardedVideoShownEvent(ArgsToJson(adUnitId)); });
     }
@@ -480,6 +508,7 @@ public class MoPubUnityEditor : MoPubBase
 
 
     public static void RequestNativeAd(string adUnitId) {
+        MoPubLog.Log("RequestNativeAd", MoPubLog.AdLogEvent.LoadAttempted);
         RequestAdUnit(adUnitId);
         WaitOneFrame(() => {
             if (!"1".Equals(adUnitId))  {
@@ -580,6 +609,7 @@ public class MoPubUnityEditor : MoPubBase
     /// </summary>
     public static void LoadConsentDialog()
     {
+        MoPubLog.Log("LoadConsentDialog", MoPubLog.ConsentLogEvent.LoadAttempted);
         _checkInitialized();
         WaitOneFrame(() => {
             IsConsentDialogReady = true;
@@ -616,6 +646,7 @@ public class MoPubUnityEditor : MoPubBase
     /// </summary>
     public static void ShowConsentDialog()
     {
+        MoPubLog.Log("ShowConsentDialog", MoPubLog.ConsentLogEvent.ShowAttempted);
         if (!IsConsentDialogReady) {
             Debug.LogError("Called ShowConsentDialog before consent dialog loaded!");
             return;

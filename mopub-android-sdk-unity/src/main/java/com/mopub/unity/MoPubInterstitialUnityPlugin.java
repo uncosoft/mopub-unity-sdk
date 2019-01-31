@@ -1,11 +1,9 @@
 package com.mopub.unity;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
-import com.unity3d.player.UnityPlayer;
 
 
 /**

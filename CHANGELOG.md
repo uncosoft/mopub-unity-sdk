@@ -1,3 +1,12 @@
+## Verison 5.5.0 (January 31, 2019)
+- The MoPub Unity Plugin now includes versions 5.5.0 of the MoPub Android SDK and the MoPub iOS SDK.
+- The SDK Manager can now also install and upgrade mediated network SDKs.
+- Google's [Unity Jar Resolver|https://github.com/googlesamples/unity-jar-resolver] is included.
+It is used to download the mediation adapters, network SDKs, and android support libraries.
+- Improved logging throughout the SDK.
+- Automatic Advanced Bidder initialization.
+- Fixed a problem with the incorrect framework path in the Xcode project for Unity 2018.3+.
+
 ## Version 5.4.1 (November 28, 2018)
 - The MoPub Unity Plugin now includes versions 5.4.1 of the MoPub Android SDK and the MoPub iOS SDK.
 - Fixed Unity 5.3 sample app crash when attempting to show MRAID rich media ads on Android 9 devices.

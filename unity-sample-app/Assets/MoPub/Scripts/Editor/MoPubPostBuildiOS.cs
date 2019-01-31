@@ -48,12 +48,24 @@ namespace MoPubInternal.Editor.Postbuild
                 project.AddFileToBuild(target, libGUID);
             }
 
+            bool emitWarning = true;
 #if UNITY_2017_1_OR_NEWER
             var fileGuid = project.FindFileGuidByProjectPath("Frameworks/MoPub/Plugins/iOS/MoPubSDKFramework.framework")
+                        // Unity 2018.3 leaves out the intermediate directories.
+                        ?? project.FindFileGuidByProjectPath("Frameworks/MoPubSDKFramework.framework")
                         // Check legacy location in case post 5.4 file migration has not been done.
                         ?? project.FindFileGuidByProjectPath("Frameworks/Plugins/iOS/MoPubSDKFramework.framework");
-            project.AddFileToEmbedFrameworks(target, fileGuid);
+            if (fileGuid != null) {
+                project.AddFileToEmbedFrameworks(target, fileGuid);
+                emitWarning = false;
+            }
 #endif
+            if (emitWarning)
+                Debug.LogWarning(
+                    "Unable to automatically add MoPubSDKFramework.framework to the Embedded Binaries list in the Xcode project.\n" +
+                    "Please add it manually in Xcode, under the General properties of the Unity-iPhone target, unless you\n" +
+                    "are building against the SDK source (via Cocoapods) or static library.");
+
             project.SetBuildProperty(
                 target, "LD_RUNPATH_SEARCH_PATHS", "$(inherited) @executable_path/Frameworks");
 

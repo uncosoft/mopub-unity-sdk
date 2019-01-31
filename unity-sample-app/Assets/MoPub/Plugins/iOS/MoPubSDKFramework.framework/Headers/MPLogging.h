@@ -1,43 +1,70 @@
 //
 //  MPLogging.h
 //
-//  Copyright 2018 Twitter, Inc.
+//  Copyright 2018-2019 Twitter, Inc.
 //  Licensed under the MoPub SDK License Agreement
 //  http://www.mopub.com/legal/sdk-license-agreement/
 //
 
 #import <Foundation/Foundation.h>
-#import "MPConstants.h"
+#import "MPLogEvent.h"
+#import "MPLogger.h"
 #import "MPLogLevel.h"
+
+NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * const kMPClearErrorLogFormatWithAdUnitID;
 extern NSString * const kMPWarmingUpErrorLogFormatWithAdUnitID;
 
-MPLogLevel MPLogGetLevel(void);
-void MPLogSetLevel(MPLogLevel level);
-void _MPLogTrace(NSString *format, ...);
-void _MPLogDebug(NSString *format, ...);
-void _MPLogInfo(NSString *format, ...);
-void _MPLogWarn(NSString *format, ...);
-void _MPLogError(NSString *format, ...);
-void _MPLogFatal(NSString *format, ...);
+#define MPLogDebug(...) [MPLogging logEvent:[MPLogEvent eventWithMessage:[NSString stringWithFormat:__VA_ARGS__] level:MPLogLevelDebug] source:nil fromClass:self.class]
+#define MPLogInfo(...) [MPLogging logEvent:[MPLogEvent eventWithMessage:[NSString stringWithFormat:__VA_ARGS__] level:MPLogLevelInfo] source:nil fromClass:self.class]
 
-#if MP_DEBUG_MODE && !SPECS
+// MPLogTrace, MPLogWarn, MPLogError, and MPLogFatal will be deprecated in
+// future SDK versions. Please use MPLogInfo or MPLogDebug
+#define MPLogTrace(...) MPLogDebug(__VA_ARGS__)
+#define MPLogWarn(...) MPLogDebug(__VA_ARGS__)
+#define MPLogError(...) MPLogDebug(__VA_ARGS__)
+#define MPLogFatal(...) MPLogDebug(__VA_ARGS__)
 
-#define MPLogTrace(...) _MPLogTrace(__VA_ARGS__)
-#define MPLogDebug(...) _MPLogDebug(__VA_ARGS__)
-#define MPLogInfo(...) _MPLogInfo(__VA_ARGS__)
-#define MPLogWarn(...) _MPLogWarn(__VA_ARGS__)
-#define MPLogError(...) _MPLogError(__VA_ARGS__)
-#define MPLogFatal(...) _MPLogFatal(__VA_ARGS__)
+// Logs ad lifecycle events
+#define MPLogAdEvent(event, adUnitId) [MPLogging logEvent:event source:adUnitId fromClass:self.class]
 
-#else
+// Logs general events
+#define MPLogEvent(event) [MPLogging logEvent:event source:nil fromClass:self.class]
 
-#define MPLogTrace(...) {}
-#define MPLogDebug(...) {}
-#define MPLogInfo(...) {}
-#define MPLogWarn(...) {}
-#define MPLogError(...) {}
-#define MPLogFatal(...) {}
+/**
+ SDK logging support.
+ */
+@interface MPLogging : NSObject
+/**
+ Current log level of the SDK console logger. The default value is @c MPLogLevelNone.
+ */
+@property (class, nonatomic, assign) MPLogLevel consoleLogLevel;
 
-#endif
+/**
+Registers a logging destination.
+@param logger Logger to receive log events.
+*/
++ (void)addLogger:(id<MPLogger>)logger;
+
+/**
+ Removes a logger from receiving log events.
+ @param logger Logger to remove.
+ */
++ (void)removeLogger:(id<MPLogger>)logger;
+
+/**
+ Logs the event generated from the calling class. The format of the log message
+ will be:
+ @code
+ className | source | logEvent.message
+ @endcode
+ @param event Event to log.
+ @param source Optional source of the event. This will generally be ad unit ID for ad-related events.
+ @param aClass Class that generated the event.
+ */
++ (void)logEvent:(MPLogEvent *)event source:(NSString * _Nullable)source fromClass:(Class)aClass;
+
+@end
+
+NS_ASSUME_NONNULL_END

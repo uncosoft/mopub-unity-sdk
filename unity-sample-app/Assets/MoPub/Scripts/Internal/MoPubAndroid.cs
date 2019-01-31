@@ -48,13 +48,20 @@ public class MoPubAndroid : MoPubBase
     }
 
 
-    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.InitializeSdk(MoPubBase.SdkConfiguration)"/>
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.InitializeSdk(MoPub.SdkConfiguration)"/>
     public static void InitializeSdk(SdkConfiguration sdkConfiguration)
     {
+        logLevel = sdkConfiguration.LogLevel;
+        MoPubLog.Log("InitializeSdk", MoPubLog.SdkLogEvent.InitStarted);
         ValidateAdUnitForSdkInit(sdkConfiguration.AdUnitId);
         PluginClass.CallStatic(
-            "initializeSdk", sdkConfiguration.AdUnitId, sdkConfiguration.AdvancedBiddersString,
-            sdkConfiguration.MediationSettingsJson, sdkConfiguration.NetworksToInitString);
+            "initializeSdk", sdkConfiguration.AdUnitId,
+            sdkConfiguration.AdditionalNetworksString,
+            sdkConfiguration.MediationSettingsJson,
+            sdkConfiguration.AllowLegitimateInterest,
+            (int) sdkConfiguration.LogLevel,
+            sdkConfiguration.NetworkConfigurationsJson,
+            sdkConfiguration.MoPubRequestOptionsJson);
     }
 
 
@@ -62,7 +69,7 @@ public class MoPubAndroid : MoPubBase
     public static void LoadBannerPluginsForAdUnits(string[] bannerAdUnitIds)
     {
         foreach (var bannerAdUnitId in bannerAdUnitIds)
-            BannerPluginsDict.Add(bannerAdUnitId, new MPBanner(bannerAdUnitId));
+            BannerPluginsDict[bannerAdUnitId] = new MPBanner(bannerAdUnitId);
 
         Debug.Log(
             bannerAdUnitIds.Length + " banner AdUnits loaded for plugins:\n" + string.Join(", ", bannerAdUnitIds));
@@ -73,7 +80,7 @@ public class MoPubAndroid : MoPubBase
     public static void LoadInterstitialPluginsForAdUnits(string[] interstitialAdUnitIds)
     {
         foreach (var interstitialAdUnitId in interstitialAdUnitIds)
-            InterstitialPluginsDict.Add(interstitialAdUnitId, new MPInterstitial(interstitialAdUnitId));
+            InterstitialPluginsDict[interstitialAdUnitId] = new MPInterstitial(interstitialAdUnitId);
 
         Debug.Log(
             interstitialAdUnitIds.Length + " interstitial AdUnits loaded for plugins:\n"
@@ -85,7 +92,7 @@ public class MoPubAndroid : MoPubBase
     public static void LoadRewardedVideoPluginsForAdUnits(string[] rewardedVideoAdUnitIds)
     {
         foreach (var rewardedVideoAdUnitId in rewardedVideoAdUnitIds)
-            RewardedVideoPluginsDict.Add(rewardedVideoAdUnitId, new MPRewardedVideo(rewardedVideoAdUnitId));
+            RewardedVideoPluginsDict[rewardedVideoAdUnitId] = new MPRewardedVideo(rewardedVideoAdUnitId);
 
         Debug.Log(
             rewardedVideoAdUnitIds.Length + " rewarded video AdUnits loaded for plugins:\n"
@@ -98,7 +105,7 @@ public class MoPubAndroid : MoPubBase
     public static void LoadNativePluginsForAdUnits(string[] nativeAdUnitIds)
     {
         foreach (var nativeAdUnitId in nativeAdUnitIds)
-            NativePluginsDict.Add(nativeAdUnitId, new MPNative(nativeAdUnitId));
+            NativePluginsDict[nativeAdUnitId] = new MPNative(nativeAdUnitId);
 
         Debug.Log(
             nativeAdUnitIds.Length + " native AdUnits loaded for plugins:\n" + string.Join(", ", nativeAdUnitIds));
@@ -109,14 +116,6 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.IsSdkInitialized"/>
     public static bool IsSdkInitialized {
         get { return PluginClass.CallStatic<bool>("isSdkInitialized"); }
-    }
-
-
-    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.AdvancedBiddingEnabled"/>
-    public static bool AdvancedBiddingEnabled {
-        get { return PluginClass.CallStatic<bool>("isAdvancedBiddingEnabled"); }
-
-        set { PluginClass.CallStatic("setAdvancedBiddingEnabled", value); }
     }
 
 
@@ -131,6 +130,23 @@ public class MoPubAndroid : MoPubBase
     public static void ReportApplicationOpen(string iTunesAppId = null)
     {
         PluginClass.CallStatic("reportApplicationOpen");
+    }
+
+
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.AllowLegitimateInterest"/>
+    public static bool AllowLegitimateInterest {
+        get { return PluginClass.CallStatic<bool>("shouldAllowLegitimateInterest"); }
+        set { PluginClass.CallStatic("setAllowLegitimateInterest", value);}
+    }
+
+
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.SdkLogLevel"/>
+    public static LogLevel SdkLogLevel {
+        get { return (LogLevel) PluginClass.CallStatic<int>("getLogLevel"); }
+        set {
+            PluginClass.CallStatic<int>("setLogLevel", (int) value);
+            logLevel = value;
+        }
     }
 
 
@@ -179,6 +195,7 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.CreateBanner(string,MoPubBase.AdPosition,MoPubBase.BannerType)"/>
     public static void CreateBanner(string adUnitId, AdPosition position)
     {
+        MoPubLog.Log("CreateBanner", MoPubLog.AdLogEvent.LoadAttempted);
         MPBanner plugin;
         if (BannerPluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.CreateBanner(position);
@@ -190,6 +207,7 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ShowBanner(string,bool)"/>
     public static void ShowBanner(string adUnitId, bool shouldShow)
     {
+        MoPubLog.Log("ShowBanner", MoPubLog.AdLogEvent.ShowAttempted);
         MPBanner plugin;
         if (BannerPluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.ShowBanner(shouldShow);
@@ -201,6 +219,7 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.RefreshBanner(string,string,string)"/>
     public static void RefreshBanner(string adUnitId, string keywords, string userDataKeywords = "")
     {
+        MoPubLog.Log("RefreshBanner", MoPubLog.AdLogEvent.ShowAttempted);
         MPBanner plugin;
         if (BannerPluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.RefreshBanner(keywords, userDataKeywords);
@@ -223,6 +242,7 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ForceRefresh(string)"/>
     public void ForceRefresh(string adUnitId)
     {
+        MoPubLog.Log("ForceRefresh", MoPubLog.AdLogEvent.ShowAttempted);
         MPBanner plugin;
         if (BannerPluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.ForceRefresh();
@@ -251,6 +271,7 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.RequestInterstitialAd(string,string,string)"/>
     public static void RequestInterstitialAd(string adUnitId, string keywords = "", string userDataKeywords = "")
     {
+        MoPubLog.Log("RequestInterstitialAd", MoPubLog.AdLogEvent.LoadAttempted);
         MPInterstitial plugin;
         if (InterstitialPluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.RequestInterstitialAd(keywords, userDataKeywords);
@@ -262,6 +283,7 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ShowInterstitialAd(string)"/>
     public static void ShowInterstitialAd(string adUnitId)
     {
+        MoPubLog.Log("ShowInterstitialAd", MoPubLog.AdLogEvent.ShowAttempted);
         MPInterstitial plugin;
         if (InterstitialPluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.ShowInterstitialAd();
@@ -299,12 +321,13 @@ public class MoPubAndroid : MoPubBase
     #region RewardedVideos
 
 
-    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.RequestRewardedVideo(string,System.Collections.Generic.List{MoPubBase.MediationSetting},string,string,double,double,string)"/>
-    public static void RequestRewardedVideo(string adUnitId, List<MediationSetting> mediationSettings = null,
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.RequestRewardedVideo(string,System.Collections.Generic.List{MoPubBase.LocalMediationSetting},string,string,double,double,string)"/>
+    public static void RequestRewardedVideo(string adUnitId, List<LocalMediationSetting> mediationSettings = null,
                                             string keywords = null, string userDataKeywords = null,
                                             double latitude = LatLongSentinel, double longitude = LatLongSentinel,
                                             string customerId = null)
     {
+        MoPubLog.Log("RequestRewardedVideo", MoPubLog.AdLogEvent.LoadAttempted);
         MPRewardedVideo plugin;
         if (RewardedVideoPluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.RequestRewardedVideo(
@@ -317,6 +340,7 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ShowRewardedVideo(string,string)"/>
     public static void ShowRewardedVideo(string adUnitId, string customData = null)
     {
+        MoPubLog.Log("ShowRewardedVideo", MoPubLog.AdLogEvent.ShowAttempted);
         MPRewardedVideo plugin;
         if (RewardedVideoPluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.ShowRewardedVideo(customData);
@@ -368,6 +392,7 @@ public class MoPubAndroid : MoPubBase
 
     public static void RequestNativeAd(string adUnitId)
     {
+        MoPubLog.Log("RequestNativeAd", MoPubLog.AdLogEvent.LoadAttempted);
         MPNative plugin;
         if (NativePluginsDict.TryGetValue(adUnitId, out plugin))
             plugin.RequestNativeAd();
@@ -405,6 +430,7 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.LoadConsentDialog()"/>
     public static void LoadConsentDialog()
     {
+        MoPubLog.Log("LoadConsentDialog", MoPubLog.ConsentLogEvent.LoadAttempted);
         PluginClass.CallStatic("loadConsentDialog");
     }
 
@@ -424,6 +450,7 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ShowConsentDialog()"/>
     public static void ShowConsentDialog()
     {
+        MoPubLog.Log("ShowConsentDialog", MoPubLog.ConsentLogEvent.ShowAttempted);
         PluginClass.CallStatic("showConsentDialog");
     }
 
