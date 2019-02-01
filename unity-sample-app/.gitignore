@@ -22,13 +22,14 @@
 sysinfo.txt
 
 # .jar/.aar files downloaded by Unity Jar Resolver
-Assets/Plugins/Android/
+Assets/Plugins/Android/*
 ProjectSettings/GvhProjectSettings.xml
 ProjectSettings/AndroidResolverDependencies.xml
 
 # Network mediation assets
 Assets/MoPub/Mediation*
 Assets/MoPub/*.unitypackage*
+!Assets/Plugins/Android/mainTemplate.gradle
 
 # JetBrains Rider Plugin
 Assets/Plugins/Editor*
