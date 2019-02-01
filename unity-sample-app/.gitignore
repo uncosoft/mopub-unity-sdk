@@ -26,6 +26,10 @@ Assets/Plugins/Android/
 ProjectSettings/GvhProjectSettings.xml
 ProjectSettings/AndroidResolverDependencies.xml
 
+# Network mediation assets
+Assets/MoPub/Mediation*
+Assets/MoPub/*.unitypackage*
+
 # JetBrains Rider Plugin
 Assets/Plugins/Editor*
 
