@@ -166,7 +166,10 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
     @Override
     public void onRewardedVideoLoadFailure(String adUnitId, MoPubErrorCode errorCode) {
         if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoFailed.Emit(adUnitId, errorCode.toString());
+            if (errorCode == MoPubErrorCode.EXPIRED)
+                UnityEvent.RewardedVideoExpired.Emit(adUnitId);
+            else
+                UnityEvent.RewardedVideoFailed.Emit(adUnitId, errorCode.toString());
         }
     }
 

@@ -60,12 +60,14 @@ public class MoPubUnityPlugin {
         AdCollapsed("AdCollapsed"),
         // Interstitials
         InterstitialLoaded("InterstitialLoaded"),
+        InterstitialExpired("InterstitialExpired"),
         InterstitialFailed("InterstitialFailed"),
         InterstitialShown("InterstitialShown"),
         InterstitialClicked("InterstitialClicked"),
         InterstitialDismissed("InterstitialDismissed"),
         // Rewarded Videos
         RewardedVideoLoaded("RewardedVideoLoaded"),
+        RewardedVideoExpired("RewardedVideoExpired"),
         RewardedVideoFailed("RewardedVideoFailed"),
         RewardedVideoShown("RewardedVideoShown"),
         RewardedVideoClicked("RewardedVideoClicked"),
@@ -173,16 +175,20 @@ public class MoPubUnityPlugin {
             @Override
             public void onInitializationFinished() {
                 UnityEvent.SdkInitialized.Emit(adUnitId, Integer.toString(logLevel));
+                mIsSdkInitialized = true;
             }
         };
 
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 MoPub.initializeSdk(getActivity(), sdkConfiguration, initListener);
-                mIsSdkInitialized = true;
-                // Note: the following call is valid only after initializeSdk() returns, as that
-                // is when the PersonalInformationManager property gets initialized.
-                MoPub.getPersonalInformationManager().subscribeConsentStatusChangeListener(consentListener);
+                // Note: Subscribing to the Consent Status Change is valid as soon as initializeSdk() returns,
+                // as that is when the PersonalInformationManager property gets initialized. Thus, keeping here instead
+                // of in onInitializationFinished to avoid race conditions.
+                PersonalInfoManager piiManager = MoPub.getPersonalInformationManager();
+                if (piiManager != null) {
+                    piiManager.subscribeConsentStatusChangeListener(consentListener);
+                }
             }
         });
     }
@@ -195,7 +201,7 @@ public class MoPubUnityPlugin {
         return MoPub.shouldAllowLegitimateInterest();
     }
 
-    public static void setAllowLegitimateInterest(boolean allowLegitimateInterest) {
+    public static void setAllowLegitimateInterest(final boolean allowLegitimateInterest) {
         MoPub.setAllowLegitimateInterest(allowLegitimateInterest);
     }
 
@@ -204,7 +210,7 @@ public class MoPubUnityPlugin {
         return MoPubLog.getLogLevel().intValue();
     }
 
-    public static void setLogLevel(int logLevel) {
+    public static void setLogLevel(final int logLevel) {
         MoPubLog.setLogLevel(MoPubLog.LogLevel.valueOf(logLevel));
     }
 
@@ -248,6 +254,20 @@ public class MoPubUnityPlugin {
         });
     }
 
+
+    /**
+     * Inform the SDK of a change in the app's pause status.
+     *
+     * @param paused True if pausing, false if resuming.
+     */
+    public static void onApplicationPause(final boolean paused) {
+        if (!mIsSdkInitialized)  // If not initialized, there are no listeners to notify.
+            return;
+        if (paused)
+            MoPub.onPause(getActivity());
+        else
+            MoPub.onResume(getActivity());
+    }
 
     /**
      * Specifies the desired location awareness settings: DISABLED, TRUNCATED or NORMAL.

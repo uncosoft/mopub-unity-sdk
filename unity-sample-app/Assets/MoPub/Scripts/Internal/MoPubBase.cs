@@ -280,16 +280,19 @@ public class MoPubBase
 
         public class AdColony   : SupportedNetwork { public AdColony()   : base("AdColony") { } }
         public class AdMob      : SupportedNetwork { public AdMob()      : base(android: "GooglePlayServices",
-                                                                                ios:     "MPGoogle") { } }
+                                                                                ios:     "MPGoogle") {
+#if UNITY_IOS
+               AdapterConfigurationClassName = "GoogleAdMobAdapterConfiguration";
+#endif
+            }
+        }
         public class AppLovin   : SupportedNetwork { public AppLovin()   : base("AppLovin") { } }
         public class Chartboost : SupportedNetwork { public Chartboost() : base("Chartboost") { } }
         public class Facebook   : SupportedNetwork { public Facebook()   : base("Facebook") { } }
         public class IronSource : SupportedNetwork { public IronSource() : base("IronSource") { } }
-        public class OnebyAOL   : SupportedNetwork { public OnebyAOL()   : base(android: "Millennial",
-                                                                                ios:     "MPMillennial") { } }
+        public class OnebyAOL   : SupportedNetwork { public OnebyAOL()   : base("Millennial") { } }
         public class Tapjoy     : SupportedNetwork { public Tapjoy()     : base("Tapjoy") { } }
-        public class Unity      : SupportedNetwork { public Unity()      : base(android: "Unity",
-                                                                                ios:     "UnityAds") { } }
+        public class Unity      : SupportedNetwork { public Unity()      : base("UnityAds") { } }
         public class Vungle     : SupportedNetwork { public Vungle()     : base("Vungle") { } }
     }
 
@@ -323,7 +326,7 @@ public class MoPubBase
     public const double LatLongSentinel = 99999.0;
 
 
-    public static readonly string moPubSDKVersion = "5.5.0";
+    public static readonly string moPubSDKVersion = "5.6.0";
     private static string _pluginName;
     private static bool _allowLegitimateInterest;
     public static LogLevel logLevel { get; protected set; }

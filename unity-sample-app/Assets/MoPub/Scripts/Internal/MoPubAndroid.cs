@@ -133,6 +133,13 @@ public class MoPubAndroid : MoPubBase
     }
 
 
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.OnApplicationPause(bool)"/>
+    internal static void OnApplicationPause(bool paused)
+    {
+        PluginClass.CallStatic("onApplicationPause", paused);
+    }
+
+
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.AllowLegitimateInterest"/>
     public static bool AllowLegitimateInterest {
         get { return PluginClass.CallStatic<bool>("shouldAllowLegitimateInterest"); }
@@ -229,7 +236,7 @@ public class MoPubAndroid : MoPubBase
 
 
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.SetAutorefresh(string,bool)"/>
-    public void SetAutorefresh(string adUnitId, bool enabled)
+    public static void SetAutorefresh(string adUnitId, bool enabled)
     {
         MPBanner plugin;
         if (BannerPluginsDict.TryGetValue(adUnitId, out plugin))
@@ -240,7 +247,7 @@ public class MoPubAndroid : MoPubBase
 
 
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ForceRefresh(string)"/>
-    public void ForceRefresh(string adUnitId)
+    public static void ForceRefresh(string adUnitId)
     {
         MoPubLog.Log("ForceRefresh", MoPubLog.AdLogEvent.ShowAttempted);
         MPBanner plugin;
@@ -292,8 +299,8 @@ public class MoPubAndroid : MoPubBase
     }
 
 
-    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.IsInterstialReady(string)"/>
-    public bool IsInterstialReady(string adUnitId)
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.IsInterstitialReady(string)"/>
+    public static bool IsInterstitialReady(string adUnitId)
     {
         MPInterstitial plugin;
         if (InterstitialPluginsDict.TryGetValue(adUnitId, out plugin))
@@ -304,7 +311,7 @@ public class MoPubAndroid : MoPubBase
 
 
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.DestroyInterstitialAd(string)"/>
-    public void DestroyInterstitialAd(string adUnitId)
+    public static void DestroyInterstitialAd(string adUnitId)
     {
         MPInterstitial plugin;
         if (InterstitialPluginsDict.TryGetValue(adUnitId, out plugin))

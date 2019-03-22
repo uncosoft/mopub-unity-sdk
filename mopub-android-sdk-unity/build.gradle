@@ -1,4 +1,6 @@
-apply from: 'shared-build.gradle'
+apply plugin: 'com.android.library'
+
+project.version = '5.6.0'
 
 buildscript {
     repositories {
@@ -10,32 +12,34 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'com.novoda:bintray-release:0.7.0'
+        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.novoda:bintray-release:0.9'
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3.1'
+    gradleVersion = '4.10.1'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    flatDir {
+        dirs 'libs'
+    }
+    maven { url 'https://maven.google.com' } // necessary for Android API 26
 }
 
 android {
+    compileSdkVersion 28
+
     defaultConfig {
-        versionCode 64
-        versionName '5.5.0'
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionName project.version
         consumerProguardFiles 'proguard.txt'
     }
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src/main/java']
-            resources.srcDirs = ['src/main/java']
-            aidl.srcDirs = ['src/main']
-            renderscript.srcDirs = ['src/main']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
-    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -46,11 +50,30 @@ android {
             minifyEnabled false
         }
     }
-    compileSdkVersion 28
-    buildToolsVersion '26.0.2'
 }
 
 dependencies {
-    // Required to build MoPubUnityPlugin.java
-    compile files('libs/unity-4.2.0f4.jar')
+    api (project(":mopub-sdk")) {
+        transitive = true
+        // Viewability measurement is not supported on the MoPub Unity Plugin yet
+        exclude module: 'libAvid-mopub'
+        exclude module: 'moat-mobile-app-kit'
+    }
+
+    // Unity's jar file is in the libs subdirectory
+    compileOnly fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+}
+
+
+allprojects { project ->
+    if (project.name != "mopub-sdk" && project.name != "mopub-sdk-native-video") {
+        task copyJar(type: Copy, dependsOn: 'compileReleaseJavaWithJavac') {
+            from('build/intermediates/packaged-classes/release/') {
+                include 'classes.jar'
+                rename 'classes.jar', "${project.name}.jar"
+            }
+            into "$rootDir/../unity-sample-app/Assets/MoPub/Plugins/Android/MoPub.plugin/libs"
+        }
+        afterEvaluate { assembleRelease.dependsOn(copyJar) }
+    }
 }

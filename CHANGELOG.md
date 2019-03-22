@@ -1,3 +1,9 @@
+## Version 5.6.0 (March 21, 2019)
+- The MoPub Unity Plugin now includes versions 5.6.0 of the MoPub Android SDK and the MoPub iOS SDK.
+- The MoPub iOS SDK is now included via podspecs.
+- Android application pause events are now properly handled.
+- isSDKInitialized on Android now returns true only after SDK initalization has completed.
+
 ## Verison 5.5.0 (January 31, 2019)
 - The MoPub Unity Plugin now includes versions 5.5.0 of the MoPub Android SDK and the MoPub iOS SDK.
 - The SDK Manager can now also install and upgrade mediated network SDKs.

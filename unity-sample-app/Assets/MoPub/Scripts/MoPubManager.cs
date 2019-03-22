@@ -111,6 +111,12 @@ public class MoPubManager : MonoBehaviour
     }
 
 
+    private void OnApplicationPause(bool paused)
+    {
+        MoPub.OnApplicationPause(paused);
+    }
+
+
     private void OnDestroy()
     {
         if (Instance == this)
@@ -166,8 +172,8 @@ public class MoPubManager : MonoBehaviour
         var newConsent = MoPub.Consent.FromString(args[1]);
         var canCollectPersonalInfo = args[2].ToLower() == "true";
 
-        MoPubLog.Log("EmitConsentStatusChangedEvent", MoPubLog.ConsentLogEvent.Updated, newConsent,
-            canCollectPersonalInfo);
+        MoPubLog.Log("EmitConsentStatusChangedEvent", MoPubLog.ConsentLogEvent.Updated, oldConsent, newConsent,
+            canCollectPersonalInfo, "unknown");
         var evt = OnConsentStatusChangedEvent;
         if (evt != null) evt(oldConsent, newConsent, canCollectPersonalInfo);
     }
@@ -222,7 +228,7 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var error = args[1];
 
-        MoPubLog.Log("EmitAdFailedEvent", MoPubLog.AdLogEvent.LoadFailed, error);
+        MoPubLog.Log("EmitAdFailedEvent", MoPubLog.AdLogEvent.LoadFailed, adUnitId, error);
         var evt = OnAdFailedEvent;
         if (evt != null) evt(adUnitId, error);
     }
@@ -281,7 +287,7 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var error = args[1];
 
-        MoPubLog.Log("EmitInterstitialFailedEvent", MoPubLog.AdLogEvent.LoadFailed, error);
+        MoPubLog.Log("EmitInterstitialFailedEvent", MoPubLog.AdLogEvent.LoadFailed, adUnitId, error);
         var evt = OnInterstitialFailedEvent;
         if (evt != null) evt(adUnitId, error);
     }
@@ -351,7 +357,7 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var error = args[1];
 
-        MoPubLog.Log("EmitRewardedVideoFailedEvent", MoPubLog.AdLogEvent.LoadFailed, error);
+        MoPubLog.Log("EmitRewardedVideoFailedEvent", MoPubLog.AdLogEvent.LoadFailed, adUnitId, error);
         var evt = OnRewardedVideoFailedEvent;
         if (evt != null) evt(adUnitId, error);
     }
@@ -408,7 +414,7 @@ public class MoPubManager : MonoBehaviour
         var label = args[1];
         var amountStr = args[2];
 
-        MoPubLog.Log("EmitRewardedVideoReceivedRewardEvent", MoPubLog.AdLogEvent.ShouldReward);
+        MoPubLog.Log("EmitRewardedVideoReceivedRewardEvent", MoPubLog.AdLogEvent.ShouldReward, label, amountStr);
         var evt = OnRewardedVideoReceivedRewardEvent;
         if (evt != null) evt(adUnitId, label, float.Parse(amountStr));
     }
@@ -453,7 +459,7 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var error = args[1];
 
-        MoPubLog.Log("EmitNativeFailEvent", MoPubLog.AdLogEvent.LoadFailed, error);
+        MoPubLog.Log("EmitNativeFailEvent", MoPubLog.AdLogEvent.LoadFailed, adUnitId, error);
         var evt = OnNativeFailEvent;
         if (evt != null) evt(adUnitId, error);
     }

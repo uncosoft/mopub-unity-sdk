@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 // ReSharper disable AccessToStaticMemberViaDerivedType
 
@@ -13,10 +14,10 @@ public static class MoPubLog
 
     public static class ConsentLogEvent
     {
-        public const string Updated = "Consent changed to {0} from {1}: PII can{2} be collected. Reason: {3}";
+        public const string Updated = "Consent changed to {0} from {1}: PII can{2} be collected.";
         public const string LoadAttempted = "Attempting to load consent dialog";
         public const string LoadSuccess = "Consent dialog loaded";
-        public const string LoadFailed = "Consent dialog failed: ({0}) {1}";
+        public const string LoadFailed = "Consent dialog failed: {0}";
         public const string ShowAttempted = "Consent dialog attempting to show";
         public const string ShowSuccess = "Sucessfully showed consent dialog";
 
@@ -34,7 +35,7 @@ public static class MoPubLog
         public const string Collapsed = "Ad collapsed";
         public const string Dismissed = "Ad did disappear";
         public const string ShouldReward = "Ad should reward user with {0} {1}";
-        public const string Expired = "Ad expired since it was not shown within {0} minutes of it being loaded";
+        public const string Expired = "Ad expired since it was not shown fast enough";
     }
 
     private static readonly Dictionary<string, MoPubBase.LogLevel> logLevelMap =
@@ -73,7 +74,8 @@ public static class MoPubLog
         try {
             Debug.LogFormat(formattedMessage, args);
         } catch (FormatException) {
-            Debug.Log(formattedMessage);
+            Debug.Log("Format exception while logging message { " + formattedMessage + " } with arguments { " +
+                       string.Join(",", args.Select(a => a.ToString()).ToArray()) + " }");
         }
     }
 }

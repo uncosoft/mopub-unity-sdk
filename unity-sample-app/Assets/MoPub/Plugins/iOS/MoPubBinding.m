@@ -134,7 +134,7 @@ void _moPubInitializeSdk(const char* adUnitIdString,
     config.additionalNetworks = extractNetworkClasses(additionalNetworksString);
     config.globalMediationSettings = extractMediationSettings(mediationSettingsJson);
     config.allowLegitimateInterest = allowLegitimateInterest;
-    config.loggingLevel = (MPLogLevel) logLevel;
+    config.loggingLevel = (MPBLogLevel) logLevel;
     config.mediatedNetworkConfigurations = extractNetworkConfigurations(networkConfigurationJson);
     config.moPubRequestOptions = extractMoPubRequestOptions(moPubRequestOptionsJson);
     NSString* logLevelString = [[NSNumber numberWithInt:logLevel] stringValue];
@@ -163,7 +163,7 @@ bool _moPubAllowLegitimateInterest()
     return MoPub.sharedInstance.allowLegitimateInterest;
 }
 
-void _moPubSetLogLevel(MPLogLevel logLevel)
+void _moPubSetLogLevel(MPBLogLevel logLevel)
 {
     MPLogging.consoleLogLevel = logLevel;
 }

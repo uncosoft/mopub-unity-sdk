@@ -97,7 +97,10 @@ public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin
 
     @Override
     public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-        UnityEvent.InterstitialFailed.Emit(mAdUnitId, errorCode.toString());
+        if (errorCode == MoPubErrorCode.EXPIRED)
+            UnityEvent.InterstitialExpired.Emit(mAdUnitId);
+        else
+            UnityEvent.InterstitialFailed.Emit(mAdUnitId, errorCode.toString());
     }
 
     @Override

@@ -95,6 +95,13 @@ public class MoPubiOS : MoPubBase
     }
 
 
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.OnApplicationPause(bool)"/>
+    internal static void OnApplicationPause(bool paused)
+    {
+        // Currently no action is needed.
+    }
+
+
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.AllowLegitimateInterest"/>
     public static bool AllowLegitimateInterest {
         get { return _moPubAllowLegitimateInterest(); }
@@ -183,7 +190,7 @@ public class MoPubiOS : MoPubBase
 
 
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.SetAutorefresh(string,bool)"/>
-    public void SetAutorefresh(string adUnitId, bool enabled)
+    public static void SetAutorefresh(string adUnitId, bool enabled)
     {
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
@@ -194,7 +201,7 @@ public class MoPubiOS : MoPubBase
 
 
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ForceRefresh(string)"/>
-    public void ForceRefresh(string adUnitId)
+    public static void ForceRefresh(string adUnitId)
     {
         MoPubLog.Log("ForceRefresh", MoPubLog.AdLogEvent.ShowAttempted);
         MP plugin;
@@ -246,8 +253,8 @@ public class MoPubiOS : MoPubBase
     }
 
 
-    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.IsInterstialReady(string)"/>
-    public bool IsInterstialReady(string adUnitId)
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.IsInterstitialReady(string)"/>
+    public static bool IsInterstitialReady(string adUnitId)
     {
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
@@ -258,7 +265,7 @@ public class MoPubiOS : MoPubBase
 
 
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.DestroyInterstitialAd(string)"/>
-    public void DestroyInterstitialAd(string adUnitId)
+    public static void DestroyInterstitialAd(string adUnitId)
     {
         MP plugin;
         if (PluginsDict.TryGetValue(adUnitId, out plugin))
@@ -497,7 +504,7 @@ public class MoPubiOS : MoPubBase
                                             int logLevel, string adapterConfigJson,
                                             string moPubRequestOptionsJson) {}
     private static bool _moPubIsSdkInitialized() { return false; }
-=    private static string _moPubGetSDKVersion() { return null; }
+    private static string _moPubGetSDKVersion() { return null; }
     private static void _moPubEnableLocationSupport(bool shouldUseLocation) {}
     private static void _moPubSetAllowLegitimateInterest(bool allowLegitimateInterest) {}
     private static bool _moPubAllowLegitimateInterest() { return false; }
