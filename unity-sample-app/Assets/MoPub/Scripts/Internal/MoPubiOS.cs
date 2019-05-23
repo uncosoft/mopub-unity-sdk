@@ -84,7 +84,7 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.EnableLocationSupport(bool)"/>
     public static void EnableLocationSupport(bool shouldUseLocation)
     {
-        _moPubEnableLocationSupport(true);
+        _moPubEnableLocationSupport(shouldUseLocation);
     }
 
 
@@ -391,12 +391,6 @@ public class MoPubiOS : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.IsConsentDialogReady"/>
     public static bool IsConsentDialogReady {
         get { return _moPubIsConsentDialogReady(); }
-    }
-
-
-    [Obsolete("Use the property name IsConsentDialogReady instead.")]
-    public static bool IsConsentDialogLoaded {
-        get { return IsConsentDialogReady; }
     }
 
 

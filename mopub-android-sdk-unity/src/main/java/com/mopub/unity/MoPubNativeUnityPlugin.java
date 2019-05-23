@@ -45,7 +45,6 @@ public class MoPubNativeUnityPlugin extends MoPubUnityPlugin
      * Loads a native ad for the current ad unit ID and with the given keywords.
      */
     public void requestNativeAd() {
-        // TODO: Add keywords to native ads
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 mMoPubNative = new MoPubNative(getActivity(), mAdUnitId,

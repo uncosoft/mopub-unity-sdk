@@ -50,12 +50,13 @@ function print_export_finished {
 
 function print_command_starting {
   cmd=$1
-  if [ ! -z $2 ]; then
-    args="($2)"
+  shift
+  if [ ! -z $1 ]; then
+    args="($*)"
   fi
-  print_blue_line "==> Running release command: $cmd$args"
+  print_blue_line "==> Running release command: $cmd $args"
 }
 
 function print_command_finished {
-  print_blue_line "==> Done!"
+  print_green_line "==> Done!"
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-my_dir="$(dirname "$0")"
+my_dir="$(dirname $0)"
 source "$my_dir/validate.sh"
 
 PROJECTS=( "mopub-android-sdk" "mopub-ios-sdk" "mopub-android" "mopub-ios" )

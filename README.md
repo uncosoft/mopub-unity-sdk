@@ -10,13 +10,19 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version  (5.6.0 - March 21, 2019)
-- The MoPub Unity Plugin now includes versions 5.6.0 of the MoPub Android SDK and the MoPub iOS SDK.
-- The MoPub iOS SDK is now included via podspecs.
-- Android application pause events are now properly handled.
-- isSDKInitialized on Android now returns true only after SDK initalization has completed.
-
+## New in This Version  (5.7.0 - May 22, 2019)
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
+
+- **Features**
+  - The MoPub Unity Plugin now includes versions 5.7.0 of the MoPub Android SDK and the MoPub iOS SDK.
+  - Impression Level Revenue Data: a data object that includes revenue information associated with each impression.
+  - Verizon Ads SDK now supported as a mediated network.
+  - Added the `willLeaveApplicationFromAd` iOS callback to send the `AdClickedEvent` to Unity
+
+- **Bug Fixes**
+  - Fixed issue with location awareness toggling.
+  - Fixed Unity event triggered from `didFailToLoadAdWithError` on iOS.
+  - Use correct culture in `float.Parse()` calls to avoid potential parsing issues.
 
 ## Upgrading to SDK 5.6
 

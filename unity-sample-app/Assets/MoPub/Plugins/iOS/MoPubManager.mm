@@ -357,7 +357,7 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - MPAdViewDelegate
 
-- (UIViewController*)viewControllerForPresentingModalView 
+- (UIViewController*)viewControllerForPresentingModalView
 {
     return [MoPubManager unityViewController];
 }
@@ -367,10 +367,10 @@ extern "C" {
 *  These callbacks notify you regarding whether the ad view (un)successfully
 *  loaded an ad.
 */
-- (void)adViewDidFailToLoadAd:(MPAdView*)view
+- (void)adView:(MPAdView *)view didFailToLoadAdWithError:(NSError *)error
 {
     _adView.hidden = YES;
-    [self sendUnityEvent:@"EmitAdFailedEvent"];
+    [[self class] sendUnityEvent:@"EmitAdFailedEvent" withArgs:@[_adUnitId, error.localizedDescription]];
 }
 
 
@@ -408,21 +408,26 @@ extern "C" {
 }
 
 
-/*
-*  This callback is triggered when the ad view has retrieved ad parameters
-*  (headers) from the MoPub server. See MPInterstitialAdController for an
-*  example of how this should be used.
- - (void)adView:(MPAdView*)view didReceiveResponseParams:(NSDictionary*)params
- {
-
- }
-*/
-
-
 - (void)adViewShouldClose:(MPAdView*)view
 {
     UnityPause(false);
     [self hideBanner:YES];
+}
+
+// NOTE: This is also used for Interstitials
+- (void)mopubAd:(id<MPMoPubAd>) ad didTrackImpressionWithImpressionData:(MPImpressionData * _Nullable)impressionData
+{
+    if (impressionData != nil) {
+        NSString * jsonString = [[NSString alloc] initWithData:impressionData.jsonRepresentation encoding:NSUTF8StringEncoding];
+        [[self class] sendUnityEvent:@"EmitImpressionTrackedEvent" withArgs:@[_adUnitId, jsonString]];
+    } else
+        [self sendUnityEvent:@"EmitImpressionTrackedEvent"];
+}
+
+
+- (void)willLeaveApplicationFromAd:(MPAdView *)view
+{
+    [self sendUnityEvent:@"EmitAdClickedEvent"];
 }
 
 
@@ -472,19 +477,16 @@ extern "C" {
     [self sendUnityEvent:@"EmitInterstitialClickedEvent"];
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - CLLocationManagerDelegate
 
-- (void)locationManager:(CLLocationManager*)manager didUpdateToLocation:(CLLocation*)newLocation fromLocation:(CLLocation*)oldLocation
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
-    // update our locations
+    self.lastKnownLocation = locations.lastObject;
     if (_adView)
-        _adView.location = newLocation;
-    self.lastKnownLocation = newLocation;
+        _adView.location = self.lastKnownLocation;
 }
-
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -547,6 +549,17 @@ extern "C" {
 {
     [[self class] sendUnityEvent:@"EmitRewardedVideoReceivedRewardEvent"
                         withArgs:@[adUnitID, reward.currencyType, reward.amount]];
+}
+
+
+- (void)didTrackImpressionWithAdUnitID:(NSString *)adUnitID
+                        impressionData:(MPImpressionData * _Nullable)impressionData;
+{
+    if (impressionData != nil) {
+        NSString * jsonString = [[NSString alloc] initWithData:impressionData.jsonRepresentation encoding:NSUTF8StringEncoding];
+        [[self class] sendUnityEvent:@"EmitImpressionTrackedEvent" withArgs:@[_adUnitId, jsonString]];
+    } else
+        [self sendUnityEvent:@"EmitImpressionTrackedEvent"];
 }
 
 @end

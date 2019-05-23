@@ -644,13 +644,6 @@ public class MoPubUnityEditor : MoPubBase
     public static bool IsConsentDialogReady { get; /* Testing: */ set; }
 
 
-    [Obsolete("Use the property name IsConsentDialogReady instead.")]
-    public static bool IsConsentDialogLoaded {
-        get { return IsConsentDialogReady; }
-        set { IsConsentDialogReady = value; }
-    }
-
-
     /// <summary>
     /// If the MoPub consent dialog is loaded, this will take over the screen and show it.
     /// <para>

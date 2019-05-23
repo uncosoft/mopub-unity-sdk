@@ -184,6 +184,12 @@ public class MoPubDemoGUI : MonoBehaviour
     }
 #endif
 
+    public void ImpressionTracked(string adUnit, MoPubBase.ImpressionData impressionData)
+    {
+        UpdateStatusLabel("Impression tracked for " + adUnit + " with impression data: "
+                          + impressionData.JsonRepresentation);
+    }
+
 
     public bool ConsentDialogLoaded {
         private get { return _consentDialogLoaded; }

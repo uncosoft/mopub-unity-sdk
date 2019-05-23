@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-project.version = '5.6.0'
+project.version = '5.7.0'
 
 buildscript {
     repositories {
@@ -12,13 +12,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:3.4.1'
         classpath 'com.novoda:bintray-release:0.9'
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.10.1'
 }
 
 repositories {
@@ -64,16 +60,13 @@ dependencies {
     compileOnly fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 }
 
-
-allprojects { project ->
-    if (project.name != "mopub-sdk" && project.name != "mopub-sdk-native-video") {
-        task copyJar(type: Copy, dependsOn: 'compileReleaseJavaWithJavac') {
-            from('build/intermediates/packaged-classes/release/') {
-                include 'classes.jar'
-                rename 'classes.jar', "${project.name}.jar"
-            }
-            into "$rootDir/../unity-sample-app/Assets/MoPub/Plugins/Android/MoPub.plugin/libs"
-        }
-        afterEvaluate { assembleRelease.dependsOn(copyJar) }
+afterEvaluate {
+    task copyJackson(type: Copy) {
+        from ('libs') { include '*jackson*' }
+        into "$rootDir/../unity-sample-app/Assets/MoPub/Plugins/Android/MoPub.plugin/libs"
     }
+
+    assembleRelease.dependsOn(copyJackson)
 }
+
+

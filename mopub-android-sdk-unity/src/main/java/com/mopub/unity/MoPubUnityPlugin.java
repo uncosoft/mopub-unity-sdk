@@ -1,12 +1,14 @@
 package com.mopub.unity;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.fasterxml.jackson.jr.ob.JSON;
+import com.fasterxml.jackson.jr.private_.TreeNode;
+import com.fasterxml.jackson.jr.stree.JacksonJrsTreeCodec;
 import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
@@ -19,15 +21,12 @@ import com.mopub.common.privacy.ConsentStatusChangeListener;
 import com.mopub.common.privacy.PersonalInfoManager;
 import com.mopub.mobileads.MoPubConversionTracker;
 import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.network.ImpressionData;
+import com.mopub.network.ImpressionListener;
+import com.mopub.network.ImpressionsEmitter;
 import com.unity3d.player.UnityPlayer;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.reflect.Constructor;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -78,17 +77,20 @@ public class MoPubUnityPlugin {
         NativeImpression("NativeImpression"),
         NativeClick("NativeClick"),
         NativeLoad("NativeLoad"),
-        NativeFail("NativeFail");
+        NativeFail("NativeFail"),
+        // Impressions
+        ImpressionTracked("ImpressionTracked");
 
         @NonNull final private String name;
 
         UnityEvent(@NonNull final String name) { this.name = "Emit" + name + "Event"; }
 
         public void Emit(String... args) {
-            JSONArray array = new JSONArray();
-            for (String arg: args) { array.put(arg); }
-            String argstr = array.toString();
-            UnityPlayer.UnitySendMessage("MoPubManager", name, argstr);
+            try {
+                UnityPlayer.UnitySendMessage("MoPubManager", name, JSON.std.asString(args));
+            } catch (IOException e) {
+                Log.e(TAG, "Exception sending message to Unity", e);
+            };
         }
     }
 
@@ -105,21 +107,6 @@ public class MoPubUnityPlugin {
                 );
             }
         };
-
-
-    private static final String CHARTBOOST_MEDIATION_SETTINGS =
-            "com.mopub.mobileads.ChartboostRewardedVideo$ChartboostMediationSettings";
-    private static final String VUNGLE_MEDIATION_SETTINGS =
-            "com.mopub.mobileads.VungleRewardedVideo$VungleMediationSettings$Builder";
-    private static final String ADCOLONY_GLOBAL_MEDIATION_SETTINGS =
-            "com.mopub.mobileads.AdColonyRewardedVideo$AdColonyGlobalMediationSettings";
-    private static final String ADCOLONY_INSTANCE_MEDIATION_SETTINGS =
-            "com.mopub.mobileads.AdColonyRewardedVideo$AdColonyInstanceMediationSettings";
-    private static final String ADMOB_MEDIATION_SETTINGS =
-            "com.mopub.mobileads.GooglePlayServicesRewardedVideo$GooglePlayServicesMediationSettings";
-
-    // TODO: see if we can't get MoPub to add an accessor for their is-initialized bool, and get rid of this one.
-    private static boolean mIsSdkInitialized = false;
 
 
     /**
@@ -162,26 +149,45 @@ public class MoPubUnityPlugin {
                                      final int logLevel,
                                      final String mediatedNetworkConfigurationsJson,
                                      final String moPubRequestOptionsJson) {
-        final SdkConfiguration.Builder sdkConfigurationBuilder = new SdkConfiguration.Builder(adUnitId)
-                .withMediationSettings(extractMediationSettingsFromJson(mediationSettingsJson, false))
-                .withLegitimateInterestAllowed(allowLegitimateInterest)
-                .withLogLevel(MoPubLog.LogLevel.valueOf(logLevel));
-        addAdapterConfigurationClasses(adapterConfigurationClassesString, sdkConfigurationBuilder);
-        addMediatedNetworkConfigurations(mediatedNetworkConfigurationsJson, sdkConfigurationBuilder);
-        addMoPubRequestOptions(moPubRequestOptionsJson, sdkConfigurationBuilder);
-        final SdkConfiguration sdkConfiguration = sdkConfigurationBuilder.build();
+
+        final SdkConfiguration.Builder sdkConfigurationBuilder =
+            new SdkConfiguration.Builder(adUnitId)
+                                .withLegitimateInterestAllowed(allowLegitimateInterest)
+                                .withLogLevel(MoPubLog.LogLevel.valueOf(logLevel));
+
+        if (!TextUtils.isEmpty(adapterConfigurationClassesString))
+            for (String adapterConfigClass : adapterConfigurationClassesString.split("\\s*,\\s*"))
+                sdkConfigurationBuilder.withAdditionalNetwork(adapterConfigClass.trim());
+
+        final Map<String, Map<String, String>> mediatedNetworkConfigurations =
+                extractOptionsMapFromJson(mediatedNetworkConfigurationsJson);
+        if (mediatedNetworkConfigurations != null)
+            for (String adapterConfigClass : mediatedNetworkConfigurations.keySet())
+                sdkConfigurationBuilder.withMediatedNetworkConfiguration(adapterConfigClass,
+                        mediatedNetworkConfigurations.get(adapterConfigClass));
+
+        final MediationSettings[] mediationSettings =
+                extractMediationSettingsFromJson(mediationSettingsJson);
+        if (mediationSettings != null && mediationSettings.length > 0)
+            sdkConfigurationBuilder.withMediationSettings(mediationSettings);
+
+        final Map<String, Map<String, String>> moPubRequestOptions =
+                extractOptionsMapFromJson(moPubRequestOptionsJson);
+        if (moPubRequestOptions != null)
+            for (String adapterConfigClass : moPubRequestOptions.keySet())
+                sdkConfigurationBuilder.withMediatedNetworkConfiguration(adapterConfigClass,
+                        moPubRequestOptions.get(adapterConfigClass));
 
         final SdkInitializationListener initListener = new SdkInitializationListener() {
             @Override
             public void onInitializationFinished() {
                 UnityEvent.SdkInitialized.Emit(adUnitId, Integer.toString(logLevel));
-                mIsSdkInitialized = true;
             }
         };
 
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                MoPub.initializeSdk(getActivity(), sdkConfiguration, initListener);
+                MoPub.initializeSdk(getActivity(), sdkConfigurationBuilder.build(), initListener);
                 // Note: Subscribing to the Consent Status Change is valid as soon as initializeSdk() returns,
                 // as that is when the PersonalInformationManager property gets initialized. Thus, keeping here instead
                 // of in onInitializationFinished to avoid race conditions.
@@ -191,10 +197,23 @@ public class MoPubUnityPlugin {
                 }
             }
         });
+
+        ImpressionsEmitter.addListener(new ImpressionListener() {
+            @Override
+            public void onImpression(@NonNull final String adUnitId,
+                                     @Nullable final ImpressionData impressionData) {
+                if (impressionData != null) {
+                    UnityEvent.ImpressionTracked.Emit(adUnitId,
+                            impressionData.getJsonRepresentation().toString());
+                } else {
+                    UnityEvent.ImpressionTracked.Emit(adUnitId);
+                }
+            }
+        });
     }
 
 
-    public static boolean isSdkInitialized() { return mIsSdkInitialized; }
+    public static boolean isSdkInitialized() { return MoPub.isSdkInitialized(); }
 
 
     public static boolean shouldAllowLegitimateInterest() {
@@ -234,11 +253,9 @@ public class MoPubUnityPlugin {
             Log.i(TAG, "could not find Facebook AdSettings.addTestDevice method. " +
                     "Did you add the Audience Network SDK to your Android folder?");
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception while adding Facebook test device id", e);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception while adding Facebook test device id", e);
         }
     }
 
@@ -261,7 +278,7 @@ public class MoPubUnityPlugin {
      * @param paused True if pausing, false if resuming.
      */
     public static void onApplicationPause(final boolean paused) {
-        if (!mIsSdkInitialized)  // If not initialized, there are no listeners to notify.
+        if (!MoPub.isSdkInitialized())  // If not initialized, there are no listeners to notify.
             return;
         if (paused)
             MoPub.onPause(getActivity());
@@ -487,216 +504,86 @@ public class MoPubUnityPlugin {
                 try {
                     runner.run();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Exception running task on UI thread", e);
                 }
             }
         });
     }
 
-    protected static void printExceptionStackTrace(Exception e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        Log.e(TAG, sw.toString());
-    }
-
-    protected static MediationSettings[] extractMediationSettingsFromJson(String json, boolean isInstance) {
+    protected static MediationSettings[] extractMediationSettingsFromJson(final String json) {
         if (TextUtils.isEmpty(json))
-            return new MediationSettings[0];
+            return null;
 
-        ArrayList<MediationSettings> settings = new ArrayList<MediationSettings>();
+        final JSON jsonReader = JSON.std.with(new JacksonJrsTreeCodec());
 
+        TreeNode jsonTree;
         try {
-            JSONObject dict = new JSONObject(json);
-            Iterator<String> adVendors = dict.keys();
-            while (adVendors.hasNext()) {
-                String adVendor = adVendors.next();
-                JSONObject jsonObj = dict.getJSONObject(adVendor);
-                Log.i(TAG, "adding MediationSettings for ad vendor: " + adVendor);
-                if (adVendor.equalsIgnoreCase("chartboost")) {
-                    if (jsonObj.has("customId")) {
-                        try {
-                            Class<?> mediationSettingsClass =
-                                    Class.forName(CHARTBOOST_MEDIATION_SETTINGS);
-                            Constructor<?> mediationSettingsConstructor =
-                                    mediationSettingsClass.getConstructor(String.class);
-                            MediationSettings s =
-                                    (MediationSettings) mediationSettingsConstructor
-                                            .newInstance(jsonObj.getString("customId"));
-                            settings.add(s);
-                        } catch (ClassNotFoundException e) {
-                            Log.i(TAG, "could not find ChartboostMediationSettings class. " +
-                                    "Did you add Chartboost Network SDK to your Android folder?");
-                        } catch (Exception e) {
-                            printExceptionStackTrace(e);
-                        }
-                    } else {
-                        Log.i(TAG, "No customId key found in the settings object. " +
-                                "Aborting adding Chartboost MediationSettings");
-                    }
-                } else if (adVendor.equalsIgnoreCase("vungle")) {
-                    try {
-                        Class<?> builderClass = Class.forName(VUNGLE_MEDIATION_SETTINGS);
-                        Constructor<?> builderConstructor = builderClass.getConstructor();
-                        Object b = builderConstructor.newInstance();
+            jsonTree = jsonReader.treeFrom(json);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception while reading mediation settings", e);
+            return null;
+        }
+        if (jsonTree == null || !jsonTree.isObject()) {
+            Log.e(TAG, "Expected a JSON object for mediation settings");
+            return null;
+        }
 
-                        Method withUserId =
-                                builderClass.getDeclaredMethod("withUserId",
-                                        String.class);
-                        Method withCancelDialogBody =
-                                builderClass.getDeclaredMethod("withCancelDialogBody",
-                                        String.class);
-                        Method withCancelDialogCloseButton =
-                                builderClass.getDeclaredMethod("withCancelDialogCloseButton",
-                                        String.class);
-                        Method withCancelDialogKeepWatchingButton =
-                                builderClass.getDeclaredMethod("withCancelDialogKeepWatchingButton",
-                                        String.class);
-                        Method withCancelDialogTitle =
-                                builderClass.getDeclaredMethod("withCancelDialogTitle",
-                                        String.class);
-                        Method build = builderClass.getDeclaredMethod("build");
-
-                        if (jsonObj.has("userId")) {
-                            withUserId.invoke(b, jsonObj.getString("userId"));
-                        }
-
-                        if (jsonObj.has("cancelDialogBody")) {
-                            withCancelDialogBody.invoke(b, jsonObj.getString("cancelDialogBody"));
-                        }
-
-                        if (jsonObj.has("cancelDialogCloseButton")) {
-                            withCancelDialogCloseButton
-                                    .invoke(b, jsonObj.getString("cancelDialogCloseButton"));
-                        }
-
-                        if (jsonObj.has("cancelDialogKeepWatchingButton")) {
-                            withCancelDialogKeepWatchingButton
-                                    .invoke(b, jsonObj.getString("cancelDialogKeepWatchingButton"));
-                        }
-
-                        if (jsonObj.has("cancelDialogTitle")) {
-                            withCancelDialogTitle.invoke(b, jsonObj.getString("cancelDialogTitle"));
-                        }
-
-                        settings.add((MediationSettings) build.invoke(b));
-
-                    } catch (ClassNotFoundException e) {
-                        Log.i(TAG, "could not find VungleMediationSettings class. " +
-                                "Did you add Vungle Network SDK to your Android folder?");
-                    } catch (Exception e) {
-                        printExceptionStackTrace(e);
-                    }
-                } else if (adVendor.equalsIgnoreCase("adcolony")) {
-                    if (jsonObj.has("withConfirmationDialog") && jsonObj.has("withResultsDialog")) {
-                        boolean withConfirmationDialog =
-                                jsonObj.getBoolean("withConfirmationDialog");
-                        boolean withResultsDialog =
-                                jsonObj.getBoolean("withResultsDialog");
-
-                        try {
-                            Class<?> mediationSettingsClass =
-                                    Class.forName(isInstance ? ADCOLONY_INSTANCE_MEDIATION_SETTINGS
-                                                             : ADCOLONY_GLOBAL_MEDIATION_SETTINGS);
-                            Constructor<?> mediationSettingsConstructor =
-                                    mediationSettingsClass
-                                            .getConstructor(boolean.class, boolean.class);
-                            MediationSettings s =
-                                    (MediationSettings) mediationSettingsConstructor
-                                            .newInstance(withConfirmationDialog, withResultsDialog);
-                            settings.add(s);
-                        } catch (ClassNotFoundException e) {
-                            Log.i(TAG, "could not find AdColonyInstanceMediationSettings class. " +
-                                    "Did you add AdColony Network SDK to your Android folder?");
-                        } catch (Exception e) {
-                            printExceptionStackTrace(e);
-                        }
-                    }
-                } else if (adVendor.equalsIgnoreCase("googleplayservices")) {
-                    if (jsonObj.has("npa")) {
-                        try {
-                            Class<?> mediationSettingsClass =
-                                    Class.forName(ADMOB_MEDIATION_SETTINGS);
-                            Constructor<?> constructor = mediationSettingsClass.getConstructor(Bundle.class);
-                            Bundle extras = new Bundle();
-                            extras.putString("npa", jsonObj.getString("npa"));
-                            MediationSettings s = (MediationSettings) constructor.newInstance(extras);
-                            settings.add(s);
-                        } catch (ClassNotFoundException e) {
-                            Log.i(TAG, "could not find GooglePlayServicesMediationSettings class. " +
-                                    "Did you add AdMob Network SDK to your Android folder?");
-                        } catch (Exception e) {
-                            printExceptionStackTrace(e);
-                        }
-                    }
-                 } else {
-                    Log.e(TAG, "adVendor not available for custom mediation settings: " +
-                            "[" + adVendor + "]");
+        final ArrayList<MediationSettings> settings = new ArrayList<>();
+        for (Iterator<String> keys = jsonTree.fieldNames(); keys.hasNext(); )
+            try {
+                final Class<?> mediationSettingsClass = Class.forName(keys.next());
+                final TreeNode mediationSettingsData = jsonTree.get(mediationSettingsClass.getName());
+                if (mediationSettingsData != null && mediationSettingsData.isObject()) {
+                    Log.i(TAG, "Adding mediation settings " + mediationSettingsClass);
+                    final Object o = jsonReader.beanFrom(mediationSettingsClass, mediationSettingsData.traverse());
+                    if (o != null)
+                        settings.add((MediationSettings) o);
+                } else {
+                    Log.e(TAG, "Expected a JSON object for mediation settings key " + mediationSettingsClass);
                 }
+            } catch (Exception e) {
+                Log.e(TAG, "Exception while reading mediation settings", e);
             }
-        } catch (JSONException e) {
-            printExceptionStackTrace(e);
-        }
 
-        return settings.toArray(new MediationSettings[settings.size()]);
-    }
-    
-    private static void addAdapterConfigurationClasses(final String adapterConfigurationClassesString,
-                                                       final SdkConfiguration.Builder sdkConfigurationBuilder) {
-        final String[] adapterConfigurationClasses = adapterConfigurationClassesString.split("\\s*,\\s*");
-        for (String adapterConfigurationClass : adapterConfigurationClasses) {
-            sdkConfigurationBuilder.withAdditionalNetwork(adapterConfigurationClass.trim());
-        }
+        return settings.toArray(new MediationSettings[0]);
     }
 
-    private static void addMediatedNetworkConfigurations(final String mediatedNetworkConfigurationsJson,
-                                                         final SdkConfiguration.Builder sdkConfigurationBuilder) {
+    protected static Map<String, Map<String, String>> extractOptionsMapFromJson(final String json)
+    {
+        if (TextUtils.isEmpty(json))
+            return null;
+
+        final JSON jsonReader = JSON.std.with(new JacksonJrsTreeCodec());
+
+        TreeNode jsonTree;
         try {
-            final JSONObject json = new JSONObject(mediatedNetworkConfigurationsJson);
-            final JSONArray keys = json.names();
-            if (keys == null) return;
-            for (int i = 0; i < keys.length(); i++) {
-                final String adapterConfigurationClass = keys.getString(i);
-                Log.i(TAG, "adding Mediated Network Configuration for Adapter Configuration Class: " + adapterConfigurationClass);
-                sdkConfigurationBuilder.withMediatedNetworkConfiguration(adapterConfigurationClass,
-                        extractMapFromJson(adapterConfigurationClass, json));
-            }
-        } catch (JSONException e) {
-            printExceptionStackTrace(e);
+            jsonTree = jsonReader.treeFrom(json);
+        } catch (IOException e) {
+            Log.e(TAG, "Exception while reading options map", e);
+            return null;
         }
-    }
+        if (jsonTree == null || !jsonTree.isObject()) {
+            Log.e(TAG, "Expected a JSON object for options map");
+            return null;
+        }
 
-    private static void addMoPubRequestOptions(final String moPubRequestOptionsJson,
-                                               final SdkConfiguration.Builder sdkConfigurationBuilder) {
-        try {
-            final JSONObject json = new JSONObject(moPubRequestOptionsJson);
-            final JSONArray keys = json.names();
-            if (keys == null) return;
-            for (int i = 0; i < keys.length(); i++) {
-                final String adapterConfigurationClass = keys.getString(i);
-                Log.i(TAG, "adding MoPub Request Options for Adapter Configuration Class: " + adapterConfigurationClass);
-                sdkConfigurationBuilder.withMoPubRequestOptions(adapterConfigurationClass,
-                        extractMapFromJson(adapterConfigurationClass, json));
+        final Map<String, Map<String, String>> allOptions = new HashMap<>();
+        for (Iterator<String> adapterConfigClasses = jsonTree.fieldNames(); adapterConfigClasses.hasNext(); ) {
+            final String adapterConfigClass = adapterConfigClasses.next();
+            final TreeNode optionsData = jsonTree.get(adapterConfigClass);
+            if (optionsData != null && optionsData.isObject()) {
+                final Map<String, String> options = new HashMap<>();
+                for (Iterator<String> keys2 = optionsData.fieldNames(); keys2.hasNext(); ) {
+                    String key = keys2.next();
+                    options.put(key, optionsData.get(key).toString());
+                }
+                allOptions.put(adapterConfigClass, options);
+            } else {
+                Log.e(TAG, "Expected a JSON object for adapter configuration options");
             }
-        } catch (JSONException e) {
-            printExceptionStackTrace(e);
         }
-    }
 
-    private static Map<String, String> extractMapFromJson(final String entry, final JSONObject json) {
-        final Map<String, String> map = new HashMap<>();
-        try {
-            final JSONObject jsonObject = json.getJSONObject(entry);
-            final JSONArray keys = jsonObject.names();
-            if (keys == null) return map;
-            for (int i = 0; i < keys.length(); i++) {
-                final String key = keys.getString(i);
-                final String value = jsonObject.getString(key);
-                map.put(key, value);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return map;
+        return allOptions;
     }
 
     private static final ConsentData NULL_CONSENT_DATA = new NullConsentData();

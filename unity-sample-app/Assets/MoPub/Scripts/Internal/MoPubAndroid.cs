@@ -122,7 +122,8 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.EnableLocationSupport(bool)"/>
     public static void EnableLocationSupport(bool shouldUseLocation)
     {
-        PluginClass.CallStatic("setLocationAwareness", LocationAwareness.NORMAL.ToString());
+        PluginClass.CallStatic("setLocationAwareness", shouldUseLocation ?
+            LocationAwareness.NORMAL.ToString() : LocationAwareness.DISABLED.ToString());
     }
 
 
@@ -445,12 +446,6 @@ public class MoPubAndroid : MoPubBase
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.IsConsentDialogReady"/>
     public static bool IsConsentDialogReady {
         get { return PluginClass.CallStatic<bool>("isConsentDialogReady"); }
-    }
-
-
-    [Obsolete("Use the property name IsConsentDialogReady instead.")]
-    public static bool IsConsentDialogLoaded {
-        get { return IsConsentDialogReady; }
     }
 
 

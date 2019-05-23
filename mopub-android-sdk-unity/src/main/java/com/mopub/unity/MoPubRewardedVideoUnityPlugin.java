@@ -86,7 +86,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
 
                 if (json != null) {
                     MoPubRewardedVideos.loadRewardedVideo(
-                            mAdUnitId, requestParameters, extractMediationSettingsFromJson(json, true));
+                            mAdUnitId, requestParameters, extractMediationSettingsFromJson(json));
                 } else {
                     MoPubRewardedVideos.loadRewardedVideo(mAdUnitId, requestParameters);
                 }

@@ -240,8 +240,9 @@ void _moPubForceRefresh(const char* adUnitId)
 
 void _moPubRequestInterstitialAd(const char* adUnitId, const char* keywords, const char* userDataKeywords)
 {
-    [[MoPubManager managerForAdunit:GetStringParam(adUnitId)] requestInterstitialAd:GetNullableStringParam(keywords)
-                                                                   userDataKeywords:GetNullableStringParam(userDataKeywords)];
+    [[MoPubManager managerForAdunit:GetStringParam(adUnitId)]
+              requestInterstitialAd:GetNullableStringParam(keywords)
+                   userDataKeywords:GetNullableStringParam(userDataKeywords)];
 }
 
 
@@ -271,7 +272,8 @@ void _moPubDestroyInterstitialAd(const char* adUnitId)
 // AdColonyInstanceMediationSettings, (BOOL)showPrePopup, (BOOL)showPostPopup
 // VungleInstanceMediationSettings, (string)userIdentifier
 
-void _moPubRequestRewardedVideo(const char* adUnitIdStr, const char* json, const char* keywords, const char* userDataKeywords, double latitude, double longitude, const char* customerId)
+void _moPubRequestRewardedVideo(const char* adUnitIdStr, const char* json, const char* keywords, const char* userDataKeywords,
+                                double latitude, double longitude, const char* customerId)
 {
     NSArray* mediationSettings = extractMediationSettings(json);
     CLLocation* location = nil;

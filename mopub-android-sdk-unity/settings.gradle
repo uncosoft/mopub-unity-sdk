@@ -10,6 +10,11 @@ if (hasProperty('mopubAndroidSdkDir')) {
     mopubSdkDirValueFrom = 'gradle.properties file (project-level or user-level)'
 }
 
+if (System.getenv('SDK_DIR')) {
+    mopubSdkDir = System.getenv('SDK_DIR')
+    mopubSdkDirValueFrom = 'environment variable SDK_DIR'
+}
+
 println "Using MoPub Android SDK dir: " + mopubSdkDir
 println "as defined by: " + mopubSdkDirValueFrom + "\n"
 

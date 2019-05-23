@@ -1,3 +1,16 @@
+
+## Version  5.7.0 (May 22, 2019)
+- **Features**
+  - The MoPub Unity Plugin now includes versions 5.7.0 of the MoPub Android SDK and the MoPub iOS SDK.
+  - Impression Level Revenue Data: a data object that includes revenue information associated with each impression.
+  - Verizon Ads SDK now supported as a mediated network.
+  - Added the `willLeaveApplicationFromAd` iOS callback to send the `AdClickedEvent` to Unity
+
+- **Bug Fixes**
+  - Fixed issue with location awareness toggling.
+  - Fixed Unity event triggered from `didFailToLoadAdWithError` on iOS.
+  - Use correct culture in `float.Parse()` calls to avoid potential parsing issues.
+
 ## Version 5.6.0 (March 21, 2019)
 - The MoPub Unity Plugin now includes versions 5.6.0 of the MoPub Android SDK and the MoPub iOS SDK.
 - The MoPub iOS SDK is now included via podspecs.

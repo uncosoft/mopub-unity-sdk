@@ -45,6 +45,8 @@ public class MoPubEventListener : MonoBehaviour
         MoPubManager.OnNativeLoadEvent += OnNativeLoadEvent;
         MoPubManager.OnNativeFailEvent += OnNativeFailEvent;
 #endif
+
+        MoPubManager.OnImpressionTrackedEvent += OnImpressionTrackedEvent;
     }
 
 
@@ -74,6 +76,8 @@ public class MoPubEventListener : MonoBehaviour
         MoPubManager.OnNativeLoadEvent -= OnNativeLoadEvent;
         MoPubManager.OnNativeFailEvent -= OnNativeFailEvent;
 #endif
+
+        MoPubManager.OnImpressionTrackedEvent -= OnImpressionTrackedEvent;
     }
 
 
@@ -194,4 +198,10 @@ public class MoPubEventListener : MonoBehaviour
         AdFailed(adUnitId, "load native ad", error);
     }
 #endif
+
+
+    private void OnImpressionTrackedEvent(string adUnitId, MoPub.ImpressionData impressionData)
+    {
+        _demoGUI.ImpressionTracked(adUnitId, impressionData);
+    }
 }
