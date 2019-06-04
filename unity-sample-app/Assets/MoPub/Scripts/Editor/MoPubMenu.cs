@@ -38,6 +38,4 @@ public class MoPubMenu
     }
 
 #endif // mopub_disable_menu
-
-
 }

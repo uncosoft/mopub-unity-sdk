@@ -345,7 +345,7 @@ public class MoPubSDKManager : EditorWindow
         var stillWorking = coroutine != null || downloader != null;
 
         string tooltip = string.Empty;
-        if ((canInst || testing) && isInst)
+        if (isInst && (MoPub.CompareVersions(cur, lat) != 0 || testing))
             tooltip += "\n  Installed:  " + cur;
         if (info.NetworkVersions != null) {
             string version;

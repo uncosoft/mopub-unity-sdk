@@ -10,19 +10,14 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version  (5.7.0 - May 22, 2019)
+## New in This Version (5.7.1 - June 4, 2019)
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
 - **Features**
-  - The MoPub Unity Plugin now includes versions 5.7.0 of the MoPub Android SDK and the MoPub iOS SDK.
-  - Impression Level Revenue Data: a data object that includes revenue information associated with each impression.
-  - Verizon Ads SDK now supported as a mediated network.
-  - Added the `willLeaveApplicationFromAd` iOS callback to send the `AdClickedEvent` to Unity
+  - The MoPub Unity Plugin now includes versions 5.7.1 of the MoPub Android SDK and the MoPub iOS SDK.
 
 - **Bug Fixes**
-  - Fixed issue with location awareness toggling.
-  - Fixed Unity event triggered from `didFailToLoadAdWithError` on iOS.
-  - Use correct culture in `float.Parse()` calls to avoid potential parsing issues.
+  - Upgraded the Unity Jar Resolver to version 1.2.110, which addresses an issue with local pods in the "Xcode project" mode of cocoapods integration (issue #51).
 
 ## Upgrading to SDK 5.6
 

@@ -159,7 +159,7 @@ PlayerSettings:
     iOS: com.mopub.sampleapp
     tvOS: com.mopub.SampleApp55
   buildNumber:
-    iOS: 5.7.0
+    iOS: 5.7.1
   AndroidBundleVersionCode: 0
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0

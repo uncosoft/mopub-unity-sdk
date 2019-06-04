@@ -409,7 +409,7 @@ public class MoPubBase
     public const double LatLongSentinel = 99999.0;
 
 
-    public static readonly string moPubSDKVersion = "5.7.0";
+    public static readonly string moPubSDKVersion = "5.7.1";
     private static string _pluginName;
     private static bool _allowLegitimateInterest;
     public static LogLevel logLevel { get; protected set; }
