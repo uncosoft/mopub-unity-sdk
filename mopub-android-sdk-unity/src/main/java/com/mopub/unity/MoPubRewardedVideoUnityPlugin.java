@@ -158,47 +158,35 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
 
     @Override
     public void onRewardedVideoLoadSuccess(String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoLoaded.Emit(adUnitId);
-        }
+        UnityEvent.RewardedVideoLoaded.Emit(adUnitId);
     }
 
     @Override
     public void onRewardedVideoLoadFailure(String adUnitId, MoPubErrorCode errorCode) {
-        if (mAdUnitId.equals(adUnitId)) {
-            if (errorCode == MoPubErrorCode.EXPIRED)
-                UnityEvent.RewardedVideoExpired.Emit(adUnitId);
-            else
-                UnityEvent.RewardedVideoFailed.Emit(adUnitId, errorCode.toString());
-        }
+        if (errorCode == MoPubErrorCode.EXPIRED)
+            UnityEvent.RewardedVideoExpired.Emit(adUnitId);
+        else
+            UnityEvent.RewardedVideoFailed.Emit(adUnitId, errorCode.toString());
     }
 
     @Override
     public void onRewardedVideoStarted(String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoShown.Emit(adUnitId);
-        }
+        UnityEvent.RewardedVideoShown.Emit(adUnitId);
     }
 
     @Override
     public void onRewardedVideoClicked(@NonNull String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoClicked.Emit(adUnitId);
-        }
+        UnityEvent.RewardedVideoClicked.Emit(adUnitId);
     }
 
     @Override
     public void onRewardedVideoPlaybackError(String adUnitId, MoPubErrorCode errorCode) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoFailedToPlay.Emit(mAdUnitId, errorCode.toString());
-        }
+        UnityEvent.RewardedVideoFailedToPlay.Emit(adUnitId, errorCode.toString());
     }
 
     @Override
     public void onRewardedVideoClosed(String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoClosed.Emit(adUnitId);
-        }
+        UnityEvent.RewardedVideoClosed.Emit(adUnitId);
     }
 
     @Override
@@ -210,10 +198,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
         }
 
         String adUnitId = adUnitIds.toArray()[0].toString();
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoReceivedReward.Emit(adUnitId, reward.getLabel(),
-                    String.valueOf(reward.getAmount()));
-        }
+        UnityEvent.RewardedVideoReceivedReward.Emit(adUnitId, reward.getLabel(),
+                String.valueOf(reward.getAmount()));
     }
 }
 
