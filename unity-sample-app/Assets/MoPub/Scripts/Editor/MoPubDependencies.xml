@@ -3,7 +3,7 @@
     <androidPackage spec="com.android.support:support-v4:28.0.0"/>
   </androidPackages>
   <iosPods>
-    <iosPod name="MoPub-SDK-Plugin" minTargetSdk="8.0" path="Assets/MoPub/Plugins/iOS"/>
-    <iosPod name="mopub-ios-sdk" subspecs="['Core']" minTargetSdk="8.0" version="5.7.1"/>
+    <iosPod name="MoPub-SDK-Plugin" minTargetSdk="9.0" path="Assets/MoPub/Plugins/iOS"/>
+    <iosPod name="mopub-ios-sdk" subspecs="['Core']" minTargetSdk="9.0" version="5.8.0"/>
   </iosPods>
 </dependencies>

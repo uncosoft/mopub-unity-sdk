@@ -127,6 +127,13 @@ public class MoPubAndroid : MoPubBase
     }
 
 
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.SetEngineInformation()"/>
+    public static void SetEngineInformation()
+    {
+        PluginClass.CallStatic("setEngineInformation", EngineName, EngineVersion);
+    }
+
+
     /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.ReportApplicationOpen(string)"/>
     public static void ReportApplicationOpen(string iTunesAppId = null)
     {
@@ -138,6 +145,7 @@ public class MoPubAndroid : MoPubBase
     internal static void OnApplicationPause(bool paused)
     {
         PluginClass.CallStatic("onApplicationPause", paused);
+        EmitConsentDialogDismissedIfApplicable(paused);
     }
 
 
@@ -200,7 +208,22 @@ public class MoPubAndroid : MoPubBase
     #region Banners
 
 
-    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.CreateBanner(string,MoPubBase.AdPosition,MoPubBase.BannerType)"/>
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.RequestBanner(string,MoPub.AdPosition,MoPub.MaxAdSize)"/>
+    public static void RequestBanner(string adUnitId, AdPosition position,
+        MaxAdSize maxAdSize = MaxAdSize.Width320Height50)
+    {
+        MoPubLog.Log("RequestBanner", MoPubLog.AdLogEvent.LoadAttempted);
+        MoPubLog.Log("RequestBanner", "Size requested: " + maxAdSize.Width() + "x" + maxAdSize.Height());
+        MPBanner plugin;
+        if (BannerPluginsDict.TryGetValue(adUnitId, out plugin))
+            plugin.RequestBanner(maxAdSize.Width(), maxAdSize.Height(), position);
+        else
+            ReportAdUnitNotFound(adUnitId);
+    }
+
+
+    /// See MoPubUnityEditor.<see cref="MoPubUnityEditor.CreateBanner(string,MoPub.AdPosition,MoPub.BannerType)"/>
+    [Obsolete("CreateBanner is deprecated and will be removed soon, please use RequestBanner instead.")]
     public static void CreateBanner(string adUnitId, AdPosition position)
     {
         MoPubLog.Log("CreateBanner", MoPubLog.AdLogEvent.LoadAttempted);
@@ -453,6 +476,7 @@ public class MoPubAndroid : MoPubBase
     public static void ShowConsentDialog()
     {
         MoPubLog.Log("ShowConsentDialog", MoPubLog.ConsentLogEvent.ShowAttempted);
+        consentDialogShown = true;
         PluginClass.CallStatic("showConsentDialog");
     }
 

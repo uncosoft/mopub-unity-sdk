@@ -6,12 +6,14 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
+import com.mopub.mobileads.MoPubView.MoPubAdSize;
 
 
 /**
@@ -36,6 +38,48 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
      * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
 
     /**
+     * Requests, loads and shows a banner with the given alignment and size for the current ad unit
+     * ID, if it doesn't exist already.
+     *
+     * Valid alignment values are:
+     *  0 - top left
+     *  1 - top center
+     *  2 - top right
+     *  3 - center
+     *  4 - bottom left
+     *  5 - bottom center
+     *  6 - bottom right
+     *
+     * @param width float for the maximum width, in dp, for the ad
+     * @param height float for the maximum height, in dp, for the ad
+     * @param alignment int for the desired alignment for the requested banner.
+     */
+    public void requestBanner(final float width, final float height, final int alignment) {
+        runSafelyOnUiThread(new Runnable() {
+            public void run() {
+                if (mMoPubView != null)
+                    return;
+
+                mMoPubView = new MoPubView(getActivity());
+                mMoPubView.setAdUnitId(mAdUnitId);
+                mMoPubView.setBannerAdListener(MoPubBannerUnityPlugin.this);
+                setViewSize(width, height);
+
+                mMoPubView.loadAd(MoPubAdSize.MATCH_VIEW);
+
+                prepLayout(alignment);
+                mLayout.addView(mMoPubView);
+                getActivity().addContentView(mLayout,
+                        new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.FILL_PARENT,
+                                LinearLayout.LayoutParams.FILL_PARENT));
+
+                mLayout.setVisibility(RelativeLayout.VISIBLE);
+            }
+        });
+    }
+
+    /**
      * Creates, loads and shows a banner with the given alignment for the current ad unit ID, if it
      * doesn't exist already. Valid alignment values are:
      *  0 - top left
@@ -47,7 +91,10 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
      *  6 - bottom right
      *
      * @param alignment int for the desired alignment for the created banner.
+     * @deprecated createBanner is deprecated and will be removed soon, please use requestBanner
+     * instead.
      */
+    @Deprecated
     public void createBanner(final int alignment) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
@@ -158,19 +205,11 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
 
     @Override
     public void onBannerLoaded(MoPubView banner) {
-        UnityEvent.AdLoaded.Emit(mAdUnitId, String.valueOf(banner.getAdHeight()));
+        UnityEvent.AdLoaded.Emit(mAdUnitId, String.valueOf(banner.getAdWidth()),
+                String.valueOf(banner.getAdHeight()));
 
         // re-center the ad
-        int height = mMoPubView.getAdHeight();
-        int width = mMoPubView.getAdWidth();
-        float density = getScreenDensity();
-
-        RelativeLayout.LayoutParams params =
-                (RelativeLayout.LayoutParams) mMoPubView.getLayoutParams();
-        params.width = (int) (width * density);
-        params.height = (int) (height * density);
-
-        mMoPubView.setLayoutParams(params);
+        setViewSize(banner.getAdWidth(), banner.getAdHeight());
     }
 
     @Override
@@ -197,6 +236,19 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
     /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
      * Private helpers                                                                         *
      * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
+
+    private void setViewSize(float width, float height) {
+        int widthPx = convertDpToPx(width);
+        int heightPx = convertDpToPx(height);
+        LayoutParams params = mMoPubView.getLayoutParams();
+        if (params == null) {
+            params = new LayoutParams(widthPx, heightPx);
+        } else {
+            params.width = widthPx;
+            params.height = heightPx;
+        }
+        mMoPubView.setLayoutParams(params);
+    }
 
     private void prepLayout(int alignment) {
         // create a RelativeLayout and add the ad view to it
@@ -236,6 +288,10 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
         }
 
         mLayout.setGravity(gravity);
+    }
+
+    private static int convertDpToPx(final float dp) {
+        return Math.round(dp * getScreenDensity());
     }
 
     private static float getScreenDensity() {

@@ -178,6 +178,11 @@ void _moPubEnableLocationSupport(bool shouldUseLocation)
     [[MoPubManager sharedManager] enableLocationSupport:shouldUseLocation];
 }
 
+void _moPubSetEngineInformation(const char* name, const char* version)
+{
+    [[MoPub sharedInstance] setEngineInformation:[MPEngineInfo named:GetStringParam(name) version:GetStringParam(version)]];
+}
+
 void _moPubReportApplicationOpen(const char* iTunesAppId)
 {
     [[MPAdConversionTracker sharedConversionTracker] reportApplicationOpenForApplicationID:GetStringParam(iTunesAppId)];
@@ -192,6 +197,15 @@ void _moPubForceWKWebView(bool shouldForce)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Banners
 
+void _moPubRequestBanner(float width, float height, int bannerPosition, const char* adUnitId)
+{
+    MoPubAdPosition position = (MoPubAdPosition)bannerPosition;
+
+    [[MoPubManager managerForAdunit:GetStringParam(adUnitId)] requestBanner:width height:height atPosition:position];
+}
+
+
+__deprecated_msg("createBanner has been deprecated, please use requestBanner instead.")
 void _moPubCreateBanner(int bannerType, int bannerPosition, const char* adUnitId)
 {
     MoPubBannerType type = (MoPubBannerType)bannerType;

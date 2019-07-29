@@ -26,6 +26,9 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+using System.Globalization;
+
 namespace MoPubInternal.ThirdParty.MiniJSON
 {
 	using System;
@@ -33,7 +36,7 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Text;
-	
+
 	// Example usage:
 	//
 	//  using UnityEngine;
@@ -66,7 +69,7 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 	//          Debug.Log("serialized: " + str);
 	//      }
 	//  }
-	
+
 	/// <summary>
 	/// This class encodes and decodes JSON strings.
 	/// Spec. details, see http://www.json.org/
@@ -85,17 +88,17 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 			if (json == null) {
 				return null;
 			}
-			
+
 			return Parser.Parse(json);
 		}
-		
+
 		sealed class Parser : IDisposable {
 			const string WORD_BREAK = "{}[],:\"";
-			
+
 			public static bool IsWordBreak(char c) {
 				return Char.IsWhiteSpace(c) || WORD_BREAK.IndexOf(c) != -1;
 			}
-			
+
 			enum TOKEN {
 				NONE,
 				CURLY_OPEN,
@@ -110,30 +113,30 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 				FALSE,
 				NULL
 			};
-			
+
 			StringReader json;
-			
+
 			Parser(string jsonString) {
 				json = new StringReader(jsonString);
 			}
-			
+
 			public static object Parse(string jsonString) {
 				using (var instance = new Parser(jsonString)) {
 					return instance.ParseValue();
 				}
 			}
-			
+
 			public void Dispose() {
 				json.Dispose();
 				json = null;
 			}
-			
+
 			Dictionary<string, object> ParseObject() {
 				Dictionary<string, object> table = new Dictionary<string, object>();
-				
+
 				// ditch opening brace
 				json.Read();
-				
+
 				// {
 				while (true) {
 					switch (NextToken) {
@@ -149,32 +152,32 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 						if (name == null) {
 							return null;
 						}
-						
+
 						// :
 						if (NextToken != TOKEN.COLON) {
 							return null;
 						}
 						// ditch the colon
 						json.Read();
-						
+
 						// value
 						table[name] = ParseValue();
 						break;
 					}
 				}
 			}
-			
+
 			List<object> ParseArray() {
 				List<object> array = new List<object>();
-				
+
 				// ditch opening bracket
 				json.Read();
-				
+
 				// [
 				var parsing = true;
 				while (parsing) {
 					TOKEN nextToken = NextToken;
-					
+
 					switch (nextToken) {
 					case TOKEN.NONE:
 						return null;
@@ -185,20 +188,20 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 						break;
 					default:
 						object value = ParseByToken(nextToken);
-						
+
 						array.Add(value);
 						break;
 					}
 				}
-				
+
 				return array;
 			}
-			
+
 			object ParseValue() {
 				TOKEN nextToken = NextToken;
 				return ParseByToken(nextToken);
 			}
-			
+
 			object ParseByToken(TOKEN token) {
 				switch (token) {
 				case TOKEN.STRING:
@@ -219,22 +222,22 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 					return null;
 				}
 			}
-			
+
 			string ParseString() {
 				StringBuilder s = new StringBuilder();
 				char c;
-				
+
 				// ditch opening quote
 				json.Read();
-				
+
 				bool parsing = true;
 				while (parsing) {
-					
+
 					if (json.Peek() == -1) {
 						parsing = false;
 						break;
 					}
-					
+
 					c = NextChar;
 					switch (c) {
 					case '"':
@@ -245,7 +248,7 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 							parsing = false;
 							break;
 						}
-						
+
 						c = NextChar;
 						switch (c) {
 						case '"':
@@ -270,11 +273,11 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 							break;
 						case 'u':
 							var hex = new char[4];
-							
+
 							for (int i=0; i< 4; i++) {
 								hex[i] = NextChar;
 							}
-							
+
 							s.Append((char) Convert.ToInt32(new string(hex), 16));
 							break;
 						}
@@ -284,70 +287,70 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 						break;
 					}
 				}
-				
+
 				return s.ToString();
 			}
-			
+
 			object ParseNumber() {
 				string number = NextWord;
-				
+
 				if (number.IndexOf('.') == -1) {
 					long parsedInt;
-					Int64.TryParse(number, out parsedInt);
+					Int64.TryParse(number, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedInt);
 					return parsedInt;
 				}
-				
+
 				double parsedDouble;
-				Double.TryParse(number, out parsedDouble);
+				Double.TryParse(number, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedDouble);
 				return parsedDouble;
 			}
-			
+
 			void EatWhitespace() {
 				while (Char.IsWhiteSpace(PeekChar)) {
 					json.Read();
-					
+
 					if (json.Peek() == -1) {
 						break;
 					}
 				}
 			}
-			
+
 			char PeekChar {
 				get {
 					return Convert.ToChar(json.Peek());
 				}
 			}
-			
+
 			char NextChar {
 				get {
 					return Convert.ToChar(json.Read());
 				}
 			}
-			
+
 			string NextWord {
 				get {
 					StringBuilder word = new StringBuilder();
-					
+
 					while (!IsWordBreak(PeekChar)) {
 						word.Append(NextChar);
-						
+
 						if (json.Peek() == -1) {
 							break;
 						}
 					}
-					
+
 					return word.ToString();
 				}
 			}
-			
+
 			TOKEN NextToken {
 				get {
 					EatWhitespace();
-					
+
 					if (json.Peek() == -1) {
 						return TOKEN.NONE;
 					}
-					
+
 					switch (PeekChar) {
 					case '{':
 						return TOKEN.CURLY_OPEN;
@@ -379,7 +382,7 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 					case '-':
 						return TOKEN.NUMBER;
 					}
-					
+
 					switch (NextWord) {
 					case "false":
 						return TOKEN.FALSE;
@@ -388,12 +391,12 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 					case "null":
 						return TOKEN.NULL;
 					}
-					
+
 					return TOKEN.NONE;
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// Converts a IDictionary / IList object or a simple type (string, int, etc.) into a JSON string
 		/// </summary>
@@ -402,27 +405,27 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 		public static string Serialize(object obj) {
 			return Serializer.Serialize(obj);
 		}
-		
+
 		sealed class Serializer {
 			StringBuilder builder;
-			
+
 			Serializer() {
 				builder = new StringBuilder();
 			}
-			
+
 			public static string Serialize(object obj) {
 				var instance = new Serializer();
-				
+
 				instance.SerializeValue(obj);
-				
+
 				return instance.builder.ToString();
 			}
-			
+
 			void SerializeValue(object value) {
 				IList asList;
 				IDictionary asDict;
 				string asStr;
-				
+
 				if (value == null) {
 					builder.Append("null");
 				} else if ((asStr = value as string) != null) {
@@ -439,49 +442,49 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 					SerializeOther(value);
 				}
 			}
-			
+
 			void SerializeObject(IDictionary obj) {
 				bool first = true;
-				
+
 				builder.Append('{');
-				
+
 				foreach (object e in obj.Keys) {
 					if (!first) {
 						builder.Append(',');
 					}
-					
+
 					SerializeString(e.ToString());
 					builder.Append(':');
-					
+
 					SerializeValue(obj[e]);
-					
+
 					first = false;
 				}
-				
+
 				builder.Append('}');
 			}
-			
+
 			void SerializeArray(IList anArray) {
 				builder.Append('[');
-				
+
 				bool first = true;
-				
+
 				foreach (object obj in anArray) {
 					if (!first) {
 						builder.Append(',');
 					}
-					
+
 					SerializeValue(obj);
-					
+
 					first = false;
 				}
-				
+
 				builder.Append(']');
 			}
-			
+
 			void SerializeString(string str) {
 				builder.Append('\"');
-				
+
 				char[] charArray = str.ToCharArray();
 				foreach (var c in charArray) {
 					switch (c) {
@@ -517,10 +520,10 @@ namespace MoPubInternal.ThirdParty.MiniJSON
 						break;
 					}
 				}
-				
+
 				builder.Append('\"');
 			}
-			
+
 			void SerializeOther(object value) {
 				// NOTE: decimals lose precision during serialization.
 				// They always have, I'm just letting you know.

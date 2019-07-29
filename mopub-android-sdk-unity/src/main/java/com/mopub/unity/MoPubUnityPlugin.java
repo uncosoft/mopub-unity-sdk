@@ -9,6 +9,8 @@ import android.util.Log;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.private_.TreeNode;
 import com.fasterxml.jackson.jr.stree.JacksonJrsTreeCodec;
+import com.fasterxml.jackson.jr.stree.JrsValue;
+import com.mopub.common.AppEngineInfo;
 import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
@@ -175,7 +177,7 @@ public class MoPubUnityPlugin {
                 extractOptionsMapFromJson(moPubRequestOptionsJson);
         if (moPubRequestOptions != null)
             for (String adapterConfigClass : moPubRequestOptions.keySet())
-                sdkConfigurationBuilder.withMediatedNetworkConfiguration(adapterConfigClass,
+                sdkConfigurationBuilder.withMoPubRequestOptions(adapterConfigClass,
                         moPubRequestOptions.get(adapterConfigClass));
 
         final SdkInitializationListener initListener = new SdkInitializationListener() {
@@ -296,6 +298,21 @@ public class MoPubUnityPlugin {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 MoPub.setLocationAwareness(MoPub.LocationAwareness.valueOf(locationAwareness));
+            }
+        });
+    }
+
+    /**
+     * Registers the current engine name and version with the SDK.
+     *
+     * @param name String with the name of the engine, e.g. "unity"
+     * @param version String with the version of the engine, e.g. "2018.3.12f1"
+     */
+    public static void setEngineInformation(final String name, final String version) {
+        runSafelyOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MoPub.setEngineInformation(new AppEngineInfo(name, version));
             }
         });
     }
@@ -575,11 +592,21 @@ public class MoPubUnityPlugin {
                 final Map<String, String> options = new HashMap<>();
                 for (Iterator<String> keys2 = optionsData.fieldNames(); keys2.hasNext(); ) {
                     String key = keys2.next();
-                    options.put(key, optionsData.get(key).toString());
+                    TreeNode valueNode = optionsData.get(key);
+                    String value = null;
+                    try {
+                        if (valueNode instanceof JrsValue)
+                            value = ((JrsValue) valueNode).asText();
+                        else
+                            value = jsonReader.asString(valueNode);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Exception getting option value", e);
+                    }
+                    options.put(key, value);
                 }
                 allOptions.put(adapterConfigClass, options);
             } else {
-                Log.e(TAG, "Expected a JSON object for adapter configuration options");
+                Log.e(TAG, "Expected a JSON object for adapter configuration options for " + adapterConfigClass);
             }
         }
 

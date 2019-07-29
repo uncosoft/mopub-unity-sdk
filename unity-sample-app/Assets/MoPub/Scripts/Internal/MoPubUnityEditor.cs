@@ -153,6 +153,17 @@ public class MoPubUnityEditor : MoPubBase
 
 
     /// <summary>
+    /// Register the current engine name and version with the SDK.
+    /// <para>
+    /// For platform-specific implementations, see
+    /// MoPubAndroid.<see cref="MoPubAndroid.SetEngineInformation()"/> and
+    /// MoPubiOS.<see cref="MoPubiOS.SetEngineInformation()"/>.
+    /// </para>
+    /// </summary>
+    public static void SetEngineInformation() { }
+
+
+    /// <summary>
     /// Reports an app download to MoPub.
     /// <para>
     /// For platform-specific implementations, see
@@ -175,7 +186,7 @@ public class MoPubUnityEditor : MoPubBase
     /// <param name="paused">True when pausing, false when resuming</param>
     internal static void OnApplicationPause(bool paused)
     {
-        // Nothing to do, since there is no platform SDK to inform.
+        EmitConsentDialogDismissedIfApplicable(paused);
     }
 
 
@@ -234,15 +245,36 @@ public class MoPubUnityEditor : MoPubBase
     /// Requests a banner ad and immediately shows it once loaded.
     /// <para>
     /// For platform-specific implementations, see
-    /// MoPubAndroid.<see cref="MoPubAndroid.CreateBanner(string,MoPubBase.AdPosition)"/>
-    /// and MoPubiOS.<see cref="MoPubiOS.CreateBanner(string, MoPubBase.AdPosition,MoPubBase.BannerType)"/>.
+    /// MoPubAndroid.<see cref="MoPubAndroid.RequestBanner(string,MoPub.AdPosition,MoPub.MaxAdSize)"/>
+    /// and MoPubiOS.<see cref="MoPubiOS.RequestBanner(string,MoPub.AdPosition,MoPub.MaxAdSize)"/>.
     /// </para>
     /// </summary>
     /// <param name="adUnitId">A string with the ad unit id.</param>
-    /// <param name="position">Where in the screen to position the loaded ad. See <see cref="MoPubBase.AdPosition"/>.
+    /// <param name="position">Where in the screen to position the loaded ad. See <see cref="MoPub.AdPosition"/>.
     /// </param>
-    /// <param name="bannerType">The size of the banner to load (only applicable to iOS).
-    /// See <see cref="MoPubBase.BannerType"/>.</param>
+    /// <param name="maxAdSize">The maximum size of the banner to load. See <see cref="MoPub.MaxAdSize"/>.</param>
+    public static void RequestBanner(string adUnitId, AdPosition position,
+        MaxAdSize maxAdSize = MaxAdSize.Width320Height50)
+    {
+        MoPubLog.Log("RequestBanner", MoPubLog.AdLogEvent.LoadAttempted);
+        MoPubLog.Log("RequestBanner", "Size requested: " + maxAdSize.Width() + "x" + maxAdSize.Height());
+        RequestAdUnit(adUnitId);
+        ForceRefresh(adUnitId);
+    }
+
+    /// <summary>
+    /// Requests a banner ad and immediately shows it once loaded. (Deprecated)
+    /// <para>
+    /// For platform-specific implementations, see
+    /// MoPubAndroid.<see cref="MoPubAndroid.CreateBanner(string,MoPub.AdPosition)"/>
+    /// and MoPubiOS.<see cref="MoPubiOS.CreateBanner(string,MoPub.AdPosition,MoPub.BannerType)"/>.
+    /// </para>
+    /// </summary>
+    /// <param name="adUnitId">A string with the ad unit id.</param>
+    /// <param name="position">Where in the screen to position the loaded ad. See <see cref="MoPub.AdPosition"/>.
+    /// </param>
+    /// <param name="bannerType">The size of the banner to load. See <see cref="MoPub.BannerType"/>.</param>
+    [Obsolete("CreateBanner is deprecated and will be removed soon, please use RequestBanner instead.")]
     public static void CreateBanner(string adUnitId, AdPosition position, BannerType bannerType = BannerType.Size320x50)
     {
         MoPubLog.Log("CreateBanner", MoPubLog.AdLogEvent.LoadAttempted);
@@ -315,7 +347,7 @@ public class MoPubUnityEditor : MoPubBase
     {
         MoPubLog.Log("ForceRefresh", MoPubLog.AdLogEvent.ShowAttempted);
         CheckAdUnitRequested(adUnitId);
-        WaitOneFrame(() => { MoPubManager.Instance.EmitAdLoadedEvent(ArgsToJson(adUnitId, "50")); });
+        WaitOneFrame(() => { MoPubManager.Instance.EmitAdLoadedEvent(ArgsToJson(adUnitId, "320", "50")); });
     }
 
 
@@ -377,7 +409,14 @@ public class MoPubUnityEditor : MoPubBase
     {
         MoPubLog.Log("ShowInterstitialAd", MoPubLog.AdLogEvent.ShowAttempted);
         if (CheckAdUnitRequested(adUnitId))
-            WaitOneFrame(() => { MoPubManager.Instance.EmitInterstitialShownEvent(ArgsToJson(adUnitId)); });
+            WaitOneFrame(() => {
+                var json = ArgsToJson(adUnitId);
+                MoPubManager.Instance.EmitInterstitialShownEvent(json);
+                WaitOneFrame(() => {
+                    MoPubManager.Instance.EmitInterstitialDismissedEvent(json);
+                    SimulateApplicationResume();
+                });
+            });
     }
 
 
@@ -465,7 +504,14 @@ public class MoPubUnityEditor : MoPubBase
     {
         MoPubLog.Log("ShowRewardedVideo", MoPubLog.AdLogEvent.ShowAttempted);
         if (CheckAdUnitRequested(adUnitId))
-            WaitOneFrame(() => { MoPubManager.Instance.EmitRewardedVideoShownEvent(ArgsToJson(adUnitId)); });
+            WaitOneFrame(() => {
+                var json = ArgsToJson(adUnitId);
+                MoPubManager.Instance.EmitRewardedVideoShownEvent(json);
+                WaitOneFrame(() => {
+                    MoPubManager.Instance.EmitRewardedVideoClosedEvent(json);
+                    SimulateApplicationResume();
+                });
+            });
     }
 
 
@@ -662,6 +708,8 @@ public class MoPubUnityEditor : MoPubBase
         WaitOneFrame(() => {
             Debug.Log("When running on a mobile device, the consent dialog would appear now.");
             MoPubManager.Instance.EmitConsentDialogShownEvent();
+            consentDialogShown = true;
+            SimulateApplicationResume();
         });
     }
 
@@ -876,6 +924,14 @@ public class MoPubUnityEditor : MoPubBase
     private static void WaitOneFrame(Action action)
     {
         MoPubManager.Instance.StartCoroutine(WaitOneFrameCoroutine(action));
+    }
+
+    private static void SimulateApplicationResume()
+    {
+        WaitOneFrame(() => {
+            Debug.Log("Simulating application resume.");
+            OnApplicationPause(false);
+        });
     }
 
 

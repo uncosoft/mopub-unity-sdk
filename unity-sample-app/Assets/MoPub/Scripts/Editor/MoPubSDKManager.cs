@@ -20,8 +20,9 @@ public class MoPubSDKManager : EditorWindow
     private const string stagingURL  = "https://mopub-mediation-staging.firebaseio.com/.json";
     private const string migrateNote = "A legacy directory structure of MoPub was found in your project.\n" +
                                        "Pressing 'Migrate' will move any files in the legacy locations into the new " +
-                                       "location, so all MoPub-related files are under Assets/MoPub/. Please open " +
-                                       "the link below for details.\nBE AWARE THAT THE MIGRATION IS NOT REVERSIBLE.";
+                                       "location, so all MoPub-related files are under Assets/MoPub/, and will also " +
+                                       "remove any redundant MoPub files.\nPlease open the link below for details.\n" +
+                                       "BE AWARE THAT THE MIGRATION IS NOT REVERSIBLE.";
     private const string migrateLink = "https://developers.mopub.com/docs/unity/getting-started/#migrating-to-54";
     private const string mediationNote = "A legacy directory of MoPub Mediation was found in your project.\n" +
                                          "If you wish to mediate other networks, please delete these\n" +
@@ -202,10 +203,16 @@ public class MoPubSDKManager : EditorWindow
         var www = new WWW(staging ? stagingURL : manifestURL);
         yield return www;
 
+        var json = www.text;
+        if (string.IsNullOrEmpty(json)) {
+            json = "{}";
+            Debug.LogError("Unable to retrieve SDK version manifest");
+        }
+
         // Got the file.  Now extract info on latest SDKs available.
         mopubSdkInfo = new SdkInfo();
         sdkInfo.Clear();
-        var dict = Json.Deserialize(www.text) as Dictionary<string,object>;
+        var dict = Json.Deserialize(json) as Dictionary<string,object>;
         if (dict != null) {
             object obj;
             if (dict.TryGetValue("mopubBaseConfig", out obj)) {

@@ -20,6 +20,7 @@ public static class MoPubLog
         public const string LoadFailed = "Consent dialog failed: {0}";
         public const string ShowAttempted = "Consent dialog attempting to show";
         public const string ShowSuccess = "Sucessfully showed consent dialog";
+        public const string Dismissed = "Consent dialog dismissed";
 
     }
 
@@ -41,32 +42,32 @@ public static class MoPubLog
     private static readonly Dictionary<string, MoPubBase.LogLevel> logLevelMap =
         new Dictionary<string, MoPubBase.LogLevel>
     {
-        { SdkLogEvent.InitStarted, MoPub.LogLevel.MPLogLevelDebug },
-        { SdkLogEvent.InitFinished, MoPub.LogLevel.MPLogLevelInfo },
-        { ConsentLogEvent.Updated, MoPub.LogLevel.MPLogLevelDebug },
-        { ConsentLogEvent.LoadAttempted, MoPub.LogLevel.MPLogLevelDebug },
-        { ConsentLogEvent.LoadSuccess, MoPub.LogLevel.MPLogLevelDebug },
-        { ConsentLogEvent.LoadFailed, MoPub.LogLevel.MPLogLevelDebug },
-        { ConsentLogEvent.ShowAttempted, MoPub.LogLevel.MPLogLevelDebug },
-        { ConsentLogEvent.ShowSuccess, MoPub.LogLevel.MPLogLevelDebug },
-        { AdLogEvent.LoadAttempted, MoPub.LogLevel.MPLogLevelInfo },
-        { AdLogEvent.LoadSuccess, MoPub.LogLevel.MPLogLevelInfo },
-        { AdLogEvent.LoadFailed, MoPub.LogLevel.MPLogLevelInfo },
-        { AdLogEvent.ShowAttempted, MoPub.LogLevel.MPLogLevelInfo },
-        { AdLogEvent.ShowSuccess, MoPub.LogLevel.MPLogLevelInfo },
-        { AdLogEvent.Tapped, MoPub.LogLevel.MPLogLevelDebug },
-        { AdLogEvent.Expanded, MoPub.LogLevel.MPLogLevelDebug },
-        { AdLogEvent.Collapsed, MoPub.LogLevel.MPLogLevelDebug },
-        { AdLogEvent.Dismissed, MoPub.LogLevel.MPLogLevelDebug },
-        { AdLogEvent.ShouldReward, MoPub.LogLevel.MPLogLevelDebug },
-        { AdLogEvent.Expired, MoPub.LogLevel.MPLogLevelDebug },
+        { SdkLogEvent.InitStarted, MoPub.LogLevel.Debug },
+        { SdkLogEvent.InitFinished, MoPub.LogLevel.Info },
+        { ConsentLogEvent.Updated, MoPub.LogLevel.Debug },
+        { ConsentLogEvent.LoadAttempted, MoPub.LogLevel.Debug },
+        { ConsentLogEvent.LoadSuccess, MoPub.LogLevel.Debug },
+        { ConsentLogEvent.LoadFailed, MoPub.LogLevel.Debug },
+        { ConsentLogEvent.ShowAttempted, MoPub.LogLevel.Debug },
+        { ConsentLogEvent.ShowSuccess, MoPub.LogLevel.Debug },
+        { AdLogEvent.LoadAttempted, MoPub.LogLevel.Info },
+        { AdLogEvent.LoadSuccess, MoPub.LogLevel.Info },
+        { AdLogEvent.LoadFailed, MoPub.LogLevel.Info },
+        { AdLogEvent.ShowAttempted, MoPub.LogLevel.Info },
+        { AdLogEvent.ShowSuccess, MoPub.LogLevel.Info },
+        { AdLogEvent.Tapped, MoPub.LogLevel.Debug },
+        { AdLogEvent.Expanded, MoPub.LogLevel.Debug },
+        { AdLogEvent.Collapsed, MoPub.LogLevel.Debug },
+        { AdLogEvent.Dismissed, MoPub.LogLevel.Debug },
+        { AdLogEvent.ShouldReward, MoPub.LogLevel.Debug },
+        { AdLogEvent.Expired, MoPub.LogLevel.Debug },
     };
 
     public static void Log(string callerMethod, string message, params object[] args)
     {
         MoPubBase.LogLevel messageLogLevel;
         if (!logLevelMap.TryGetValue(message, out messageLogLevel))
-            messageLogLevel = MoPubBase.LogLevel.MPLogLevelDebug;
+            messageLogLevel = MoPubBase.LogLevel.Debug;
 
         if (MoPub.logLevel > messageLogLevel) return;
 

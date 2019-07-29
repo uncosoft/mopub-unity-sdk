@@ -212,7 +212,30 @@ extern "C" {
 }
 
 
+- (void)requestBanner:(float)width height:(float)height atPosition:(MoPubAdPosition)position
+{
+    // kill the current adView if we have one
+    if (_adView)
+        [self hideBanner:YES];
+
+    bannerPosition = position;
+
+    CGSize requestedBannerSize = CGSizeMake(width, height);
+    _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:requestedBannerSize];
+
+    // do we have location enabled?
+    if (_locationEnabled && _lastKnownLocation)
+        _adView.location = _lastKnownLocation;
+
+    _adView.delegate = self;
+    _autorefresh = YES;
+    [[MoPubManager unityViewController].view addSubview:_adView];
+    [_adView loadAd];
+}
+
+
 - (void)createBanner:(MoPubBannerType)bannerType atPosition:(MoPubAdPosition)position
+__deprecated_msg("createBanner has been deprecated, please use requestBanner instead.")
 {
     // kill the current adView if we have one
     if (_adView)
@@ -222,21 +245,23 @@ extern "C" {
 
     switch (bannerType) {
         case MoPubBannerType_320x50: {
-            _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:MOPUB_BANNER_SIZE];
-            [_adView lockNativeAdsToOrientation:MPNativeAdOrientationPortrait];
+            CGSize requestedBannerSize = CGSizeMake(320.0, 50.0);
+            _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:requestedBannerSize];
             break;
         }
         case MoPubBannerType_728x90: {
-            _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:MOPUB_LEADERBOARD_SIZE];
-            [_adView lockNativeAdsToOrientation:MPNativeAdOrientationPortrait];
+            CGSize requestedBannerSize = CGSizeMake(728.0, 90.0);
+            _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:requestedBannerSize];
             break;
         }
         case MoPubBannerType_160x600: {
-            _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:MOPUB_WIDE_SKYSCRAPER_SIZE];
+            CGSize requestedBannerSize = CGSizeMake(160.0, 600.0);
+            _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:requestedBannerSize];
             break;
         }
         case MoPubBannerType_300x250: {
-            _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:MOPUB_MEDIUM_RECT_SIZE];
+            CGSize requestedBannerSize = CGSizeMake(300.0, 250.0);
+            _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:requestedBannerSize];
             break;
         }
     }
@@ -374,17 +399,18 @@ extern "C" {
 }
 
 
-- (void)adViewDidLoadAd:(MPAdView*)view
+- (void)adViewDidLoadAd:(MPAdView *)view adSize:(CGSize)adSize
 {
     // resize the banner
     CGRect newFrame = _adView.frame;
-    newFrame.size = _adView.adContentViewSize;
+    newFrame.size = adSize;
     _adView.frame = newFrame;
 
     [self adjustAdViewFrameToShowAdView];
+    [_adView setNeedsLayout];
     _adView.hidden = NO;
 
-    [[self class] sendUnityEvent:@"EmitAdLoadedEvent" withArgs:@[_adUnitId, @(_adView.frame.size.height)]];
+    [[self class] sendUnityEvent:@"EmitAdLoadedEvent" withArgs:@[_adUnitId, @(_adView.frame.size.width), @(_adView.frame.size.height)]];
 }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using MoPubInternal.ThirdParty.MiniJSON;
 using UnityEngine;
@@ -100,7 +101,7 @@ public class MoPubBase
     }
 
 
-    // Currently used only for iOS
+    [Obsolete("BannerType is deprecated, please use MaxAdSize instead (via new CreateBanner).")]
     public enum BannerType
     {
         Size320x50,
@@ -110,18 +111,38 @@ public class MoPubBase
     }
 
 
+    /// <summary>
+    /// The maximum size, in density-independent pixels (DIPs), an ad should have.
+    /// </summary>
+    public enum MaxAdSize
+    {
+        Width300Height50,
+        Width300Height250,
+        Width320Height50,
+        Width336Height280,
+        Width468Height60,
+        Width728Height90,
+        Width970Height90,
+        Width970Height250,
+        ScreenWidthHeight50,
+        ScreenWidthHeight90,
+        ScreenWidthHeight250,
+        ScreenWidthHeight280
+    }
+
+
     public enum LogLevel
     {
-        MPLogLevelDebug = 20,
-        MPLogLevelInfo = 30,
-        MPLogLevelNone = 70
+        Debug = 20,
+        Info = 30,
+        None = 70
     }
 
 
     /// <summary>
     /// Data object holding any SDK initialization parameters.
     /// </summary>
-    public struct SdkConfiguration
+    public class SdkConfiguration
     {
         /// <summary>
         /// Any ad unit that your app uses.
@@ -139,11 +160,11 @@ public class MoPubBase
         public bool AllowLegitimateInterest;
 
         /// <summary>
-        /// MoPub SDK log level. Defaults to MoPub.<see cref="MoPubBase.LogLevel.MPLogLevelNone"/>
+        /// MoPub SDK log level. Defaults to MoPub.<see cref="MoPubBase.LogLevel.None"/>
         /// </summary>
         public LogLevel LogLevel
         {
-            get { return _logLevel != 0 ? _logLevel : LogLevel.MPLogLevelNone; }
+            get { return _logLevel != 0 ? _logLevel : LogLevel.None; }
             set { _logLevel = value; }
         }
 
@@ -196,6 +217,20 @@ public class MoPubBase
                          select n;
                 return Json.Serialize(ro.ToDictionary(n => n.AdapterConfigurationClassName,
                                                       n => n.MoPubRequestOptions));
+            }
+        }
+
+
+        // Allow looking up an entry in the MediatedNetwork array using the network name, which is presumed to be
+        // part of the AdapterConfigurationClassName value.
+        public MediatedNetwork this[string networkName]
+        {
+            get {
+                return MediatedNetworks.FirstOrDefault(mn =>
+                    mn.AdapterConfigurationClassName == networkName ||
+                    mn.AdapterConfigurationClassName == networkName + "AdapterConfiguration" ||
+                    mn.AdapterConfigurationClassName.EndsWith("." + networkName) ||
+                    mn.AdapterConfigurationClassName.EndsWith("." + networkName + "AdapterConfiguration"));
             }
         }
     }
@@ -254,9 +289,9 @@ public class MoPubBase
         public string AdapterConfigurationClassName { get; set; }
         public string MediationSettingsClassName    { get; set; }
 
-        public Dictionary<string,object> NetworkConfiguration { get; set; }
+        public Dictionary<string,string> NetworkConfiguration { get; set; }
         public Dictionary<string,object> MediationSettings    { get; set; }
-        public Dictionary<string,object> MoPubRequestOptions  { get; set; }
+        public Dictionary<string,string> MoPubRequestOptions  { get; set; }
     }
 
 
@@ -364,7 +399,7 @@ public class MoPubBase
                 impData.Currency = obj.ToString();
 
             if (fields.TryGetValue("publisher_revenue", out obj)
-                && double.TryParse(obj.ToString(), out parsedDouble))
+                && double.TryParse(obj.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out parsedDouble))
                 impData.PublisherRevenue = parsedDouble;
 
             if (fields.TryGetValue("adgroup_id", out obj))
@@ -377,7 +412,7 @@ public class MoPubBase
                 impData.AdGroupType = obj.ToString();
 
             if (fields.TryGetValue("adgroup_priority", out obj)
-                && int.TryParse(obj.ToString(), out parsedInt))
+                && int.TryParse(obj.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out parsedInt))
                 impData.AdGroupPriority = parsedInt;
 
             if (fields.TryGetValue("country", out obj))
@@ -405,19 +440,42 @@ public class MoPubBase
     /// </summary>
     public static string ConsentLanguageCode { get; set; }
 
-
     public const double LatLongSentinel = 99999.0;
 
+    /// <summary>
+    /// The version for the MoPub Unity SDK, which includes specific versions of the MoPub Android and iOS SDKs.
+    /// <para>
+    /// Please see <a href="https://github.com/mopub/mopub-unity-sdk">our GitHub repository</a> for details.
+    /// </para>
+    /// </summary>
+    public const string moPubSDKVersion = "5.8.0";
 
-    public static readonly string moPubSDKVersion = "5.7.1";
+    protected static bool consentDialogShown;
+    protected const string EngineName = "unity";
+    protected static readonly string EngineVersion = Application.unityVersion;
+
     private static string _pluginName;
     private static bool _allowLegitimateInterest;
+
     public static LogLevel logLevel { get; protected set; }
+
 
     public static string PluginName {
         get { return _pluginName ?? (_pluginName = "MoPub Unity Plugin v" + moPubSDKVersion); }
     }
 
+
+    /// <summary>
+    /// Fires the ConsentDialogDismissed event if the application is resuming after a consent dialog was shown.
+    /// </summary>
+    /// <param name="applicationPaused">True when the application is pausing; False when the application is resuming.</param>
+    protected static void EmitConsentDialogDismissedIfApplicable(bool applicationPaused)
+    {
+        if (!applicationPaused && consentDialogShown) {
+            MoPubManager.Instance.EmitConsentDialogDismissedEvent();
+            consentDialogShown = false;
+        }
+    }
 
     /// <summary>
     /// Compares two versions to see which is greater.
@@ -474,21 +532,80 @@ public class MoPubBase
     private static int[] VersionStringToInts(string version)
     {
         int piece;
-        return version.Split('.').Select(v => int.TryParse(v, out piece) ? piece : 0).ToArray();
+        return version.Split('.')
+                      .Select(v => int.TryParse(v, NumberStyles.Any, CultureInfo.InvariantCulture, out piece) ? piece : 0)
+                      .ToArray();
     }
 
 
     // Allocate the MoPubManager singleton, which receives all callback events from the native SDKs.
+    // This is done in case the app is not using the new MoPubManager prefab, for backwards compatibility.
     protected static void InitManager()
     {
-        var type = typeof(MoPubManager);
-        var mgr = new GameObject("MoPubManager", type).GetComponent<MoPubManager>(); // Its Awake() method sets Instance.
-        if (MoPubManager.Instance != mgr)
-            Debug.LogWarning(
-                "It looks like you have the " + type.Name
-                + " on a GameObject in your scene. Please remove the script from your scene.");
+        if (MoPubManager.Instance == null)
+            new GameObject("MoPubManager", typeof(MoPubManager));
     }
 
 
     protected MoPubBase() { }
+}
+
+
+public static class AdSizeMapping
+{
+    public static float Width(this MoPub.MaxAdSize adSize)
+    {
+        switch (adSize) {
+            case MoPubBase.MaxAdSize.Width300Height50:
+            case MoPubBase.MaxAdSize.Width300Height250:
+                return 300;
+            case MoPubBase.MaxAdSize.Width320Height50:
+                return 320;
+            case MoPubBase.MaxAdSize.Width336Height280:
+                return 336;
+            case MoPubBase.MaxAdSize.Width468Height60:
+                return 468;
+            case MoPubBase.MaxAdSize.Width728Height90:
+                return 728;
+            case MoPubBase.MaxAdSize.Width970Height90:
+            case MoPubBase.MaxAdSize.Width970Height250:
+                return 970;
+            case MoPubBase.MaxAdSize.ScreenWidthHeight50:
+            case MoPubBase.MaxAdSize.ScreenWidthHeight90:
+            case MoPubBase.MaxAdSize.ScreenWidthHeight250:
+            case MoPubBase.MaxAdSize.ScreenWidthHeight280:
+                var pixels = Screen.width;
+                var dpi = Screen.dpi;
+                var dips = pixels / (dpi / 96.0f);
+                return dips;
+            default:
+                // fallback to default size: Width320Height50
+                return 300;
+        }
+    }
+    public static float Height(this MoPub.MaxAdSize adSize)
+    {
+        switch (adSize) {
+            case MoPubBase.MaxAdSize.Width300Height50:
+            case MoPubBase.MaxAdSize.Width320Height50:
+            case MoPubBase.MaxAdSize.ScreenWidthHeight50:
+                return 50;
+            case MoPubBase.MaxAdSize.Width468Height60:
+                return 60;
+            case MoPubBase.MaxAdSize.Width728Height90:
+            case MoPubBase.MaxAdSize.Width970Height90:
+            case MoPubBase.MaxAdSize.ScreenWidthHeight90:
+                return 90;
+            case MoPubBase.MaxAdSize.Width300Height250:
+            case MoPubBase.MaxAdSize.Width970Height250:
+            case MoPubBase.MaxAdSize.ScreenWidthHeight250:
+                return 250;
+            case MoPubBase.MaxAdSize.Width336Height280:
+            case MoPubBase.MaxAdSize.ScreenWidthHeight280:
+                return 280;
+            default:
+                // fallback to default size: Width320Height50
+                return 50;
+        }
+    }
 }

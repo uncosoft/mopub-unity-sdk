@@ -26,16 +26,32 @@ public static class MoPubUpgradeMigration
         { "Plugins/iOS/MoPubBinding.m", "MoPub/Plugins/iOS/MoPubBinding.m" },
         { "Plugins/iOS/MoPubManager.h", "MoPub/Plugins/iOS/MoPubManager.h" },
         { "Plugins/iOS/MoPubManager.mm", "MoPub/Plugins/iOS/MoPubManager.mm" },
-        { "Plugins/iOS/MoPubSDKFramework.framework", "MoPub/Plugins/iOS/MoPubSDKFramework.framework" },
+        { "Plugins/iOS/MoPubSDKFramework.framework", "MoPub/Plugins/iOS/MoPubSDKFramework.framework" }
     };
     private static readonly Dictionary<string,string> ManualMapping = new Dictionary<string, string>
     {
         { "Plugins/Android/res/drawable/ic_launcher_foreground.png", "MoPub/Plugins/Android/MoPub.plugin/res/drawable/" },
         { "Plugins/Android/res/drawable-anydpi-v26/app_icon.xml", "MoPub/Plugins/Android/MoPub.plugin/res/drawable-anydpi-v26/" },
-        { "Plugins/Android/res/values/ic_launcher_background.xml", "MoPub/Plugins/Android/MoPub.plugin/res/values/" },
+        { "Plugins/Android/res/values/ic_launcher_background.xml", "MoPub/Plugins/Android/MoPub.plugin/res/values/" }
     };
+
+    private static readonly string[] LegacyMediationDirs = {
+        "Assets/Plugins/Android/mopub-support",
+        "Assets/Plugins/iOS/MoPub-Mediation-Adapters",
+        "Assets/MoPub/Plugins/iOS/MoPubSDKFramework.framework"
+    };
+
+    private static readonly string[] RedundantJars = {
+        "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-sdk-banner.jar",
+        "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-sdk-base.jar",
+        "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-sdk-interstitial.jar",
+        "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-sdk-native-static.jar",
+        "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-sdk-rewardedvideo.jar",
+        "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-unity-wrappers.jar"
+    };
+
     private const string RedundantDir = "Assets/MoPub/Extras/";
-    private const string RedundantJar = "Assets/Plugins/Android/libs/android-support-v4-23.1.1.jar";
+    private const string RedundantLib = "Assets/Plugins/Android/libs/android-support-v4-23.1.1.jar";
     private const string MigrationBegin = "==========> Beginning MoPub Upgrade Migration";
     private const string MigrationEnd = "==========> Finished MoPub Upgrade Migration";
     private const string ManualMigrationNote =
@@ -45,14 +61,14 @@ public static class MoPubUpgradeMigration
 
     public static bool LegacyMoPubPresent()
     {
-        return DoesExist(RedundantJar) || LocationMapping.Keys.Select(p => DoesExist("Assets/" + p)).Any(p => p);
+        return DoesExist(RedundantLib)
+               || RedundantJars.Select(DoesExist).Any(p => p)
+               || LocationMapping.Keys.Select(p => DoesExist("Assets/" + p)).Any(p => p);
     }
 
     public static bool LegacyMediationPresent()
     {
-        return DoesExist("Assets/Plugins/Android/mopub-support")
-            || DoesExist("Assets/Plugins/iOS/MoPub-Mediation-Adapters")
-            || DoesExist("Assets/MoPub/Plugins/iOS/MoPubSDKFramework.framework");
+        return LegacyMediationDirs.Select(DoesExist).Any(p => p);
     }
 
     public static void DoSDKMigration()
@@ -60,12 +76,14 @@ public static class MoPubUpgradeMigration
         Debug.Log(MigrationBegin);
 
         if (DoesExist(RedundantDir)) OS.RmDir(RedundantDir);
-        if (DoesExist(RedundantJar)) {
-            OS.Rm(RedundantJar);
-            var redundantJarDir = RedundantJar.Remove(RedundantJar.LastIndexOf("/", StringComparison.Ordinal)) + "/";
+        if (DoesExist(RedundantLib)) {
+            OS.Rm(RedundantLib);
+            var redundantJarDir = RedundantLib.Remove(RedundantLib.LastIndexOf("/", StringComparison.Ordinal)) + "/";
             var redundantJarDirContents = OS.GetFileSystemEntries(redundantJarDir);
             if (!redundantJarDirContents.Any()) OS.RmDir(redundantJarDir);
         }
+
+        foreach (var jar in RedundantJars.Where(DoesExist)) OS.Rm(jar);
 
         var allSucceeded = true;
 
@@ -76,12 +94,12 @@ public static class MoPubUpgradeMigration
             allSucceeded &= OS.Mv(source, dest);
         }
 
-        bool showNote = false;
+        var showNote = false;
         var migrationNote = new StringBuilder(ManualMigrationNote);
         foreach (var entry in ManualMapping)
             if (DoesExist(Path.Combine("Assets", entry.Key))) {
                 showNote = true;
-                migrationNote.Append(string.Format("'{0}' to '{1}'\n", entry.Key, entry.Value));
+                migrationNote.AppendFormat("'{0}' to '{1}'\n", entry.Key, entry.Value);
             }
         if (showNote)
             Debug.LogWarning(migrationNote);

@@ -15,7 +15,7 @@
 #import "MoPub.h"
 #endif
 
-
+__deprecated_enum_msg("MoPubBannerType has been deprecated, please use MoPubAdSize instead.")
 typedef enum
 {
     MoPubBannerType_320x50,
@@ -23,6 +23,14 @@ typedef enum
     MoPubBannerType_728x90,
     MoPubBannerType_160x600
 } MoPubBannerType;
+
+typedef enum
+{
+    MoPubAdSize_50Height,
+    MoPubAdSize_90Height,
+    MoPubAdSize_250Height,
+    MoPubAdSize_280Height
+} MoPubAdSize;
 
 typedef enum
 {
@@ -43,9 +51,9 @@ typedef enum
     NSString* _adUnitId;
     BOOL _autorefresh;
 }
-@property (nonatomic, retain) MPAdView *adView;
-@property (nonatomic, retain) CLLocationManager *locationManager;
-@property (nonatomic, retain) CLLocation *lastKnownLocation;
+@property (nonatomic, strong) MPAdView *adView;
+@property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) CLLocation *lastKnownLocation;
 @property (nonatomic) MoPubAdPosition bannerPosition;
 
 
@@ -63,6 +71,9 @@ typedef enum
 
 - (void)enableLocationSupport:(BOOL)shouldEnable;
 
+- (void)requestBanner:(float)width height:(float)height atPosition:(MoPubAdPosition)position;
+
+__deprecated_msg("createBanner has been deprecated, please use requestBanner instead.");
 - (void)createBanner:(MoPubBannerType)bannerType atPosition:(MoPubAdPosition)position;
 
 - (void)destroyBanner;

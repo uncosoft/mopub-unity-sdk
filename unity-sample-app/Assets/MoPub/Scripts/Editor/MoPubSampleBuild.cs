@@ -19,10 +19,10 @@ class MoPubSampleBuild
         var sdkVersion = MoPubBase.moPubSDKVersion;
         var args = Environment.GetCommandLineArgs();
         var lastCommit = args.First(a => a.StartsWith(LAST_COMMIT_PREFIX)).Substring(LAST_COMMIT_PREFIX.Length);
-        var filename = $"MoPubSampleUnity{platform}_{sdkVersion}+{lastCommit}"
-                       + (platform.ToString() == "Android" ? ".apk" : "");
+        var filename = string.Format("MoPubSampleUnity{0}_{1}+{2}{3}", platform, sdkVersion, lastCommit,
+                                     platform.ToString() == "Android" ? ".apk" : "");
 
-        BuildPipeline.BuildPlayer(new BuildPlayerOptions() {
+        BuildPipeline.BuildPlayer(new BuildPlayerOptions {
             scenes = EditorBuildSettings.scenes.Select(s => s.path).ToArray(),
             locationPathName = "Build/" + filename,
             target = platform

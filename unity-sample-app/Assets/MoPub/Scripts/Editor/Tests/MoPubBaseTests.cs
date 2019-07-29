@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
-using UnityEngine;
+﻿using NUnit.Framework;
+#if UNITY_2017_1_OR_NEWER
 using UnityEngine.TestTools;
+#endif
 
 namespace Tests
 {

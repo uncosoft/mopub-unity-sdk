@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
-using MoPubInternal.ThirdParty.MiniJSON;
 
 [SuppressMessage("ReSharper", "AccessToStaticMemberViaDerivedType")]
 public class MoPubBinding
@@ -19,6 +20,13 @@ public class MoPubBinding
     }
 
 
+    public void RequestBanner(float width, float height, MoPub.AdPosition position)
+    {
+        _moPubRequestBanner(width, height, (int) position, _adUnitId);
+    }
+
+
+    [Obsolete("CreateBanner is deprecated and will be removed soon, please use RequestBanner instead.")]
     public void CreateBanner(MoPub.BannerType bannerType, MoPub.AdPosition position)
     {
         _moPubCreateBanner((int) bannerType, (int) position, _adUnitId);
@@ -104,7 +112,7 @@ public class MoPubBinding
                       select rewardString.Split(':')
                       into rewardComponents
                       where rewardComponents.Length == 2
-                      where int.TryParse(rewardComponents[1], out amount)
+                      where int.TryParse(rewardComponents[1], NumberStyles.Any, CultureInfo.InvariantCulture, out amount)
                       select new MoPub.Reward { Label = rewardComponents[0], Amount = amount };
         return rewards.ToList();
     }
@@ -120,7 +128,8 @@ public class MoPubBinding
     #region DllImports
 #if ENABLE_IL2CPP && UNITY_ANDROID
     // IL2CPP on Android scrubs DllImports, so we need to provide stubs to unblock compilation
-    private static void _moPubCreateBanner(int bannerType, int position, string adUnitId) { }
+    private static void _moPubRequestBanner(float width, float height, int position, string adUnitId) {}
+    private static void _moPubCreateBanner(int bannerType, int position, string adUnitId) {}
     private static void _moPubDestroyBanner(string adUnitId) {}
     private static void _moPubShowBanner(string adUnitId, bool shouldShow) {}
     private static void _moPubRefreshBanner(string adUnitId, string keywords, string userDataKeywords) {}
@@ -138,6 +147,10 @@ public class MoPubBinding
     private static void _moPubShowRewardedVideo(string adUnitId, string currencyName, int currencyAmount,
                                                 string customData) {}
 #else
+    [DllImport("__Internal")]
+    private static extern void _moPubRequestBanner(float width, float height, int position, string adUnitId);
+
+
     [DllImport("__Internal")]
     private static extern void _moPubCreateBanner(int bannerType, int position, string adUnitId);
 

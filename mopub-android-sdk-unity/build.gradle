@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-project.version = '5.7.1'
+project.version = '5.8.0'
 
 buildscript {
     repositories {

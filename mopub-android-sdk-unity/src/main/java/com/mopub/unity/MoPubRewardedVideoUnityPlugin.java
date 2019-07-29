@@ -7,8 +7,6 @@ import android.util.Log;
 
 import com.mopub.common.MoPubReward;
 import com.mopub.common.Preconditions;
-import com.mopub.mobileads.MoPubErrorCode;
-import com.mopub.mobileads.MoPubRewardedVideoListener;
 import com.mopub.mobileads.MoPubRewardedVideoManager;
 import com.mopub.mobileads.MoPubRewardedVideos;
 
@@ -19,8 +17,7 @@ import java.util.Set;
 /**
  * Provides an API that bridges the Unity Plugin with the MoPub Rewarded Ad SDK.
  */
-public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
-        implements MoPubRewardedVideoListener {
+public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin {
 
     /**
      * Creates a {@link MoPubRewardedVideoUnityPlugin} for the given ad unit ID.
@@ -82,7 +79,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                         new MoPubRewardedVideoManager.RequestParameters(
                                 keywords, userDataKeywords, location, customerId);
 
-                MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPlugin.this);
+                MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPluginManager
+                        .getInstance());
 
                 if (json != null) {
                     MoPubRewardedVideos.loadRewardedVideo(
@@ -117,7 +115,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                     return;
                 }
 
-                MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPlugin.this);
+                MoPubRewardedVideos.setRewardedVideoListener(MoPubRewardedVideoUnityPluginManager
+                        .getInstance());
                 MoPubRewardedVideos.showRewardedVideo(mAdUnitId, customData);
             }
         });
@@ -149,71 +148,6 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin
                 selectedReward.getLabel()));
 
         MoPubRewardedVideos.selectReward(mAdUnitId, selectedReward);
-    }
-
-
-    /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
-     * RewardedVideoListener implementation                                                    *
-     * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/
-
-    @Override
-    public void onRewardedVideoLoadSuccess(String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoLoaded.Emit(adUnitId);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoLoadFailure(String adUnitId, MoPubErrorCode errorCode) {
-        if (mAdUnitId.equals(adUnitId)) {
-            if (errorCode == MoPubErrorCode.EXPIRED)
-                UnityEvent.RewardedVideoExpired.Emit(adUnitId);
-            else
-                UnityEvent.RewardedVideoFailed.Emit(adUnitId, errorCode.toString());
-        }
-    }
-
-    @Override
-    public void onRewardedVideoStarted(String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoShown.Emit(adUnitId);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoClicked(@NonNull String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoClicked.Emit(adUnitId);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoPlaybackError(String adUnitId, MoPubErrorCode errorCode) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoFailedToPlay.Emit(mAdUnitId, errorCode.toString());
-        }
-    }
-
-    @Override
-    public void onRewardedVideoClosed(String adUnitId) {
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoClosed.Emit(adUnitId);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoCompleted(Set<String> adUnitIds, MoPubReward reward) {
-        if (adUnitIds.size() == 0 || reward == null) {
-            Log.e(TAG, String.format(Locale.US,
-                    "Rewarded ad completed without ad unit ID and/or reward."));
-            return;
-        }
-
-        String adUnitId = adUnitIds.toArray()[0].toString();
-        if (mAdUnitId.equals(adUnitId)) {
-            UnityEvent.RewardedVideoReceivedReward.Emit(adUnitId, reward.getLabel(),
-                    String.valueOf(reward.getAmount()));
-        }
     }
 }
 

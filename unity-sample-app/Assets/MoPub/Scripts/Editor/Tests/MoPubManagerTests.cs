@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using UnityEngine;
+#if UNITY_2017_1_OR_NEWER
 using UnityEngine.TestTools;
+#endif
 
 namespace Tests
 {
@@ -16,7 +16,7 @@ namespace Tests
 
             LogAssert.Expect(LogType.Error, "Invalid JSON data: ");
             Assert.That(res, Is.Not.Null);
-            Assert.That(res.Length, Is.Zero);
+            Assert.That(res.Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace Tests
 
             LogAssert.Expect(LogType.Error, "Invalid JSON data: {\"a\"]");
             Assert.That(res, Is.Not.Null);
-            Assert.That(res.Length, Is.Zero);
+            Assert.That(res.Length, Is.EqualTo(0));
         }
 
         [Test]

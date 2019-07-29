@@ -1,3 +1,22 @@
+## Version 5.8.0 (July 29, 2019)
+
+- **Features**
+  - The MoPub Unity Plugin now includes version 5.8.0 of the MoPub Android and iOS SDKs.
+  - The MoPubManager script has been expanded into a prefab you can add to the scene.
+It can be used to configure the SDK initialization and consent dialog management from within the Unity editor.
+  - Each mediation adapter comes with a NetworkConfig script which extends the MoPubManager prefab for adding network options to the initialization call.
+  - The MoPubManager prefab includes two separate configurations, one for production builds and one for QA/testing builds.
+  - Updated to the latest version of the Google Play Services Resolver to gain support for AndroidX and Jetifier.
+  - Added an event for ConsentDialogDismissed.
+
+- **Bug Fixes**
+  - Failing to retrieve the SDK manifest in the SDK Manager dialog no longer causes an exception.
+  - Fixed a bug that incorrectly deserialized JSON network options as the class names instead of the object values (Android only).
+  - Use InvariantCulture in all calls to Parse/TryParse in order to not be affected by the user's locale when reading internal MoPub data.
+  - Android SDK components are bundled in aar form instead of jar form because they contain some resources now.
+  - Fixed concurrent loading of rewarded videos.
+  - Fixed a bug causing an error message regarding Play Services Resolver when a new version is shipped. 
+
 ## Version 5.7.1 (June 4, 2019)
 - **Features**
   - The MoPub Unity Plugin now includes versions 5.7.1 of the MoPub Android SDK and the MoPub iOS SDK.

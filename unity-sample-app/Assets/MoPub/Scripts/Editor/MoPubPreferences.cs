@@ -58,8 +58,7 @@ public static class MoPubPreferences
                               text = "Enable MoPub native ads (BETA)",
                               tooltip = "Enables the MoPub Native Ads SDK (Android only)."
                           }, enableNativeAds);
-        if (EditorGUI.EndChangeCheck()) {
+        if (EditorGUI.EndChangeCheck())
             UpdateDefines(MoPubNativeAdsDefine, enableNativeAds, BuildTargetGroup.Android);
-        }
     }
 }

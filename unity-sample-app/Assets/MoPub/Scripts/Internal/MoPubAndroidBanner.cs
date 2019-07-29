@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 
@@ -14,6 +15,14 @@ public class MoPubAndroidBanner
 
 
     [SuppressMessage("ReSharper", "AccessToStaticMemberViaDerivedType")]
+    public void RequestBanner(float width, float height, MoPub.AdPosition position)
+    {
+        _bannerPlugin.Call("requestBanner", width, height, (int) position);
+    }
+
+
+    [SuppressMessage("ReSharper", "AccessToStaticMemberViaDerivedType")]
+    [Obsolete("CreateBanner is deprecated and will be removed soon, please use RequestBanner instead.")]
     public void CreateBanner(MoPub.AdPosition position)
     {
         _bannerPlugin.Call("createBanner", (int) position);

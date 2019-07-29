@@ -216,7 +216,7 @@ namespace Tests
 
         private static string GetJsonEntry(string key, object value)
         {
-            return value != null ? $"\"{key}\":\"{value}\"," : "";
+            return value != null ? "\"" + key + "\":\"" + value.ToString() + "\"," : "";
         }
 
         private static string GetJson(
