@@ -1,5 +1,20 @@
-## Version 5.8.0 (July 29, 2019)
+## Version 5.9.0 (September 17, 2019)
+- **Features**
+  - The MoPub Unity Plugin now includes version 5.9.0 of the MoPub Android and iOS SDKs.
+  - Refactored SDK to clarify between publisher and internal APIs, in short:
+    - The entire Publisher API, along with its documentation, is now contained in the [MoPub class](https://github.com/mopub/mopub-unity-sdk/blob/master/unity-sample-app/Assets/MoPub/Scripts/MoPub.cs).
+    - Internal APIs (such as the `MoPubPlatformApi` and `MoPubAdUnit` classes along with their derived types) now have all their methods marked `internal`.
+    - *NOTE:* These changes are backwards-compatible, but if your integration contains calls to the internal class `MoPubBase`, simply replace those with calls to `MoPub`.
+  - Removed Network-specific activity declarations in Android manifest (since they are now included in their corresponding adapters).
+  - Migrated to Android X.
+  - Sample app is now scrollable when needed.
+  - Sample app on Android is now compatible with SSL Proxying.
+- **Bug Fixes**
+  - Fixed a bug in pixels to dips conversions.
+  - Guarded against null values in Impression Data.
+  - Logging from Android wrapper now uses `MoPubLog`.
 
+## Version 5.8.0 (July 29, 2019)
 - **Features**
   - The MoPub Unity Plugin now includes version 5.8.0 of the MoPub Android and iOS SDKs.
   - The MoPubManager script has been expanded into a prefab you can add to the scene.
@@ -8,7 +23,6 @@ It can be used to configure the SDK initialization and consent dialog management
   - The MoPubManager prefab includes two separate configurations, one for production builds and one for QA/testing builds.
   - Updated to the latest version of the Google Play Services Resolver to gain support for AndroidX and Jetifier.
   - Added an event for ConsentDialogDismissed.
-
 - **Bug Fixes**
   - Failing to retrieve the SDK manifest in the SDK Manager dialog no longer causes an exception.
   - Fixed a bug that incorrectly deserialized JSON network options as the class names instead of the object values (Android only).
@@ -20,7 +34,6 @@ It can be used to configure the SDK initialization and consent dialog management
 ## Version 5.7.1 (June 4, 2019)
 - **Features**
   - The MoPub Unity Plugin now includes versions 5.7.1 of the MoPub Android SDK and the MoPub iOS SDK.
-
 - **Bug Fixes**
   - Upgraded the Unity Jar Resolver to version 1.2.110, which addresses an issue with local pods in the "Xcode project" mode of cocoapods integration (issue #51).
 
@@ -30,7 +43,6 @@ It can be used to configure the SDK initialization and consent dialog management
   - Impression Level Revenue Data: a data object that includes revenue information associated with each impression.
   - Verizon Ads SDK now supported as a mediated network.
   - Added the `willLeaveApplicationFromAd` iOS callback to send the `AdClickedEvent` to Unity
-
 - **Bug Fixes**
   - Fixed issue with location awareness toggling.
   - Fixed Unity event triggered from `didFailToLoadAdWithError` on iOS.

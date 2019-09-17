@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using UnityEngine;
 #if mopub_native_beta
@@ -10,7 +9,6 @@ using NativeAdData = AbstractNativeAd.Data;
 
 #endif
 
-[SuppressMessage("ReSharper", "AccessToStaticMemberViaDerivedType")]
 public class MoPubDemoGUI : MonoBehaviour
 {
     // State maps to enable/disable GUI ad state buttons
@@ -70,6 +68,9 @@ public class MoPubDemoGUI : MonoBehaviour
     // Buffer space between sections
     private int _sectionMarginSize;
 
+    // Scroll view position
+    private Vector2 _scrollPosition;
+
     // Label style for plugin and SDK version banner
     private GUIStyle _centeredStyle;
 
@@ -104,8 +105,8 @@ public class MoPubDemoGUI : MonoBehaviour
     private int _bannerPositionIndex = 5;
 
     // All possible banner positions
-    private readonly MoPubBase.AdPosition[] _bannerPositions =
-        Enum.GetValues(typeof(MoPubBase.AdPosition)).Cast<MoPubBase.AdPosition>().ToArray();
+    private readonly MoPub.AdPosition[] _bannerPositions =
+        Enum.GetValues(typeof(MoPub.AdPosition)).Cast<MoPub.AdPosition>().ToArray();
 
 
     private static bool IsAdUnitArrayNullOrEmpty(ICollection<string> adUnitArray)
@@ -194,7 +195,7 @@ public class MoPubDemoGUI : MonoBehaviour
     }
 #endif
 
-    public void ImpressionTracked(string adUnit, MoPubBase.ImpressionData impressionData)
+    public void ImpressionTracked(string adUnit, MoPub.ImpressionData impressionData)
     {
         UpdateStatusLabel("Impression tracked for " + adUnit + " with impression data: "
                           + impressionData.JsonRepresentation);
@@ -235,7 +236,8 @@ public class MoPubDemoGUI : MonoBehaviour
 
     private void Start()
     {
-        // The SdkInitialize() call is handled by the MoPubManager prefab now.
+        // The SdkInitialize() call is handled by the MoPubManager prefab now. Please see:
+        // https://developers.mopub.com/publishers/unity/initialize/#option-1-use-the-mopub-manager-recommended
 
         MoPub.LoadBannerPluginsForAdUnits(_bannerAdUnits);
         MoPub.LoadInterstitialPluginsForAdUnits(_interstitialAdUnits);
@@ -268,6 +270,17 @@ public class MoPubDemoGUI : MonoBehaviour
         if (nativeAdsGO != null)
             nativeAdsGO.SetActive(false);
 #endif
+    }
+
+
+    private void Update()
+    {
+        // Enable scrollview dragging
+        foreach (var touch in Input.touches) {
+            if (touch.phase != TouchPhase.Moved) continue;
+            _scrollPosition.y += touch.deltaPosition.y;
+            _scrollPosition.x -= touch.deltaPosition.x;
+        }
     }
 
 
@@ -306,8 +319,11 @@ public class MoPubDemoGUI : MonoBehaviour
         var guiArea = new Rect(0, 0, Screen.width, Screen.height);
 #endif
         guiArea.x += 20;
+        guiArea.y += 20;
         guiArea.width -= 40;
+        guiArea.height -= 40;
         GUILayout.BeginArea(guiArea);
+        _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
 
         CreateTitleSection();
         CreateBannersSection();
@@ -321,6 +337,7 @@ public class MoPubDemoGUI : MonoBehaviour
         CreateActionsSection();
         CreateStatusSection();
 
+        GUILayout.EndScrollView();
         GUILayout.EndArea();
     }
 
@@ -348,7 +365,7 @@ public class MoPubDemoGUI : MonoBehaviour
                 if (GUILayout.Button(CreateRequestButtonLabel(bannerAdUnit))) {
                     var position = _bannerPositions[_bannerPositionIndex++];
                     UpdateStatusLabel(string.Format("Requesting {0} at position {1}", bannerAdUnit, position));
-                    MoPub.RequestBanner(bannerAdUnit, position, MoPubBase.MaxAdSize.Width336Height280);
+                    MoPub.RequestBanner(bannerAdUnit, position, MoPub.MaxAdSize.Width336Height280);
                     _bannerPositionIndex %= _bannerPositions.Length;
                 }
 

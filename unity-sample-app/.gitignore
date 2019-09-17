@@ -24,7 +24,7 @@
 sysinfo.txt
 
 # .jar/.aar files downloaded by Unity Jar Resolver
-Assets/Plugins/Android/
+Assets/Plugins/Android/*.[ja]ar*
 ProjectSettings/GvhProjectSettings.xml
 ProjectSettings/AndroidResolverDependencies.xml
 

@@ -1,10 +1,10 @@
 package com.mopub.unity;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.private_.TreeNode;
@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static com.mopub.common.logging.MoPubLog.ConsentLogEvent;
+import static com.mopub.common.logging.MoPubLog.SdkLogEvent;
 
 /**
  * Base class for every available ad format plugin. Exposes APIs that the plugins might need.
@@ -83,7 +85,8 @@ public class MoPubUnityPlugin {
         // Impressions
         ImpressionTracked("ImpressionTracked");
 
-        @NonNull final private String name;
+        @NonNull
+        final private String name;
 
         UnityEvent(@NonNull final String name) { this.name = "Emit" + name + "Event"; }
 
@@ -91,8 +94,8 @@ public class MoPubUnityPlugin {
             try {
                 UnityPlayer.UnitySendMessage("MoPubManager", name, JSON.std.asString(args));
             } catch (IOException e) {
-                Log.e(TAG, "Exception sending message to Unity", e);
-            };
+                MoPubLog.log(SdkLogEvent.ERROR, "Exception sending message to Unity", e);
+            }
         }
     }
 
@@ -247,17 +250,18 @@ public class MoPubUnityPlugin {
             Class<?> cls = Class.forName("com.facebook.ads.AdSettings");
             Method method = cls.getMethod("addTestDevice", String.class);
             method.invoke(cls, hashedDeviceId);
-            Log.i(TAG, "successfully added Facebook test device: " + hashedDeviceId);
+            MoPubLog.log(SdkLogEvent.CUSTOM,
+                    "successfully added Facebook test device: " + hashedDeviceId);
         } catch (ClassNotFoundException e) {
-            Log.i(TAG, "could not find Facebook AdSettings class. " +
+            MoPubLog.log(SdkLogEvent.ERROR, "could not find Facebook AdSettings class. " +
                     "Did you add the Audience Network SDK to your Android folder?");
         } catch (NoSuchMethodException e) {
-            Log.i(TAG, "could not find Facebook AdSettings.addTestDevice method. " +
+            MoPubLog.log(SdkLogEvent.ERROR, "could not find Facebook AdSettings.addTestDevice method. " +
                     "Did you add the Audience Network SDK to your Android folder?");
         } catch (IllegalAccessException e) {
-            Log.e(TAG, "Exception while adding Facebook test device id", e);
+            MoPubLog.log(SdkLogEvent.ERROR, "Exception while adding Facebook test device id", e);
         } catch (InvocationTargetException e) {
-            Log.e(TAG, "Exception while adding Facebook test device id", e);
+            MoPubLog.log(SdkLogEvent.ERROR, "Exception while adding Facebook test device id", e);
         }
     }
 
@@ -364,8 +368,8 @@ public class MoPubUnityPlugin {
     public static void forceGdprApplies() {
         PersonalInfoManager pim = MoPub.getPersonalInformationManager();
         if (pim == null) {
-            Log.e(TAG, "Failed to force GDPR applicability; did you initialize the MoPub " +
-                    "SDK?");
+            MoPubLog.log(ConsentLogEvent.CUSTOM,
+                    "Failed to force GDPR applicability; did you initialize the MoPub SDK?");
         } else {
             pim.forceGdprApplies();
         }
@@ -521,7 +525,8 @@ public class MoPubUnityPlugin {
                 try {
                     runner.run();
                 } catch (Exception e) {
-                    Log.e(TAG, "Exception running task on UI thread", e);
+                    MoPubLog.log(SdkLogEvent.ERROR,
+                            "Exception running task on UI thread", e);
                 }
             }
         });
@@ -537,11 +542,13 @@ public class MoPubUnityPlugin {
         try {
             jsonTree = jsonReader.treeFrom(json);
         } catch (IOException e) {
-            Log.e(TAG, "Exception while reading mediation settings", e);
+            MoPubLog.log(SdkLogEvent.ERROR,
+                    "Exception while reading mediation settings", e);
             return null;
         }
         if (jsonTree == null || !jsonTree.isObject()) {
-            Log.e(TAG, "Expected a JSON object for mediation settings");
+            MoPubLog.log(SdkLogEvent.ERROR,
+                    "Expected a JSON object for mediation settings");
             return null;
         }
 
@@ -551,15 +558,19 @@ public class MoPubUnityPlugin {
                 final Class<?> mediationSettingsClass = Class.forName(keys.next());
                 final TreeNode mediationSettingsData = jsonTree.get(mediationSettingsClass.getName());
                 if (mediationSettingsData != null && mediationSettingsData.isObject()) {
-                    Log.i(TAG, "Adding mediation settings " + mediationSettingsClass);
+                    MoPubLog.log(SdkLogEvent.CUSTOM,
+                            "Adding mediation settings " + mediationSettingsClass);
                     final Object o = jsonReader.beanFrom(mediationSettingsClass, mediationSettingsData.traverse());
                     if (o != null)
                         settings.add((MediationSettings) o);
                 } else {
-                    Log.e(TAG, "Expected a JSON object for mediation settings key " + mediationSettingsClass);
+                    MoPubLog.log(SdkLogEvent.ERROR,
+                            "Expected a JSON object for mediation settings key "
+                                    + mediationSettingsClass);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Exception while reading mediation settings", e);
+                MoPubLog.log(SdkLogEvent.ERROR,
+                        "Exception while reading mediation settings", e);
             }
 
         return settings.toArray(new MediationSettings[0]);
@@ -576,11 +587,11 @@ public class MoPubUnityPlugin {
         try {
             jsonTree = jsonReader.treeFrom(json);
         } catch (IOException e) {
-            Log.e(TAG, "Exception while reading options map", e);
+            MoPubLog.log(SdkLogEvent.ERROR, "Exception while reading options map", e);
             return null;
         }
         if (jsonTree == null || !jsonTree.isObject()) {
-            Log.e(TAG, "Expected a JSON object for options map");
+            MoPubLog.log(SdkLogEvent.ERROR, "Expected a JSON object for options map");
             return null;
         }
 
@@ -600,13 +611,16 @@ public class MoPubUnityPlugin {
                         else
                             value = jsonReader.asString(valueNode);
                     } catch (Exception e) {
-                        Log.e(TAG, "Exception getting option value", e);
+                        MoPubLog.log(SdkLogEvent.ERROR,
+                                "Exception getting option value", e);
                     }
                     options.put(key, value);
                 }
                 allOptions.put(adapterConfigClass, options);
             } else {
-                Log.e(TAG, "Expected a JSON object for adapter configuration options for " + adapterConfigClass);
+                MoPubLog.log(SdkLogEvent.ERROR,
+                        "Expected a JSON object for adapter configuration options for "
+                                + adapterConfigClass);
             }
         }
 

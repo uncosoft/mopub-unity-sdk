@@ -10,25 +10,24 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.8.0 - July 29, 2019)
+## New in This Version (5.9.0 - September 17, 2019)
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
 - **Features**
-  - The MoPub Unity Plugin now includes version 5.8.0 of the MoPub Android and iOS SDKs.
-  - The MoPubManager script has been expanded into a prefab you can add to the scene.
-It can be used to configure the SDK initialization and consent dialog management from within the Unity editor.
-  - Each mediation adapter comes with a NetworkConfig script which extends the MoPubManager prefab for adding network options to the initialization call.
-  - The MoPubManager prefab includes two separate configurations, one for production builds and one for QA/testing builds.
-  - Updated to the latest version of the Google Play Services Resolver to gain support for AndroidX and Jetifier.
-  - Added an event for ConsentDialogDismissed.
+  - The MoPub Unity Plugin now includes version 5.9.0 of the MoPub Android and iOS SDKs.
+  - Refactored SDK to clarify between publisher and internal APIs, in short:
+    - The entire Publisher API, along with its documentation, is now contained in the [MoPub class](https://github.com/mopub/mopub-unity-sdk/blob/master/unity-sample-app/Assets/MoPub/Scripts/MoPub.cs).
+    - Internal APIs (such as the `MoPubPlatformApi` and `MoPubAdUnit` classes along with their derived types) now have all their methods marked `internal`.
+    - *NOTE:* These changes are backwards-compatible, but if your integration contains calls to the internal class `MoPubBase`, simply replace those with calls to `MoPub`.
+  - Removed Network-specific activity declarations in Android manifest (since they are now included in their corresponding adapters).
+  - Migrated to Android X.
+  - Sample app is now scrollable when needed.
+  - Sample app on Android is now compatible with SSL Proxying.
 
 - **Bug Fixes**
-  - Failing to retrieve the SDK manifest in the SDK Manager dialog no longer causes an exception.
-  - Fixed a bug that incorrectly deserialized JSON network options as the class names instead of the object values (Android only).
-  - Use InvariantCulture in all calls to Parse/TryParse in order to not be affected by the user's locale when reading internal MoPub data.
-  - Android SDK components are bundled in aar form instead of jar form because they contain some resources now.
-  - Fixed concurrent loading of rewarded videos.
-  - Fixed a bug causing an error message regarding Play Services Resolver when a new version is shipped. 
+  - Fixed a bug in pixels to dips conversions.
+  - Guarded against null values in Impression Data.
+  - Logging from Android wrapper now uses `MoPubLog`.
 
 ## Upgrading to SDK 5.8
 

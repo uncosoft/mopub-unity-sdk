@@ -10,11 +10,11 @@ public class MoPubAboutDialog : ScriptableWizard
 
     protected override bool DrawWizardGUI()
     {
-        EditorGUILayout.LabelField("MoPub SDK version " + MoPub.moPubSDKVersion);
+        EditorGUILayout.LabelField("MoPub SDK version " + MoPub.MoPubSdkVersion);
 
         EditorGUILayout.Space();
         if (GUILayout.Button("Release Notes"))
-            Application.OpenURL("https://github.com/mopub/mopub-unity-sdk/tree/v" + MoPub.moPubSDKVersion);
+            Application.OpenURL("https://github.com/mopub/mopub-unity-sdk/tree/v" + MoPub.MoPubSdkVersion);
 
         return false;
     }

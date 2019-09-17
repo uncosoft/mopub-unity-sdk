@@ -223,7 +223,7 @@ public abstract class MoPubNetworkConfig : MonoBehaviour
 
             // Is this field one of our Wrapper types?
             var isContainer = fieldInfo.FieldType.IsSubclassOf(typeof(Container));
-            var isPlatformSpecific = !isContainer && fieldInfo.FieldType.IsSubclassOf(typeof(PlatformSpecific));
+            //var isPlatformSpecific = !isContainer && fieldInfo.FieldType.IsSubclassOf(typeof(PlatformSpecific));
 
             // Make the foldout state match the enabled state so the user doesn't have to click two things to see
             // the fields of a container / collection / struct etc.
@@ -315,7 +315,7 @@ public abstract class MoPubNetworkConfig : MonoBehaviour
     // Using reflection, find all fields marked with one of the optional/required attributes defined above,
     // and add entries for them to the correct dictionary (NetworkConfiguration or MediationSettings).
 
-    protected void FillInMarkedFields(MoPubBase.MediatedNetwork options)
+    protected void FillInMarkedFields(MoPub.MediatedNetwork options)
     {
         if (enabledOptions == null)
             enabledOptions = new List<string>();

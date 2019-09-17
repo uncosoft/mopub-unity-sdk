@@ -1,9 +1,7 @@
 package com.mopub.unity;
 
 import android.app.Activity;
-import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -11,10 +9,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
+
+import com.mopub.common.logging.MoPubLog;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
 import com.mopub.mobileads.MoPubView.MoPubAdSize;
 
+import static com.mopub.common.logging.MoPubLog.AdLogEvent;
 
 /**
  * Provides an API that bridges the Unity Plugin with the MoPub Banner SDK.
@@ -142,7 +144,7 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
     /**
      * Sets the given keywords for the current banner and then reloads it. Personally
      * Identifiable Information (PII) should ONLY be passed via
-     * {@link #refreshBanner(String, String)}
+     * {@link #refreshBanner(String)}
      *
      * @param keywords String with comma-separated key:value pairs of non-PII keywords.
      */
@@ -303,7 +305,8 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
             return metrics.density;
         }
 
-        Log.w(TAG, "getScreenDensity: Activity was null, so using default screen density.");
+        MoPubLog.log(AdLogEvent.CUSTOM,
+                "getScreenDensity: Activity was null, so using default screen density.");
         return DisplayMetrics.DENSITY_DEFAULT;
     }
 }

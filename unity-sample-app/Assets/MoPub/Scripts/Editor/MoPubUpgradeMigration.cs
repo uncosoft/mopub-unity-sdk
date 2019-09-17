@@ -47,7 +47,8 @@ public static class MoPubUpgradeMigration
         "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-sdk-interstitial.jar",
         "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-sdk-native-static.jar",
         "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-sdk-rewardedvideo.jar",
-        "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-unity-wrappers.jar"
+        "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-unity-wrappers.jar",
+        "Assets/MoPub/Plugins/Android/MoPub.plugin/libs/mopub-unity-plugins.jar"
     };
 
     private const string RedundantDir = "Assets/MoPub/Extras/";

@@ -1,13 +1,15 @@
 package com.mopub.unity;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
+import androidx.annotation.NonNull;
 
 import com.mopub.common.MoPubReward;
+import com.mopub.common.logging.MoPubLog;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubRewardedVideoListener;
 
 import java.util.Set;
+
+import static com.mopub.common.logging.MoPubLog.AdLogEvent;
 
 /**
  * Singleton class to handle Rewarded Video events, as this is the one ad format to follow a
@@ -69,7 +71,8 @@ public class MoPubRewardedVideoUnityPluginManager implements MoPubRewardedVideoL
     public void onRewardedVideoCompleted(@NonNull final Set<String> adUnitIds,
                                          @NonNull final MoPubReward reward) {
         if (adUnitIds.size() == 0 || reward == null) {
-            Log.e(TAG, "Rewarded ad completed without ad unit ID and/or reward.");
+            MoPubLog.log(AdLogEvent.CUSTOM,
+                    "Rewarded ad completed without ad unit ID and/or reward.");
             return;
         }
 

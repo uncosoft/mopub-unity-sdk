@@ -1,6 +1,5 @@
 package com.mopub.unity;
 
-import android.util.Log;
 import android.view.View;
 
 import com.mopub.nativeads.MoPubNative;
@@ -9,12 +8,9 @@ import com.mopub.nativeads.NativeAd;
 import com.mopub.nativeads.NativeErrorCode;
 import com.mopub.nativeads.StaticNativeAd;
 import com.mopub.nativeads.ViewBinder;
-import com.unity3d.player.UnityPlayer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
 
 
 /**

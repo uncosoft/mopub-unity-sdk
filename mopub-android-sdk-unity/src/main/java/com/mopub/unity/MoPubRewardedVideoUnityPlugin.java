@@ -1,18 +1,20 @@
 package com.mopub.unity;
 
 import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mopub.common.MoPubReward;
 import com.mopub.common.Preconditions;
+import com.mopub.common.logging.MoPubLog;
 import com.mopub.mobileads.MoPubRewardedVideoManager;
 import com.mopub.mobileads.MoPubRewardedVideos;
 
 import java.util.Locale;
 import java.util.Set;
 
+import static com.mopub.common.logging.MoPubLog.AdLogEvent;
 
 /**
  * Provides an API that bridges the Unity Plugin with the MoPub Rewarded Ad SDK.
@@ -67,8 +69,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin {
      * @param customerId String with the customer ID.
      */
     public void requestRewardedVideo(final String json, final String keywords,
-            @Nullable final String userDataKeywords, final double latitude, final double longitude,
-            final String customerId) {
+                                     @Nullable final String userDataKeywords, final double latitude, final double longitude,
+                                     final String customerId) {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 Location location = new Location("");
@@ -110,7 +112,7 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 if (!MoPubRewardedVideos.hasRewardedVideo(mAdUnitId)) {
-                    Log.i(TAG, String.format(Locale.US,
+                    MoPubLog.log(AdLogEvent.CUSTOM, String.format(Locale.US,
                             "No rewarded ad is available at this time."));
                     return;
                 }
@@ -130,7 +132,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin {
     public MoPubReward[] getAvailableRewards() {
         Set<MoPubReward> rewardsSet = MoPubRewardedVideos.getAvailableRewards(mAdUnitId);
 
-        Log.i(TAG, String.format(Locale.US, "%d MoPub rewards available", rewardsSet.size()));
+        MoPubLog.log(AdLogEvent.CUSTOM,
+                String.format(Locale.US, "%d MoPub rewards available", rewardsSet.size()));
 
         return rewardsSet.toArray(new MoPubReward[rewardsSet.size()]);
     }
@@ -143,7 +146,8 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin {
     public void selectReward(@NonNull MoPubReward selectedReward) {
         Preconditions.checkNotNull(selectedReward);
 
-        Log.i(TAG, String.format(Locale.US, "Selected reward \"%d %s\"",
+        MoPubLog.log(AdLogEvent.CUSTOM, String.format(Locale.US,
+                "Selected reward \"%d %s\"",
                 selectedReward.getAmount(),
                 selectedReward.getLabel()));
 

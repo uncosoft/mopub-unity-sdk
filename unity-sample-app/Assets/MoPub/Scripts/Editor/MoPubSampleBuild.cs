@@ -16,7 +16,7 @@ class MoPubSampleBuild
     static void PerformBuild ()
     {
         var platform = EditorUserBuildSettings.activeBuildTarget;
-        var sdkVersion = MoPubBase.moPubSDKVersion;
+        var sdkVersion = MoPub.MoPubSdkVersion;
         var args = Environment.GetCommandLineArgs();
         var lastCommit = args.First(a => a.StartsWith(LAST_COMMIT_PREFIX)).Substring(LAST_COMMIT_PREFIX.Length);
         var filename = string.Format("MoPubSampleUnity{0}_{1}+{2}{3}", platform, sdkVersion, lastCommit,

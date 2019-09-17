@@ -199,6 +199,9 @@ public class MoPubSDKManager : EditorWindow
 
     private IEnumerator GetSDKVersions()
     {
+        // Wait one frame so that we don't try to show the progress bar in the middle of OnGUI().
+        yield return null;
+
         activity = "Downloading SDK version manifest...";
         var www = new WWW(staging ? stagingURL : manifestURL);
         yield return www;
@@ -217,7 +220,7 @@ public class MoPubSDKManager : EditorWindow
             object obj;
             if (dict.TryGetValue("mopubBaseConfig", out obj)) {
                 mopubSdkInfo.FromJson("Unity SDK", obj as Dictionary<string, object>);
-                mopubSdkInfo.CurrentVersion = MoPub.moPubSDKVersion;
+                mopubSdkInfo.CurrentVersion = MoPub.MoPubSdkVersion;
             }
             if (dict.TryGetValue("releaseInfo", out obj))
                 foreach (var item in obj as Dictionary<string, object>) {
@@ -347,12 +350,12 @@ public class MoPubSDKManager : EditorWindow
         var lat = info.LatestVersion;
         var cur = info.CurrentVersion;
         var isInst = !string.IsNullOrEmpty(cur);
-        var canInst = !string.IsNullOrEmpty(lat) && (!isInst || MoPub.CompareVersions(cur, lat) < 0);
+        var canInst = !string.IsNullOrEmpty(lat) && (!isInst || MoPubUtils.CompareVersions(cur, lat) < 0);
         // Is any async job in progress?
         var stillWorking = coroutine != null || downloader != null;
 
         string tooltip = string.Empty;
-        if (isInst && (MoPub.CompareVersions(cur, lat) != 0 || testing))
+        if (isInst && (MoPubUtils.CompareVersions(cur, lat) != 0 || testing))
             tooltip += "\n  Installed:  " + cur;
         if (info.NetworkVersions != null) {
             string version;
@@ -423,6 +426,9 @@ public class MoPubSDKManager : EditorWindow
 
     private IEnumerator DownloadSDK(SdkInfo info)
     {
+        // Wait one frame so that we don't try to show the progress bar in the middle of OnGUI().
+        yield return null;
+
         // Track download progress (updated by event callbacks below).
         bool ended = false;
         bool cancelled = false;

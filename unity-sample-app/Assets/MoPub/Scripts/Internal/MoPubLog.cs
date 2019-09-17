@@ -39,8 +39,8 @@ public static class MoPubLog
         public const string Expired = "Ad expired since it was not shown fast enough";
     }
 
-    private static readonly Dictionary<string, MoPubBase.LogLevel> logLevelMap =
-        new Dictionary<string, MoPubBase.LogLevel>
+    private static readonly Dictionary<string, MoPub.LogLevel> logLevelMap =
+        new Dictionary<string, MoPub.LogLevel>
     {
         { SdkLogEvent.InitStarted, MoPub.LogLevel.Debug },
         { SdkLogEvent.InitFinished, MoPub.LogLevel.Info },
@@ -65,11 +65,11 @@ public static class MoPubLog
 
     public static void Log(string callerMethod, string message, params object[] args)
     {
-        MoPubBase.LogLevel messageLogLevel;
+        MoPub.LogLevel messageLogLevel;
         if (!logLevelMap.TryGetValue(message, out messageLogLevel))
-            messageLogLevel = MoPubBase.LogLevel.Debug;
+            messageLogLevel = MoPub.LogLevel.Debug;
 
-        if (MoPub.logLevel > messageLogLevel) return;
+        if (MoPub.CachedLogLevel > messageLogLevel) return;
 
         var formattedMessage = "[MoPub-Unity] [" + callerMethod + "] " + message;
         try {

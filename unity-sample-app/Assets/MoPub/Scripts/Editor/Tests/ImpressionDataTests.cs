@@ -8,7 +8,7 @@ namespace Tests
         [Test]
         public void FromJsonWithNullShouldYieldEmpty()
         {
-            var impData = MoPubBase.ImpressionData.FromJson(null);
+            var impData = MoPub.ImpressionData.FromJson(null);
             Assert.That(impData.AdUnitId, Is.Null);
             Assert.That(impData.AdUnitName, Is.Null);
             Assert.That(impData.AdUnitFormat, Is.Null);
@@ -27,7 +27,7 @@ namespace Tests
         }
 
         [Test]
-        public void FromJsonWithNullValuesShouldYieldEmpty()
+        public void FromJsonWithEmptyShouldYieldEmpty()
         {
             var json = GetJson(
                 null,
@@ -44,7 +44,30 @@ namespace Tests
                 null,
                 null,
                 null);
-            MoPubBase.ImpressionData impData = MoPubBase.ImpressionData.FromJson(json);
+            var impData = MoPub.ImpressionData.FromJson(json);
+
+            Assert.That(impData.AdUnitId, Is.Null);
+            Assert.That(impData.AdUnitName, Is.Null);
+            Assert.That(impData.AdUnitFormat, Is.Null);
+            Assert.That(impData.ImpressionId, Is.Null);
+            Assert.That(impData.Currency, Is.Null);
+            Assert.That(impData.PublisherRevenue, Is.Null);
+            Assert.That(impData.AdGroupId, Is.Null);
+            Assert.That(impData.AdGroupName, Is.Null);
+            Assert.That(impData.AdGroupType, Is.Null);
+            Assert.That(impData.AdGroupPriority, Is.Null);
+            Assert.That(impData.Country, Is.Null);
+            Assert.That(impData.Precision, Is.Null);
+            Assert.That(impData.NetworkName, Is.Null);
+            Assert.That(impData.NetworkPlacementId, Is.Null);
+            Assert.That(impData.JsonRepresentation, Is.EqualTo(json));
+        }
+
+        [Test]
+        public void FromJsonWithNullValuesShouldYieldEmpty()
+        {
+            var json = GetNullValuesJson();
+            var impData = MoPub.ImpressionData.FromJson(json);
 
             Assert.That(impData.AdUnitId, Is.Null);
             Assert.That(impData.AdUnitName, Is.Null);
@@ -96,7 +119,7 @@ namespace Tests
                 precision,
                 networkName,
                 networkPlacementId);
-            MoPubBase.ImpressionData impData = MoPubBase.ImpressionData.FromJson(json);
+            MoPub.ImpressionData impData = MoPub.ImpressionData.FromJson(json);
 
             Assert.That(impData.AdUnitId, Is.EqualTo(adUnitId));
             Assert.That(impData.AdUnitName, Is.EqualTo(adUnitName));
@@ -141,7 +164,7 @@ namespace Tests
                 precision,
                 null,
                 null);
-            MoPubBase.ImpressionData impData = MoPubBase.ImpressionData.FromJson(json);
+            MoPub.ImpressionData impData = MoPub.ImpressionData.FromJson(json);
 
             Assert.That(impData.AdUnitId, Is.EqualTo(adUnitId));
             Assert.That(impData.AdUnitName, Is.Null);
@@ -195,7 +218,7 @@ namespace Tests
                 networkPlacementId);
             var jsonWithExtra = json.Substring(0, json.Length - 1)
                                 + GetJsonEntry("some_extra_key", "some_extra_value") + "}";
-            MoPubBase.ImpressionData impData = MoPubBase.ImpressionData.FromJson(jsonWithExtra);
+            MoPub.ImpressionData impData = MoPub.ImpressionData.FromJson(jsonWithExtra);
 
             Assert.That(impData.AdUnitId, Is.EqualTo(adUnitId));
             Assert.That(impData.AdUnitName, Is.EqualTo(adUnitName));
@@ -217,6 +240,11 @@ namespace Tests
         private static string GetJsonEntry(string key, object value)
         {
             return value != null ? "\"" + key + "\":\"" + value.ToString() + "\"," : "";
+        }
+
+        private static string GetNullValueJsonEntry(string key)
+        {
+            return "\"" + key + "\":" + "null" +  ",";
         }
 
         private static string GetJson(
@@ -250,6 +278,26 @@ namespace Tests
                    + GetJsonEntry("precision", precision)
                    + GetJsonEntry("network_name", networkName)
                    + GetJsonEntry("network_placement_id", networkPlacementId)
+                   + "}";
+        }
+
+        private static string GetNullValuesJson()
+        {
+            return "{"
+                   + GetNullValueJsonEntry("adunit_id")
+                   + GetNullValueJsonEntry("adunit_name")
+                   + GetNullValueJsonEntry("adunit_format")
+                   + GetNullValueJsonEntry("id")
+                   + GetNullValueJsonEntry("currency")
+                   + GetNullValueJsonEntry("publisher_revenue")
+                   + GetNullValueJsonEntry("adgroup_id")
+                   + GetNullValueJsonEntry("adgroup_name")
+                   + GetNullValueJsonEntry("adgroup_type")
+                   + GetNullValueJsonEntry("adgroup_priority")
+                   + GetNullValueJsonEntry("country")
+                   + GetNullValueJsonEntry("precision")
+                   + GetNullValueJsonEntry("network_name")
+                   + GetNullValueJsonEntry("network_placement_id")
                    + "}";
         }
     }

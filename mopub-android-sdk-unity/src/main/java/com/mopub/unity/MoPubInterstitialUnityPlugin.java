@@ -1,6 +1,6 @@
 package com.mopub.unity;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
