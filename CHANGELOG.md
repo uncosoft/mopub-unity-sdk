@@ -1,10 +1,32 @@
+## Version 5.11.0 (February 5, 2020)
+- **Features**
+  - The MoPub Unity Plugin now includes version 5.11.0 of the MoPub Android and iOS SDKs.
+  - GDPR Consent Dialog is now automatically shown on application start (if needed) when "Auto Show Consent Dialog" is enabled (within the MoPubManager GameObject > MoPubConsent).
+  - Added 3-layered validation ensuring any method in the MoPub API can be safely called regardless of SDK or Ad Unit state.
+  - Added error message when SDK Manager fails to download files, suggesting manual integration.
+  - Updated SDK Manager to use `UnityWebRequest` to download files.
+  - Added 10-second timeout to SDK Manager downloads.
+  - Added Flurry to MoPub.SupportedNetwork class.
+  - Updated the following package names:
+    - Plugin package renamed from `com.mopub.unityplugindemo` to `com.mopub.unity.plugin`.
+    - Sample app package renamed from `com.mopub.sample` to `com.mopub.unity.sample`.
+    - NOTE: Android wrapper package name remains as `com.mopub.unity`.
+
+- **Bug Fixes**
+  - Android binary updated with 5.10.0 bug fix: Guarded against premature calls to `IsInterstitialReady`.
+  - Fixed Impression-Level Revenue Data parsing in cultures with comma decimals.
+  - Namespaced our version of MiniJSON to avoid conflicts with publisher-included MiniJSON.
+  - Removed duplicate Consent Dialog log entries.
+  - Consent Dialog showing is now denied when GDPR does not apply.
+  - Sample app now supports SSL Proxying.
+
 ## Version 5.10.0 (November 4, 2019)
 - **Features**
   - The MoPub Unity Plugin now includes version 5.10.0 of the MoPub Android and iOS SDKs.
   - Upgraded Android Gradle plugin dependency to 3.5.1.
   - Rewarded Videos failing to show now trigger an `OnRewardedVideoFailedToPlayEvent` with error code `VIDEO_NOT_AVAILABLE`.
 - **Bug Fixes**
-  - Guarded against premature calls to `IsInterstitialReady`.
+  - Guarded against premature calls to `IsInterstitialReady`. NOTE: Android binary updated with this fix on 5.11.0.
   - Prevent polling `IsInterstitialReady` from spamming the Editor console.
   - Removed deprecated `Android only` comments.
   - Prevent destroying intersitials from causing exceptions.
@@ -29,6 +51,7 @@
 ## Version 5.8.0 (July 29, 2019)
 - **Features**
   - The MoPub Unity Plugin now includes version 5.8.0 of the MoPub Android and iOS SDKs.
+  - `CreateBanner` has been deprecated in favor of new `RequestBanner` which allows a maximum ad size to be specified.
   - The MoPubManager script has been expanded into a prefab you can add to the scene.
 It can be used to configure the SDK initialization and consent dialog management from within the Unity editor.
   - Each mediation adapter comes with a NetworkConfig script which extends the MoPubManager prefab for adding network options to the initialization call.

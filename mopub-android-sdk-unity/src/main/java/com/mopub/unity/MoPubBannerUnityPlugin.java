@@ -34,6 +34,10 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
         super(adUnitId);
     }
 
+    @Override
+    public boolean isPluginReady() {
+        return mMoPubView != null;
+    }
 
     /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
      * Banners API                                                                             *
@@ -57,11 +61,11 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
      * @param alignment int for the desired alignment for the requested banner.
      */
     public void requestBanner(final float width, final float height, final int alignment) {
+        if (alreadyRequested())
+            return;
+
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                if (mMoPubView != null)
-                    return;
-
                 mMoPubView = new MoPubView(getActivity());
                 mMoPubView.setAdUnitId(mAdUnitId);
                 mMoPubView.setBannerAdListener(MoPubBannerUnityPlugin.this);
@@ -98,11 +102,11 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
      */
     @Deprecated
     public void createBanner(final int alignment) {
+        if (alreadyRequested())
+            return;
+
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                if (mMoPubView != null)
-                    return;
-
                 mMoPubView = new MoPubView(getActivity());
                 mMoPubView.setAdUnitId(mAdUnitId);
                 mMoPubView.setBannerAdListener(MoPubBannerUnityPlugin.this);
@@ -127,7 +131,7 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
      * @param shouldHide hides the banner if true; shows the banner if false.
      */
     public void hideBanner(final boolean shouldHide) {
-        if (mMoPubView == null)
+        if (!isPluginReady())
             return;
 
         runSafelyOnUiThread(new Runnable() {
@@ -160,11 +164,11 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
      * @param userDataKeywords String with comma-separated key:value pairs of PII keywords.
      */
     public void refreshBanner(final String keywords, @Nullable final String userDataKeywords) {
+        if (!isPluginReady())
+            return;
+
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                if (mMoPubView == null)
-                    return;
-
                 mMoPubView.setKeywords(keywords);
                 mMoPubView.setUserDataKeywords(userDataKeywords);
                 mMoPubView.loadAd();
@@ -176,11 +180,11 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
      * Removes the current banner from the view and destroys it.
      */
     public void destroyBanner() {
+        if (!isPluginReady() || mLayout == null)
+            return;
+
         runSafelyOnUiThread(new Runnable() {
             public void run() {
-                if (mMoPubView == null || mLayout == null)
-                    return;
-
                 mLayout.removeAllViews();
                 mLayout.setVisibility(LinearLayout.GONE);
                 mMoPubView.destroy();
@@ -192,12 +196,14 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
 
 
     public void setAutorefreshEnabled(boolean enabled) {
-        mMoPubView.setAutorefreshEnabled(enabled);
+        if (isPluginReady())
+            mMoPubView.setAutorefreshEnabled(enabled);
     }
 
 
     public void forceRefresh() {
-        mMoPubView.forceRefresh();
+        if (isPluginReady())
+            mMoPubView.forceRefresh();
     }
 
 
@@ -308,5 +314,10 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
         MoPubLog.log(AdLogEvent.CUSTOM,
                 "getScreenDensity: Activity was null, so using default screen density.");
         return DisplayMetrics.DENSITY_DEFAULT;
+    }
+
+    // Redundant method for better readability.
+    private boolean alreadyRequested() {
+        return isPluginReady();
     }
 }

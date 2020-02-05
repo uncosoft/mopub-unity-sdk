@@ -31,6 +31,11 @@ public class MoPubRewardedVideoUnityPlugin extends MoPubUnityPlugin {
         super(adUnitId);
     }
 
+    @Override
+    public boolean isPluginReady() {
+        // Rewarded Videos are handled by the MoPubRewardedVideoManager, so plugin is always "ready"
+        return true;
+    }
 
     /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
      * Rewarded Ads API                                                                        *

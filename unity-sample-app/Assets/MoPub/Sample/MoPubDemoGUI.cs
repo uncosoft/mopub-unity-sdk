@@ -11,6 +11,10 @@ using NativeAdData = AbstractNativeAd.Data;
 
 public class MoPubDemoGUI : MonoBehaviour
 {
+    [Tooltip("Whether to ignore ad unit states and simply enable all buttons to test invalid MoPub API calls " +
+             "(e.g., calling Show before Request).")]
+    public bool ForceEnableButtons = false;
+
     // State maps to enable/disable GUI ad state buttons
     private readonly Dictionary<string, bool> _adUnitToLoadedMapping = new Dictionary<string, bool>();
 
@@ -361,7 +365,7 @@ public class MoPubDemoGUI : MonoBehaviour
             foreach (var bannerAdUnit in _bannerAdUnits) {
                 GUILayout.BeginHorizontal();
 
-                GUI.enabled = !_adUnitToLoadedMapping[bannerAdUnit];
+                GUI.enabled = !_adUnitToLoadedMapping[bannerAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button(CreateRequestButtonLabel(bannerAdUnit))) {
                     var position = _bannerPositions[_bannerPositionIndex++];
                     UpdateStatusLabel(string.Format("Requesting {0} at position {1}", bannerAdUnit, position));
@@ -369,7 +373,7 @@ public class MoPubDemoGUI : MonoBehaviour
                     _bannerPositionIndex %= _bannerPositions.Length;
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit];
+                GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Destroy")) {
                     ClearStatusLabel();
                     MoPub.DestroyBanner(bannerAdUnit);
@@ -377,14 +381,14 @@ public class MoPubDemoGUI : MonoBehaviour
                     _adUnitToShownMapping[bannerAdUnit] = false;
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit] && !_adUnitToShownMapping[bannerAdUnit];
+                GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit] && !_adUnitToShownMapping[bannerAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Show")) {
                     ClearStatusLabel();
                     MoPub.ShowBanner(bannerAdUnit, true);
                     _adUnitToShownMapping[bannerAdUnit] = true;
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit] && _adUnitToShownMapping[bannerAdUnit];
+                GUI.enabled = _adUnitToLoadedMapping[bannerAdUnit] && _adUnitToShownMapping[bannerAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Hide")) {
                     ClearStatusLabel();
                     MoPub.ShowBanner(bannerAdUnit, false);
@@ -409,20 +413,20 @@ public class MoPubDemoGUI : MonoBehaviour
             foreach (var interstitialAdUnit in _interstitialAdUnits) {
                 GUILayout.BeginHorizontal();
 
-                GUI.enabled = !_adUnitToLoadedMapping[interstitialAdUnit];
+                GUI.enabled = !_adUnitToLoadedMapping[interstitialAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button(CreateRequestButtonLabel(interstitialAdUnit))) {
                     Debug.Log("requesting interstitial with AdUnit: " + interstitialAdUnit);
                     UpdateStatusLabel("Requesting " + interstitialAdUnit);
                     MoPub.RequestInterstitialAd(interstitialAdUnit);
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[interstitialAdUnit];
+                GUI.enabled = _adUnitToLoadedMapping[interstitialAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Show")) {
                     ClearStatusLabel();
                     MoPub.ShowInterstitialAd(interstitialAdUnit);
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[interstitialAdUnit];
+                GUI.enabled = _adUnitToLoadedMapping[interstitialAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Destroy")) {
                     ClearStatusLabel();
                     MoPub.DestroyInterstitialAd(interstitialAdUnit);
@@ -447,7 +451,7 @@ public class MoPubDemoGUI : MonoBehaviour
             foreach (var rewardedVideoAdUnit in _rewardedVideoAdUnits) {
                 GUILayout.BeginHorizontal();
 
-                GUI.enabled = !_adUnitToLoadedMapping[rewardedVideoAdUnit];
+                GUI.enabled = !_adUnitToLoadedMapping[rewardedVideoAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button(CreateRequestButtonLabel(rewardedVideoAdUnit))) {
                     Debug.Log("requesting rewarded video with AdUnit: " + rewardedVideoAdUnit);
                     UpdateStatusLabel("Requesting " + rewardedVideoAdUnit);
@@ -456,7 +460,7 @@ public class MoPubDemoGUI : MonoBehaviour
                         latitude: 37.7833, longitude: 122.4167, customerId: "customer101");
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[rewardedVideoAdUnit];
+                GUI.enabled = _adUnitToLoadedMapping[rewardedVideoAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Show")) {
                     ClearStatusLabel();
                     MoPub.ShowRewardedVideo(rewardedVideoAdUnit, GetCustomData(_rvCustomData));
@@ -500,7 +504,7 @@ public class MoPubDemoGUI : MonoBehaviour
             foreach (var rewardedRichMediaAdUnit in _rewardedRichMediaAdUnits) {
                 GUILayout.BeginHorizontal();
 
-                GUI.enabled = !_adUnitToLoadedMapping[rewardedRichMediaAdUnit];
+                GUI.enabled = !_adUnitToLoadedMapping[rewardedRichMediaAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button(CreateRequestButtonLabel(rewardedRichMediaAdUnit))) {
                     Debug.Log("requesting rewarded rich media with AdUnit: " + rewardedRichMediaAdUnit);
                     UpdateStatusLabel("Requesting " + rewardedRichMediaAdUnit);
@@ -509,7 +513,7 @@ public class MoPubDemoGUI : MonoBehaviour
                         latitude: 37.7833, longitude: 122.4167, customerId: "customer101");
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[rewardedRichMediaAdUnit];
+                GUI.enabled = _adUnitToLoadedMapping[rewardedRichMediaAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Show")) {
                     ClearStatusLabel();
                     MoPub.ShowRewardedVideo(rewardedRichMediaAdUnit, GetCustomData(_rrmCustomData));
@@ -555,20 +559,20 @@ public class MoPubDemoGUI : MonoBehaviour
 
                 var nativeAd = _nativeAds[nativeAdUnit];
 
-                GUI.enabled = !_adUnitToLoadedMapping[nativeAdUnit];
+                GUI.enabled = !_adUnitToLoadedMapping[nativeAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button(CreateRequestButtonLabel(nativeAdUnit))) {
                     Debug.Log("requesting native AdUnit: " + nativeAdUnit);
                     UpdateStatusLabel("Requesting " + nativeAdUnit);
                     nativeAd.LoadAd();
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[nativeAdUnit] && !_adUnitToShownMapping[nativeAdUnit];
+                GUI.enabled = _adUnitToLoadedMapping[nativeAdUnit] && !_adUnitToShownMapping[nativeAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Show")) {
                     ClearStatusLabel();
                     ShowNativeAd(nativeAd);
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[nativeAdUnit] && _adUnitToShownMapping[nativeAdUnit];
+                GUI.enabled = _adUnitToLoadedMapping[nativeAdUnit] && _adUnitToShownMapping[nativeAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Hide")) {
                     ClearStatusLabel();
                     HideNativeAd(nativeAd);
@@ -597,17 +601,17 @@ public class MoPubDemoGUI : MonoBehaviour
             _smallerFont);
 
         GUILayout.BeginHorizontal();
-        GUI.enabled = !ConsentDialogLoaded;
+        GUI.enabled = !ConsentDialogLoaded || ForceEnableButtons;
         if (GUILayout.Button("Load Consent Dialog")) {
             UpdateStatusLabel("Loading consent dialog");
             MoPub.LoadConsentDialog();
         }
-        GUI.enabled = ConsentDialogLoaded;
+        GUI.enabled = ConsentDialogLoaded || ForceEnableButtons;
         if (GUILayout.Button("Show Consent Dialog")) {
             ClearStatusLabel();
             MoPub.ShowConsentDialog();
         }
-        GUI.enabled = !_isGdprForced;
+        GUI.enabled = !_isGdprForced || ForceEnableButtons;
         if (GUILayout.Button("Force GDPR")) {
             ClearStatusLabel();
             MoPub.ForceGdprApplicable();

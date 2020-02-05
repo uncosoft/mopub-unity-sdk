@@ -33,6 +33,11 @@ public class MoPubNativeUnityPlugin extends MoPubUnityPlugin
     }
 
 
+    @Override
+    public boolean isPluginReady() {
+        return mMoPubNative != null;
+    }
+
     /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
      * Native API                                                                              *
      * ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****/

@@ -94,7 +94,8 @@ public class MoPubUnityPlugin {
             try {
                 UnityPlayer.UnitySendMessage("MoPubManager", name, JSON.std.asString(args));
             } catch (IOException e) {
-                MoPubLog.log(SdkLogEvent.ERROR, "Exception sending message to Unity", e);
+                MoPubLog.log(SdkLogEvent.ERROR_WITH_THROWABLE,
+                        "Exception sending message to Unity", e);
             }
         }
     }
@@ -127,6 +128,17 @@ public class MoPubUnityPlugin {
      */
     public MoPubUnityPlugin(final String adUnitId) {
         mAdUnitId = adUnitId;
+    }
+
+    /**
+     * Whether the plugin has had its underlying SDK class initialized and can therefore receive
+     * method calls. In general, it means the ad unit has been requested. Each specific plugin
+     * overwrites this method according to their needs.
+     *
+     * @return true if an ad has been requested, false otherwise.
+     */
+    public boolean isPluginReady() {
+        return false;
     }
 
 
@@ -256,12 +268,15 @@ public class MoPubUnityPlugin {
             MoPubLog.log(SdkLogEvent.ERROR, "could not find Facebook AdSettings class. " +
                     "Did you add the Audience Network SDK to your Android folder?");
         } catch (NoSuchMethodException e) {
-            MoPubLog.log(SdkLogEvent.ERROR, "could not find Facebook AdSettings.addTestDevice method. " +
+            MoPubLog.log(SdkLogEvent.ERROR,
+                    "could not find Facebook AdSettings.addTestDevice method. " +
                     "Did you add the Audience Network SDK to your Android folder?");
         } catch (IllegalAccessException e) {
-            MoPubLog.log(SdkLogEvent.ERROR, "Exception while adding Facebook test device id", e);
+            MoPubLog.log(SdkLogEvent.ERROR_WITH_THROWABLE,
+                    "Exception while adding Facebook test device id", e);
         } catch (InvocationTargetException e) {
-            MoPubLog.log(SdkLogEvent.ERROR, "Exception while adding Facebook test device id", e);
+            MoPubLog.log(SdkLogEvent.ERROR_WITH_THROWABLE,
+                    "Exception while adding Facebook test device id", e);
         }
     }
 
@@ -525,7 +540,7 @@ public class MoPubUnityPlugin {
                 try {
                     runner.run();
                 } catch (Exception e) {
-                    MoPubLog.log(SdkLogEvent.ERROR,
+                    MoPubLog.log(SdkLogEvent.ERROR_WITH_THROWABLE,
                             "Exception running task on UI thread", e);
                 }
             }
@@ -542,7 +557,7 @@ public class MoPubUnityPlugin {
         try {
             jsonTree = jsonReader.treeFrom(json);
         } catch (IOException e) {
-            MoPubLog.log(SdkLogEvent.ERROR,
+            MoPubLog.log(SdkLogEvent.ERROR_WITH_THROWABLE,
                     "Exception while reading mediation settings", e);
             return null;
         }
@@ -569,7 +584,7 @@ public class MoPubUnityPlugin {
                                     + mediationSettingsClass);
                 }
             } catch (Exception e) {
-                MoPubLog.log(SdkLogEvent.ERROR,
+                MoPubLog.log(SdkLogEvent.ERROR_WITH_THROWABLE,
                         "Exception while reading mediation settings", e);
             }
 
@@ -587,7 +602,7 @@ public class MoPubUnityPlugin {
         try {
             jsonTree = jsonReader.treeFrom(json);
         } catch (IOException e) {
-            MoPubLog.log(SdkLogEvent.ERROR, "Exception while reading options map", e);
+            MoPubLog.log(SdkLogEvent.ERROR_WITH_THROWABLE, "Exception while reading options map", e);
             return null;
         }
         if (jsonTree == null || !jsonTree.isObject()) {
@@ -611,7 +626,7 @@ public class MoPubUnityPlugin {
                         else
                             value = jsonReader.asString(valueNode);
                     } catch (Exception e) {
-                        MoPubLog.log(SdkLogEvent.ERROR,
+                        MoPubLog.log(SdkLogEvent.ERROR_WITH_THROWABLE,
                                 "Exception getting option value", e);
                     }
                     options.put(key, value);

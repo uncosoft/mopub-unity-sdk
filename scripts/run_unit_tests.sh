@@ -11,6 +11,7 @@ TEST_LOG="`pwd`/scripts/testlog.txt"
 
 function tests_passed {
   print_green_line "Tests PASSED!"
+  exit 0
 }
 
 function tests_error {
@@ -18,6 +19,7 @@ function tests_error {
   print_blue_line "Log excerpt: "
   grep -A 5 "\-----CompilerOutput:-stderr----------" $TEST_LOG
   print_blue_line "Please see $TEST_LOG for full details."
+  exit 1
 }
 
 function tests_failed {
@@ -25,6 +27,7 @@ function tests_failed {
   print_blue_line "Results excerpt: "
   grep -A 5 -B 3 "Expected" $TEST_RESULTS
   print_blue_line "Please see $TEST_RESULTS for full test results."
+  exit 2
 }
 
 echo "Running unit tests with Unity Editor at:"

@@ -126,7 +126,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 5.10.0
+  bundleVersion: 5.11.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -159,15 +159,15 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.mopub.sample
-    Standalone: unity.MoPub.MoPub Sample
-    Tizen: com.mopub.sample
-    iOS: com.mopub.sample
-    tvOS: com.mopub.sample
+    Android: com.mopub.unity.sample
+    Standalone: com.mopub.unity.sample
+    Tizen: com.mopub.unity.sample
+    iOS: com.mopub.unity.sample
+    tvOS: com.mopub.unity.sample
   buildNumber:
-    iOS: 5.10.0
+    iOS: 5.11.0
   AndroidBundleVersionCode: 0
-  AndroidMinSdkVersion: 16
+  AndroidMinSdkVersion: 19
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 

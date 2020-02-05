@@ -23,6 +23,10 @@ public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin
         super(adUnitId);
     }
 
+    @Override
+    public boolean isPluginReady() {
+        return mMoPubInterstitial != null;
+    }
 
     /* ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** ***** *****
      * Interstitials API                                                                       *
@@ -38,6 +42,7 @@ public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin
     public void request(final String keywords) {
         request(keywords, null);
     }
+
     /**
      * Loads an interstitial ad for the current ad unit ID and with the given keywords. Personally
      * Identifiable Information (PII) should ONLY be present in the userDataKeywords field.
@@ -62,8 +67,7 @@ public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin
      * Check if the interstitial ad has finished loading.
      */
     public boolean isReady() {
-        // TODO(ADF-4411): Replace this check with 3-layer validation in MoPub API.
-        return mMoPubInterstitial != null && mMoPubInterstitial.isReady();
+        return isPluginReady() && mMoPubInterstitial.isReady();
     }
 
 
@@ -71,6 +75,8 @@ public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin
      * Shows the loaded interstitial ad.
      */
     public void show() {
+        if (!isPluginReady()) return;
+
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 mMoPubInterstitial.show();
@@ -83,6 +89,8 @@ public class MoPubInterstitialUnityPlugin extends MoPubUnityPlugin
      * Destroy the interstitial ad.
      */
     public void destroy() {
+        if (!isPluginReady()) return;
+
         runSafelyOnUiThread(new Runnable() {
             @Override
             public void run() {
