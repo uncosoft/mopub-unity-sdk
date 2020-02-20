@@ -1,3 +1,11 @@
+## Version 5.11.1 (February 19, 2020)
+- **Features**
+  - The MoPub Unity Plugin now includes version 5.11.1 of the MoPub Android SDK (and version 5.11.0 of the MoPub iOS SDK).
+
+- **Bug Fixes**
+  - Fixed crash on Android due to missing Kotlin dependency when parsing ads with video trackers.
+  - Ensured ad events with invalid numerical values are handled gracefully.
+
 ## Version 5.11.0 (February 5, 2020)
 - **Features**
   - The MoPub Unity Plugin now includes version 5.11.0 of the MoPub Android and iOS SDKs.

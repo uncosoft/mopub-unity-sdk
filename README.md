@@ -10,30 +10,15 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.11.0 - February 5, 2020)
+## New in This Version (5.11.1 - February 19, 2020)
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
 - **Features**
-  - The MoPub Unity Plugin now includes version 5.11.0 of the MoPub Android and iOS SDKs.
-  - Raised the minimum Android SDK to Android 4.4 (API level 19).
-  - GDPR Consent Dialog is now automatically shown on application start (if needed) when "Auto Show Consent Dialog" is enabled (within the MoPubManager GameObject > MoPubConsent).
-  - Added 3-layered validation ensuring any method in the MoPub API can be safely called regardless of SDK or Ad Unit state.
-  - Added error message when SDK Manager fails to download files, suggesting manual integration.
-  - Updated SDK Manager to use `UnityWebRequest` to download files.
-  - Added 10-second timeout to SDK Manager downloads.
-  - Added Flurry to MoPub.SupportedNetwork class.
-  - Updated the following package names:
-    - Plugin package renamed from `com.mopub.unityplugindemo` to `com.mopub.unity.plugin`.
-    - Sample app package renamed from `com.mopub.sample` to `com.mopub.unity.sample`.
-    - NOTE: Android wrapper package name remains as `com.mopub.unity`.
+  - The MoPub Unity Plugin now includes version 5.11.1 of the MoPub Android SDK (and version 5.11.0 of the MoPub iOS SDK).
 
 - **Bug Fixes**
-  - Android binary updated with 5.10.0 bug fix: Guarded against premature calls to `IsInterstitialReady`.
-  - Fixed Impression-Level Revenue Data parsing in cultures with comma decimals.
-  - Namespaced our version of MiniJSON to avoid conflicts with publisher-included MiniJSON.
-  - Removed duplicate Consent Dialog log entries.
-  - Consent Dialog showing is now denied when GDPR does not apply.
-  - Sample app now supports SSL Proxying.
+  - Fixed crash on Android due to missing Kotlin dependency when parsing ads with video trackers.
+  - Ensured ad events with invalid numerical values are handled gracefully.
 
 
 ## Upgrading to SDK 5.8

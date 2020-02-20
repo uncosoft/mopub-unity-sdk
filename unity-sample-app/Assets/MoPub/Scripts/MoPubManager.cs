@@ -334,12 +334,20 @@ public class MoPubManager : MonoBehaviour
         var adUnitId = args[0];
         var width = args[1];
         var height = args[2];
+        float parsedHeight;
+        var parseSucceeded = float.TryParse(height, NumberStyles.Float, CultureInfo.InvariantCulture,
+            out parsedHeight);
 
         MoPubLog.Log("EmitAdLoadedEvent", MoPubLog.AdLogEvent.LoadSuccess);
         MoPubLog.Log("EmitAdLoadedEvent", "Size received: {0}x{1}", width, height);
         MoPubLog.Log("EmitAdLoadedEvent", MoPubLog.AdLogEvent.ShowSuccess);
+        if (!parseSucceeded) {
+            EmitAdFailedEvent(MoPubUtils.EncodeArgs(adUnitId, "Failed to parse AdLoadedEvent due to invalid ad " +
+                                                              "height: (" + height + ")"));
+            return;
+        }
         var evt = OnAdLoadedEvent;
-        if (evt != null) evt(adUnitId, Single.Parse(height, CultureInfo.InvariantCulture));
+        if (evt != null) evt(adUnitId, parsedHeight);
     }
 
 
@@ -533,11 +541,20 @@ public class MoPubManager : MonoBehaviour
         var args = MoPubUtils.DecodeArgs(argsJson, min: 3);
         var adUnitId = args[0];
         var label = args[1];
-        var amountStr = args[2];
+        var amount = args[2];
+        float parsedAmount;
+        var parseSucceeded = float.TryParse(amount, NumberStyles.Float, CultureInfo.InvariantCulture,
+            out parsedAmount);
 
-        MoPubLog.Log("EmitRewardedVideoReceivedRewardEvent", MoPubLog.AdLogEvent.ShouldReward, label, amountStr);
+        MoPubLog.Log("EmitRewardedVideoReceivedRewardEvent", MoPubLog.AdLogEvent.ShouldReward, label, amount);
+        if (!parseSucceeded) {
+            EmitRewardedVideoFailedEvent(MoPubUtils.EncodeArgs(adUnitId,
+                "Failed to parse RewardedVideoReceivedRewardEvent due to invalid rewarded amount: (" + amount + ")." +
+                " Please ensure the reward info is configured properly on your advertising dashboard."));
+            return;
+        }
         var evt = OnRewardedVideoReceivedRewardEvent;
-        if (evt != null) evt(adUnitId, label, Single.Parse(amountStr, CultureInfo.InvariantCulture));
+        if (evt != null) evt(adUnitId, label, parsedAmount);
     }
 
 
