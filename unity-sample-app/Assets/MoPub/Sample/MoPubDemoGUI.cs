@@ -27,15 +27,14 @@ public class MoPubDemoGUI : MonoBehaviour
 
 #if UNITY_IOS
     private readonly string[] _bannerAdUnits =
-        { "0ac59b0996d947309c33f59d6676399f", "23b49916add211e281c11231392559e4" };
+        { "0ac59b0996d947309c33f59d6676399f", "ef078b27e11c49bbb87080617a69b970", "2aae44d2ab91424d9850870af33e5af7" };
 
     private readonly string[] _interstitialAdUnits =
-        { "4f117153f5c24fa6a3a92b818a5eb630", "3aba0056add211e281c11231392559e4" };
+        { "4f117153f5c24fa6a3a92b818a5eb630", "9f2859c6726447aa9eaaa43a35ae8682" };
 
-    private readonly string[] _rewardedVideoAdUnits =
-        { "8f000bd5e00246de9c789eed39ff6096", "98c29e015e7346bd9c380b1467b33850" };
+    private readonly string[] _rewardedVideoAdUnits = { "8f000bd5e00246de9c789eed39ff6096" };
 
-    private readonly string[] _rewardedRichMediaAdUnits = { };
+    private readonly string[] _rewardedRichMediaAdUnits = { "98c29e015e7346bd9c380b1467b33850" };
 #elif UNITY_ANDROID || UNITY_EDITOR
     private readonly string[] _bannerAdUnits = { "b195f8dd8ded45fe847ad89ed1d016da" };
     private readonly string[] _interstitialAdUnits = { "24534e1901884e398f1253216226017e" };
@@ -316,12 +315,8 @@ public class MoPubDemoGUI : MonoBehaviour
     {
         GUI.skin = _skin;
 
-#if UNITY_2017_3_OR_NEWER
         // Screen.safeArea was added in Unity 2017.2.0p1
         var guiArea = Screen.safeArea;
-#else
-        var guiArea = new Rect(0, 0, Screen.width, Screen.height);
-#endif
         guiArea.x += 20;
         guiArea.y += 20;
         guiArea.width -= 40;

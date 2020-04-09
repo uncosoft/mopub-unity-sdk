@@ -10,15 +10,24 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.11.1 - February 19, 2020)
+## New in This Version (5.12.0 - April 09, 2020)
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
 - **Features**
-  - The MoPub Unity Plugin now includes version 5.11.1 of the MoPub Android SDK (and version 5.11.0 of the MoPub iOS SDK).
+  - The MoPub Unity Plugin now includes version 5.12.0 of the MoPub Android SDK (and version 5.12.0 of the MoPub iOS SDK).
+  - Bumped minimum supported Unity version from 5.5 to 2017.1.
+  - Added `app_version` to Impression-Level Revenue Data object.
+  - Upgraded External Dependency Manager (f.k.a. Unity Jar Resolver) from version 1.2.122.0 to 1.2.147.0, enabling iOS building on Unity 2019.3+ and addressing several External Dependency Manager bugs.
+  - Replaced "OneByAol" (aka "Millenial") with "Mintegral".
+  - Removed deprecated `CreateBanner` API; please use `RequestBanner` instead.
 
 - **Bug Fixes**
-  - Fixed crash on Android due to missing Kotlin dependency when parsing ads with video trackers.
-  - Ensured ad events with invalid numerical values are handled gracefully.
+  - Fixed potential crash on Android due to missing dependencies.
+  - Fixed banners sometimes rendering bigger than requested.
+  - Ensured MoPub iOS helper methods do not collide with publisher methods.
+  - Fixed MoPubManagerTesting game object.
+  - Fixed crash on Android when loading some ads due to missing new depedencies from Android SDK.
+  - Removed double semicolons which caused some IDEs to report errors.
 
 
 ## Upgrading to SDK 5.8

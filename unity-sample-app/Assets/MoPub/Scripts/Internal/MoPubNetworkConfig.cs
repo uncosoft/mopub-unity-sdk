@@ -302,9 +302,7 @@ public abstract class MoPubNetworkConfig : MonoBehaviour
 
             // Now draw the actual field (label + value) next to the toggle.  Have to indent the label, and also disable
             // the value entry if the field is not enabled.
-#if UNITY_2017_1_OR_NEWER
             using (new EditorGUI.IndentLevelScope(property.hasVisibleChildren ? 2 : 1))
-#endif
             using (new EditorGUI.DisabledScope(!isEnabled))
                 EditorGUI.PropertyField(position, property, label2, isEnabled);
         }

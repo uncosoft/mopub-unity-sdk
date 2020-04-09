@@ -36,15 +36,6 @@ internal class MoPubiOSAdUnit : MoPubAdUnit
     }
 
 
-    [Obsolete("CreateBanner is deprecated and will be removed soon, please use RequestBanner instead.")]
-    internal override void CreateBanner(MoPub.AdPosition position, MoPub.BannerType bannerType)
-    {
-        if (!CheckPluginReady()) return;
-
-        _moPubCreateBanner((int) bannerType, (int) position, AdUnitId);
-    }
-
-
     internal override void DestroyBanner()
     {
         if (!CheckPluginReady()) return;
@@ -186,7 +177,6 @@ internal class MoPubiOSAdUnit : MoPubAdUnit
     // IL2CPP on Android scrubs DllImports, so we need to provide stubs to unblock compilation
     private static bool _moPubIsPluginReady(string adUnitId) { return false; }
     private static void _moPubRequestBanner(float width, float height, int position, string adUnitId) {}
-    private static void _moPubCreateBanner(int bannerType, int position, string adUnitId) {}
     private static void _moPubDestroyBanner(string adUnitId) {}
     private static void _moPubShowBanner(string adUnitId, bool shouldShow) {}
     private static void _moPubRefreshBanner(string adUnitId, string keywords, string userDataKeywords) {}
@@ -209,10 +199,6 @@ internal class MoPubiOSAdUnit : MoPubAdUnit
 
     [DllImport("__Internal")]
     private static extern void _moPubRequestBanner(float width, float height, int position, string adUnitId);
-
-
-    [DllImport("__Internal")]
-    private static extern void _moPubCreateBanner(int bannerType, int position, string adUnitId);
 
 
     [DllImport("__Internal")]

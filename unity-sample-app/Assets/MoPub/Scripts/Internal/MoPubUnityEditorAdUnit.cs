@@ -33,13 +33,6 @@ internal class MoPubUnityEditorAdUnit : MoPubAdUnit
         ForceRefresh();
     }
 
-    [Obsolete("CreateBanner is deprecated and will be removed soon, please use RequestBanner instead.")]
-    internal override void CreateBanner(MoPub.AdPosition position, MoPub.BannerType bannerType = MoPub.BannerType.Size320x50)
-    {
-        RequestAdUnit();
-        ForceRefresh();
-    }
-
     internal override void ShowBanner(bool shouldShow)
     {
         CheckAdUnitRequested();

@@ -10,17 +10,20 @@ BLUE='\033[0;34m'
 
 # Ensures the previous command completed successfully otherwise prints given message and exits
 function validate {
-  if [[ $? -ne 0 ]]; then
+  local return_code=$?
+  if [[ $return_code -ne 0 ]]; then
     # Use argument as message or default message if no argument was given
     msg=${1:-Something went wrong, scroll up for details.}
     print_red_line "FAILED: $msg"
     [ "$2" != true ] && exit 1;
   fi
+  return $return_code
 }
 
 # Ensures the previous command completed successfully otherwise prints given message
 function validate_without_exit {
   validate "$1" true
+  return $?
 }
 
 # Ensures the script is being run on the project root

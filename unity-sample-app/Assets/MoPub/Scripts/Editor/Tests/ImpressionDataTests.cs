@@ -12,6 +12,7 @@ namespace Tests
         public void FromJsonWithNullShouldYieldEmpty()
         {
             var impData = MoPub.ImpressionData.FromJson(null);
+            Assert.That(impData.AppVersion, Is.Null);
             Assert.That(impData.AdUnitId, Is.Null);
             Assert.That(impData.AdUnitName, Is.Null);
             Assert.That(impData.AdUnitFormat, Is.Null);
@@ -33,6 +34,7 @@ namespace Tests
         public void FromJsonWithEmptyShouldYieldEmpty()
         {
             var json = GetJson(
+                null,
                 null,
                 null,
                 null,
@@ -92,6 +94,7 @@ namespace Tests
         [Test]
         public void FromJsonWithValuesShouldYieldValues()
         {
+            const string appVersion = "1.0.0";
             const string adUnitId = "1234";
             const string adUnitName = "my awesome ad unit";
             const string adUnitFormat = "Rewarded Video";
@@ -108,6 +111,7 @@ namespace Tests
             const string networkPlacementId = "3456";
 
             var json = GetJson(
+                appVersion,
                 adUnitId,
                 adUnitName,
                 adUnitFormat,
@@ -124,6 +128,7 @@ namespace Tests
                 networkPlacementId);
             MoPub.ImpressionData impData = MoPub.ImpressionData.FromJson(json);
 
+            Assert.That(impData.AppVersion, Is.EqualTo(appVersion));
             Assert.That(impData.AdUnitId, Is.EqualTo(adUnitId));
             Assert.That(impData.AdUnitName, Is.EqualTo(adUnitName));
             Assert.That(impData.AdUnitFormat, Is.EqualTo(adUnitFormat));
@@ -153,6 +158,7 @@ namespace Tests
             const string precision = "publisher_defined";
 
             var json = GetJson(
+                null,
                 adUnitId,
                 null,
                 adUnitFormat,
@@ -169,6 +175,7 @@ namespace Tests
                 null);
             MoPub.ImpressionData impData = MoPub.ImpressionData.FromJson(json);
 
+            Assert.That(impData.AppVersion, Is.Null);
             Assert.That(impData.AdUnitId, Is.EqualTo(adUnitId));
             Assert.That(impData.AdUnitName, Is.Null);
             Assert.That(impData.AdUnitFormat, Is.EqualTo(adUnitFormat));
@@ -189,6 +196,7 @@ namespace Tests
         [Test]
         public void FromJsonWithExtraValuesShouldYieldAllValues()
         {
+            const string appVersion = "1.0.0";
             const string adUnitId = "1234";
             const string adUnitName = "my awesome ad unit";
             const string adUnitFormat = "Rewarded Video";
@@ -205,6 +213,7 @@ namespace Tests
             const string networkPlacementId = "3456";
 
             var json = GetJson(
+                appVersion,
                 adUnitId,
                 adUnitName,
                 adUnitFormat,
@@ -223,6 +232,7 @@ namespace Tests
                                 + GetJsonEntry("some_extra_key", "some_extra_value") + "}";
             MoPub.ImpressionData impData = MoPub.ImpressionData.FromJson(jsonWithExtra);
 
+            Assert.That(impData.AppVersion, Is.EqualTo(appVersion));
             Assert.That(impData.AdUnitId, Is.EqualTo(adUnitId));
             Assert.That(impData.AdUnitName, Is.EqualTo(adUnitName));
             Assert.That(impData.AdUnitFormat, Is.EqualTo(adUnitFormat));
@@ -244,6 +254,7 @@ namespace Tests
         public void FromJsonInDecimalCommaCountriesShouldParseValuesCorrectly()
         {
             RunTestWithCulture("fr-FR", () => {
+                const string appVersion = "1.0.0";
                 const string adUnitId = "1234";
                 const string adUnitName = "my awesome ad unit";
                 const string adUnitFormat = "Rewarded Video";
@@ -260,6 +271,7 @@ namespace Tests
                 const string networkPlacementId = "3456";
 
                 var json = GetJson(
+                    appVersion,
                     adUnitId,
                     adUnitName,
                     adUnitFormat,
@@ -277,6 +289,7 @@ namespace Tests
 
                 MoPub.ImpressionData impData = MoPub.ImpressionData.FromJson(json);
 
+                Assert.That(impData.AppVersion, Is.EqualTo(appVersion));
                 Assert.That(impData.AdUnitId, Is.EqualTo(adUnitId));
                 Assert.That(impData.AdUnitName, Is.EqualTo(adUnitName));
                 Assert.That(impData.AdUnitFormat, Is.EqualTo(adUnitFormat));
@@ -329,6 +342,7 @@ namespace Tests
         }
 
         private static string GetJson(
+            string appVersion,
             string adUnitId,
             string adUnitName,
             string adUnitFormat,
@@ -345,6 +359,7 @@ namespace Tests
             string networkPlacementId)
         {
             return "{"
+                   + GetJsonEntry("app_version", appVersion)
                    + GetJsonEntry("adunit_id", adUnitId)
                    + GetJsonEntry("adunit_name", adUnitName)
                    + GetJsonEntry("adunit_format", adUnitFormat)
@@ -365,6 +380,7 @@ namespace Tests
         private static string GetNullValuesJson()
         {
             return "{"
+                   + GetNullValueJsonEntry("app_version")
                    + GetNullValueJsonEntry("adunit_id")
                    + GetNullValueJsonEntry("adunit_name")
                    + GetNullValueJsonEntry("adunit_format")

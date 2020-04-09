@@ -1,10 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
 using UnityEngine;
-#if UNITY_2017_1_OR_NEWER
 
 // ReSharper disable Unity.IncorrectMonoBehaviourInstantiation
-#endif
 
 namespace Tests
 {

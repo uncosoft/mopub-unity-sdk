@@ -57,11 +57,6 @@ internal class MoPubAdUnit
     internal virtual void RequestBanner(float width, float height, MoPub.AdPosition position) { }
 
 
-    [Obsolete("CreateBanner is deprecated and will be removed soon, please use RequestBanner instead.")]
-    internal virtual void CreateBanner(MoPub.AdPosition position,
-        MoPub.BannerType bannerType = MoPub.BannerType.Size320x50) { }
-
-
     internal virtual void ShowBanner(bool shouldShow) { }
 
 

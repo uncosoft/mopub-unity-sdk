@@ -40,14 +40,6 @@ internal class MoPubAndroidAdUnit : MoPubAdUnit {
     }
 
 
-    [Obsolete("CreateBanner is deprecated and will be removed soon, please use RequestBanner instead.")]
-    internal override void CreateBanner(MoPub.AdPosition position,
-        MoPub.BannerType bannerType = MoPub.BannerType.Size320x50)
-    {
-        _plugin.Call("createBanner", (int) position);
-    }
-
-
     internal override void ShowBanner(bool shouldShow)
     {
         if (!CheckPluginReady()) return;

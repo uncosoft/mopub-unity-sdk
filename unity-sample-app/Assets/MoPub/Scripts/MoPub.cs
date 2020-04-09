@@ -21,7 +21,7 @@ public abstract class MoPub : MoPubBase
     /// Please see <a href="https://github.com/mopub/mopub-unity-sdk">our GitHub repository</a> for details.
     /// </para>
     /// </summary>
-    public const string MoPubSdkVersion = "5.11.1";
+    public const string MoPubSdkVersion = "5.12.0";
 
 
     #region SdkSetup
@@ -234,22 +234,6 @@ public abstract class MoPub : MoPubBase
         MoPubLog.Log("RequestBanner", MoPubLog.AdLogEvent.LoadAttempted);
         MoPubLog.Log("RequestBanner", "Size requested: " + width + "x" + height);
         AdUnitManager.GetAdUnit(adUnitId).RequestBanner(width, height, position);
-    }
-
-
-    /// <summary>
-    /// Requests a banner ad and immediately shows it once loaded. (Deprecated)
-    /// </summary>
-    /// <param name="adUnitId">A string with the ad unit id.</param>
-    /// <param name="position">Where in the screen to position the loaded ad. See <see cref="MoPub.AdPosition"/>.
-    /// </param>
-    /// <param name="bannerType">The size of the banner to load. See <see cref="MoPub.BannerType"/>.</param>
-    [Obsolete("CreateBanner is deprecated and will be removed soon, please use RequestBanner instead.")]
-    public static void CreateBanner(string adUnitId, AdPosition position,
-        BannerType bannerType = BannerType.Size320x50)
-    {
-        MoPubLog.Log("CreateBanner", MoPubLog.AdLogEvent.LoadAttempted);
-        AdUnitManager.GetAdUnit(adUnitId).CreateBanner(position, bannerType);
     }
 
 
@@ -737,16 +721,6 @@ public abstract class MoPub : MoPubBase
     }
 
 
-    [Obsolete("BannerType is deprecated, please use MaxAdSize instead (via new CreateBanner).")]
-    public enum BannerType
-    {
-        Size320x50,
-        Size300x250,
-        Size728x90,
-        Size160x600
-    }
-
-
     /// <summary>
     /// The maximum size, in density-independent pixels (DIPs), an ad should have.
     /// </summary>
@@ -953,7 +927,7 @@ public abstract class MoPub : MoPubBase
         public class Facebook   : SupportedNetwork { public Facebook()   : base("Facebook") { } }
         public class Flurry     : SupportedNetwork { public Flurry()     : base("Flurry") { } }
         public class IronSource : SupportedNetwork { public IronSource() : base("IronSource") { } }
-        public class OnebyAOL   : SupportedNetwork { public OnebyAOL()   : base("Millennial") { } }
+        public class Mintegral  : SupportedNetwork { public Mintegral()  : base("Mintegral") { } }
         public class Tapjoy     : SupportedNetwork { public Tapjoy()     : base("Tapjoy") { } }
         public class Unity      : SupportedNetwork { public Unity()      : base("UnityAds") { } }
         public class Verizon    : SupportedNetwork { public Verizon()    : base("Verizon") { } }
@@ -982,6 +956,7 @@ public abstract class MoPub : MoPubBase
 
     public struct ImpressionData
     {
+        public string AppVersion;
         public string AdUnitId;
         public string AdUnitName;
         public string AdUnitFormat;
@@ -1009,6 +984,9 @@ public abstract class MoPub : MoPubBase
             object obj;
             double parsedDouble;
             int parsedInt;
+
+            if (fields.TryGetValue("app_version", out obj) && obj != null)
+                impData.AppVersion = obj.ToString();
 
             if (fields.TryGetValue("adunit_id", out obj) && obj != null)
                 impData.AdUnitId = obj.ToString();
