@@ -3,7 +3,7 @@ pipeline {
     agent any
     parameters {
         string(name: 'UNITY_ROOT', defaultValue: '/Applications/Unity/Hub/Editor', description: 'Override the root directory of the agent Unity root')
-        string(name: 'UNITY_VERSION', defaultValue: '2017.4.32f1', description: 'The version directory name of the Unity install')
+        string(name: 'UNITY_VERSION', defaultValue: '2018.4.22f1', description: 'The version directory name of the Unity install')
     }
     environment {
         UNITY_ROOT = "${params.UNITY_ROOT}"
@@ -39,6 +39,11 @@ pipeline {
                     archiveArtifacts 'unity-sample-app/Build/*.apk'
                     archiveArtifacts 'unity-sample-app/Build/*.ipa.zip'
                     archiveArtifacts 'scripts/*log.txt'
+
+                    echo "Finished job with the following environment:"
+                    echo "UNITY_ROOT: ${env.UNITY_ROOT}"
+                    echo "UNITY_VERSION: ${env.UNITY_VERSION}"
+                    echo "UNITY_PATH: ${env.UNITY_BIN}"
                 }
             }
         }

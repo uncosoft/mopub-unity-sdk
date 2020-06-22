@@ -311,6 +311,8 @@ public class MoPubManager : MonoBehaviour
 
     public void EmitConsentDialogShownEvent()
     {
+        consentDialogShown = true;
+
         MoPubLog.Log("EmitConsentDialogShownEvent", MoPubLog.ConsentLogEvent.ShowSuccess);
         var evt = OnConsentDialogShownEvent;
         if (evt != null) evt();

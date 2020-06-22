@@ -38,7 +38,7 @@ UNITY_DIR=unity-sample-app/Assets/MoPub/Plugins/Android
 #   * mopub-sdk-*.aar: modularized SDK aars (excluding native-video)
 cp mopub-android-sdk-unity/"$AAR_DIR"/mopub-unity-wrappers-release.aar "$UNITY_DIR"/mopub-unity-wrappers.aar
 validate
-for lib in base banner interstitial rewardedvideo native-static; do
+for lib in base banner fullscreen native-static; do
   cp "$SDK_DIR/mopub-sdk/mopub-sdk-$lib/$AAR_DIR/mopub-sdk-$lib-release.aar" "$UNITY_DIR"/mopub-sdk-$lib.aar
   validate
 done

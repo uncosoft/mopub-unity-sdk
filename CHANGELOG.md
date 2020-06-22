@@ -1,3 +1,20 @@
+## Version 5.13.0 (June 22, 2020)
+- **Features**
+  - The MoPub Unity Plugin now includes version `5.13.0` of the MoPub Android and iOS SDKs.
+  - Handled newly deprecated Android SDK modules in SDK Manager migration.
+  - Removed viewability exclusions in Android wrapper.
+  - Cleaned up Android Manifest.
+
+- **Bug Fixes**
+  - Fixed missing `OnConsentDialogDismissed` event when consent dialog closes via X button.
+  - Fixed incorrect logging when consent status changes.
+  - Fixed incorrect return from `GetAvailableRewards` when there is a single Reward.
+  - Removed redundant Unity resume after interstitial dismissal on iOS.
+
+## Version 5.12.1 (April 16, 2020)
+- **Features**
+  - The MoPub Unity Plugin now includes version 5.12.1 of the MoPub iOS SDK (and version 5.12.0 of the MoPub Android SDK).
+
 ## Version 5.12.0 (April 09, 2020)
 - **Features**
   - The MoPub Unity Plugin now includes version 5.12.0 of the MoPub Android SDK and version 5.12.0 of the MoPub iOS SDK.

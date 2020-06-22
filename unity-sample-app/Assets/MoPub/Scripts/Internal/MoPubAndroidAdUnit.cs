@@ -147,9 +147,6 @@ internal class MoPubAndroidAdUnit : MoPubAdUnit {
 
         using (var obj = _plugin.Call<AndroidJavaObject>("getAvailableRewards")) {
             var rewardsJavaObjArray = AndroidJNIHelper.ConvertFromJNIArray<AndroidJavaObject[]>(obj.GetRawObject());
-            if (rewardsJavaObjArray.Length <= 1)
-                return new List<MoPub.Reward>(_rewardsDict.Keys);
-
             foreach (var r in rewardsJavaObjArray) {
                 _rewardsDict.Add(
                     new MoPub.Reward { Label = r.Call<string>("getLabel"), Amount = r.Call<int>("getAmount") }, r);

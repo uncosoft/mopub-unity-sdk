@@ -19,6 +19,8 @@ print_export_starting
 # It also imports and includes the Google Play Services Resolver using the gvh_disable, per their README on github, to 
 # prevent a version clash in a pub's project when importing a newer version of it.
 
+# TODO (ADF-4383): Replace the res/ dir (and this workaround) with in-editor adaptive icons once
+# Unity 2018 is the minimum supported version.
 echo -e "Excluding Android resources to avoid overriding Publisher icon...\n"
 mv unity-sample-app/Assets/MoPub/Plugins/Android/MoPub.plugin/res* unity-sample-app/
 validate

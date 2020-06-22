@@ -32,14 +32,13 @@ public class MoPubDemoGUI : MonoBehaviour
     private readonly string[] _interstitialAdUnits =
         { "4f117153f5c24fa6a3a92b818a5eb630", "9f2859c6726447aa9eaaa43a35ae8682" };
 
-    private readonly string[] _rewardedVideoAdUnits = { "8f000bd5e00246de9c789eed39ff6096" };
-
-    private readonly string[] _rewardedRichMediaAdUnits = { "98c29e015e7346bd9c380b1467b33850" };
+    private readonly string[] _rewardedAdUnits =
+        { "8f000bd5e00246de9c789eed39ff6096", "98c29e015e7346bd9c380b1467b33850" };
 #elif UNITY_ANDROID || UNITY_EDITOR
     private readonly string[] _bannerAdUnits = { "b195f8dd8ded45fe847ad89ed1d016da" };
     private readonly string[] _interstitialAdUnits = { "24534e1901884e398f1253216226017e" };
-    private readonly string[] _rewardedVideoAdUnits = { "920b6145fb1546cf8b5cf2ac34638bb7" };
-    private readonly string[] _rewardedRichMediaAdUnits = { "a96ae2ef41d44822af45c6328c4e1eb1" };
+    private readonly string[] _rewardedAdUnits =
+        { "920b6145fb1546cf8b5cf2ac34638bb7", "a96ae2ef41d44822af45c6328c4e1eb1" };
 #endif
 
 #if mopub_native_beta
@@ -80,11 +79,8 @@ public class MoPubDemoGUI : MonoBehaviour
     // Default text for custom data fields
     private static string _customDataDefaultText = "Optional custom data";
 
-    // String to fill with custom data for Rewarded Videos
-    private string _rvCustomData = _customDataDefaultText;
-
-    // String to fill with custom data for Rewarded Rich Media
-    private string _rrmCustomData = _customDataDefaultText;
+    // String to fill with custom data for Rewarded ads
+    private string _rewardedCustomData = _customDataDefaultText;
 
     // Flag indicating that personally identifiable information can be collected
     private bool _canCollectPersonalInfo = false;
@@ -152,7 +148,7 @@ public class MoPubDemoGUI : MonoBehaviour
         _currentConsentStatus = newStatus;
         _shouldShowConsentDialog = MoPub.ShouldShowConsentDialog;
 
-        UpdateStatusLabel("Consent status changed");
+        UpdateStatusLabel($"Consent status changed from {oldStatus} to {newStatus}");
     }
 
     public void LoadAvailableRewards(string adUnitId, List<MoPub.Reward> availableRewards)
@@ -228,8 +224,7 @@ public class MoPubDemoGUI : MonoBehaviour
 
         AddAdUnitsToStateMaps(_bannerAdUnits);
         AddAdUnitsToStateMaps(_interstitialAdUnits);
-        AddAdUnitsToStateMaps(_rewardedVideoAdUnits);
-        AddAdUnitsToStateMaps(_rewardedRichMediaAdUnits);
+        AddAdUnitsToStateMaps(_rewardedAdUnits);
 #if mopub_native_beta
         AddAdUnitsToStateMaps(_nativeAdUnits);
 #endif
@@ -244,8 +239,7 @@ public class MoPubDemoGUI : MonoBehaviour
 
         MoPub.LoadBannerPluginsForAdUnits(_bannerAdUnits);
         MoPub.LoadInterstitialPluginsForAdUnits(_interstitialAdUnits);
-        MoPub.LoadRewardedVideoPluginsForAdUnits(_rewardedVideoAdUnits);
-        MoPub.LoadRewardedVideoPluginsForAdUnits(_rewardedRichMediaAdUnits);
+        MoPub.LoadRewardedVideoPluginsForAdUnits(_rewardedAdUnits);
 #if mopub_native_beta
         MoPub.LoadNativePluginsForAdUnits(_nativeAdUnits);
 #endif
@@ -328,7 +322,6 @@ public class MoPubDemoGUI : MonoBehaviour
         CreateBannersSection();
         CreateInterstitialsSection();
         CreateRewardedVideosSection();
-        CreateRewardedRichMediaSection();
 #if mopub_native_beta
         CreateNativeSection();
 #endif
@@ -441,24 +434,24 @@ public class MoPubDemoGUI : MonoBehaviour
     {
         GUILayout.Space(_sectionMarginSize);
         GUILayout.Label("Rewarded Videos");
-        if (!IsAdUnitArrayNullOrEmpty(_rewardedVideoAdUnits)) {
-            CreateCustomDataField("rvCustomDataField", ref _rvCustomData);
-            foreach (var rewardedVideoAdUnit in _rewardedVideoAdUnits) {
+        if (!IsAdUnitArrayNullOrEmpty(_rewardedAdUnits)) {
+            CreateCustomDataField("rewardedCustomDataField", ref _rewardedCustomData);
+            foreach (var rewardedAdUnit in _rewardedAdUnits) {
                 GUILayout.BeginHorizontal();
 
-                GUI.enabled = !_adUnitToLoadedMapping[rewardedVideoAdUnit] || ForceEnableButtons;
-                if (GUILayout.Button(CreateRequestButtonLabel(rewardedVideoAdUnit))) {
-                    Debug.Log("requesting rewarded video with AdUnit: " + rewardedVideoAdUnit);
-                    UpdateStatusLabel("Requesting " + rewardedVideoAdUnit);
+                GUI.enabled = !_adUnitToLoadedMapping[rewardedAdUnit] || ForceEnableButtons;
+                if (GUILayout.Button(CreateRequestButtonLabel(rewardedAdUnit))) {
+                    Debug.Log("requesting rewarded ad with AdUnit: " + rewardedAdUnit);
+                    UpdateStatusLabel("Requesting " + rewardedAdUnit);
                     MoPub.RequestRewardedVideo(
-                        adUnitId: rewardedVideoAdUnit, keywords: "rewarded, video, mopub",
+                        adUnitId: rewardedAdUnit, keywords: "rewarded, video, mopub",
                         latitude: 37.7833, longitude: 122.4167, customerId: "customer101");
                 }
 
-                GUI.enabled = _adUnitToLoadedMapping[rewardedVideoAdUnit] || ForceEnableButtons;
+                GUI.enabled = _adUnitToLoadedMapping[rewardedAdUnit] || ForceEnableButtons;
                 if (GUILayout.Button("Show")) {
                     ClearStatusLabel();
-                    MoPub.ShowRewardedVideo(rewardedVideoAdUnit, GetCustomData(_rvCustomData));
+                    MoPub.ShowRewardedVideo(rewardedAdUnit, GetCustomData(_rewardedCustomData));
                 }
 
                 GUI.enabled = true;
@@ -467,17 +460,17 @@ public class MoPubDemoGUI : MonoBehaviour
 
 
                 // Display rewards if there's a rewarded video loaded and there are multiple rewards available
-                if (!MoPub.HasRewardedVideo(rewardedVideoAdUnit)
-                    || !_adUnitToRewardsMapping.ContainsKey(rewardedVideoAdUnit)
-                    || _adUnitToRewardsMapping[rewardedVideoAdUnit].Count <= 1) continue;
+                if (!MoPub.HasRewardedVideo(rewardedAdUnit)
+                    || !_adUnitToRewardsMapping.ContainsKey(rewardedAdUnit)
+                    || _adUnitToRewardsMapping[rewardedAdUnit].Count <= 1) continue;
 
                 GUILayout.BeginVertical();
                 GUILayout.Space(_sectionMarginSize);
                 GUILayout.Label("Select a reward:");
 
-                foreach (var reward in _adUnitToRewardsMapping[rewardedVideoAdUnit]) {
+                foreach (var reward in _adUnitToRewardsMapping[rewardedAdUnit]) {
                     if (GUILayout.Button(reward.ToString())) {
-                        MoPub.SelectReward(rewardedVideoAdUnit, reward);
+                        MoPub.SelectReward(rewardedAdUnit, reward);
                     }
                 }
 
@@ -485,59 +478,7 @@ public class MoPubDemoGUI : MonoBehaviour
                 GUILayout.EndVertical();
             }
         } else {
-            GUILayout.Label("No rewarded video AdUnits available", _smallerFont, null);
-        }
-    }
-
-
-    private void CreateRewardedRichMediaSection()
-    {
-        GUILayout.Space(_sectionMarginSize);
-        GUILayout.Label("Rewarded Rich Media");
-        if (!IsAdUnitArrayNullOrEmpty(_rewardedRichMediaAdUnits)) {
-            CreateCustomDataField("rrmCustomDataField", ref _rrmCustomData);
-            foreach (var rewardedRichMediaAdUnit in _rewardedRichMediaAdUnits) {
-                GUILayout.BeginHorizontal();
-
-                GUI.enabled = !_adUnitToLoadedMapping[rewardedRichMediaAdUnit] || ForceEnableButtons;
-                if (GUILayout.Button(CreateRequestButtonLabel(rewardedRichMediaAdUnit))) {
-                    Debug.Log("requesting rewarded rich media with AdUnit: " + rewardedRichMediaAdUnit);
-                    UpdateStatusLabel("Requesting " + rewardedRichMediaAdUnit);
-                    MoPub.RequestRewardedVideo(
-                        adUnitId: rewardedRichMediaAdUnit, keywords: "rewarded, video, mopub",
-                        latitude: 37.7833, longitude: 122.4167, customerId: "customer101");
-                }
-
-                GUI.enabled = _adUnitToLoadedMapping[rewardedRichMediaAdUnit] || ForceEnableButtons;
-                if (GUILayout.Button("Show")) {
-                    ClearStatusLabel();
-                    MoPub.ShowRewardedVideo(rewardedRichMediaAdUnit, GetCustomData(_rrmCustomData));
-                }
-
-                GUI.enabled = true;
-
-                GUILayout.EndHorizontal();
-
-                // Display rewards if there's a rewarded rich media ad loaded and there are multiple rewards available
-                if (!MoPub.HasRewardedVideo(rewardedRichMediaAdUnit)
-                    || !_adUnitToRewardsMapping.ContainsKey(rewardedRichMediaAdUnit)
-                    || _adUnitToRewardsMapping[rewardedRichMediaAdUnit].Count <= 1) continue;
-
-                GUILayout.BeginVertical();
-                GUILayout.Space(_sectionMarginSize);
-                GUILayout.Label("Select a reward:");
-
-                foreach (var reward in _adUnitToRewardsMapping[rewardedRichMediaAdUnit]) {
-                    if (GUILayout.Button(reward.ToString())) {
-                        MoPub.SelectReward(rewardedRichMediaAdUnit, reward);
-                    }
-                }
-
-                GUILayout.Space(_sectionMarginSize);
-                GUILayout.EndVertical();
-            }
-        } else {
-            GUILayout.Label("No rewarded rich media AdUnits available", _smallerFont, null);
+            GUILayout.Label("No rewarded AdUnits available", _smallerFont, null);
         }
     }
 

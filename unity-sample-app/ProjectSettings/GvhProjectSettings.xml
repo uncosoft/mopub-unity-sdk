@@ -6,6 +6,7 @@
   <projectSetting name="Google.IOSResolver.PodfileEnabled" value="True" />
   <projectSetting name="Google.IOSResolver.PodToolExecutionViaShellEnabled" value="True" />
   <projectSetting name="Google.IOSResolver.VerboseLoggingEnabled" value="True" />
+  <projectSetting name="Google.UnityPackageManagerResolver.Enable" value="False" />
   <projectSetting name="Google.UnityPackageManagerResolver.VerboseLoggingEnabled" value="False" />
   <projectSetting name="Google.VersionHandler.VerboseLoggingEnabled" value="False" />
   <projectSetting name="GooglePlayServices.AndroidPackageInstallationEnabled" value="True" />
