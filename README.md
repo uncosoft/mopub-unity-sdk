@@ -11,6 +11,9 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
 ## New in This Version (5.13.0 - June 22, 2020)
+
+** NOTE: MoPub has found a bug regarding failover urls such that using 5.13.0 is not recommended. Stay tuned for 5.13.1. **
+
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
 - **Features**
