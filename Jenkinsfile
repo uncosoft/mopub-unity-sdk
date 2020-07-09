@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 pipeline {
-    agent any
+    agent { label 'node_1' }
     parameters {
         string(name: 'UNITY_ROOT', defaultValue: '/Applications/Unity/Hub/Editor', description: 'Override the root directory of the agent Unity root')
         string(name: 'UNITY_VERSION', defaultValue: '2018.4.22f1', description: 'The version directory name of the Unity install')

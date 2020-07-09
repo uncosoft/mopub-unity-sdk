@@ -10,23 +10,15 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.13.0 - June 22, 2020)
-
-**NOTE: MoPub has found a bug regarding failover urls such that using 5.13.0 is not recommended. Stay tuned for 5.13.1.**
+## New in This Version (5.13.1 - July 09, 2020)
 
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
 - **Features**
-  - The MoPub Unity Plugin now includes version `5.13.0` of the MoPub Android and iOS SDKs.
-  - Handled newly deprecated Android SDK modules in SDK Manager migration.
-  - Removed viewability exclusions in Android wrapper.
-  - Cleaned up Android Manifest.
+  - The MoPub Unity Plugin now includes version `5.13.1` of the MoPub Android and iOS SDKs.
 
 - **Bug Fixes**
-  - Fixed missing `OnConsentDialogDismissed` event when consent dialog closes via X button.
-  - Fixed incorrect logging when consent status changes.
-  - Fixed incorrect return from `GetAvailableRewards` when there is a single Reward.
-  - Removed redundant Unity resume after interstitial dismissal on iOS.
+  - Fixed outdated version in sample app podspec.
 
 ## Upgrading to SDK 5.13
 
