@@ -53,8 +53,11 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
      * @param width float for the maximum width, in dp, for the ad
      * @param height float for the maximum height, in dp, for the ad
      * @param alignment int for the desired alignment for the requested banner.
+     * @param keywords String with comma-separated key:value pairs of non-PII keywords.
+     * @param userDataKeywords String with comma-separated key:value pairs of PII keywords.
      */
-    public void requestBanner(final float width, final float height, final int alignment) {
+    public void requestBanner(final float width, final float height, final int alignment,
+                              final String keywords, final String userDataKeywords) {
         if (alreadyRequested())
             return;
 
@@ -62,6 +65,8 @@ public class MoPubBannerUnityPlugin extends MoPubUnityPlugin implements MoPubVie
             public void run() {
                 mMoPubView = new MoPubView(getActivity());
                 mMoPubView.setAdUnitId(mAdUnitId);
+                mMoPubView.setKeywords(keywords);
+                mMoPubView.setUserDataKeywords(userDataKeywords);
                 mMoPubView.setBannerAdListener(MoPubBannerUnityPlugin.this);
 
                 mMoPubView.loadAd(MoPubAdSize.valueOf((int) height));

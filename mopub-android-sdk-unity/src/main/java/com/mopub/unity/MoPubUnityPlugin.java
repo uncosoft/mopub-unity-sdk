@@ -46,6 +46,16 @@ import static com.mopub.common.logging.MoPubLog.SdkLogEvent;
 public class MoPubUnityPlugin {
     protected static String TAG = "MoPub";
 
+    /**
+     * Listener interface to send real-time background events while the Unity Player is paused (due
+     * to a fullscreen ad being displayed).
+     */
+    public interface IBackgroundEventListener
+    {
+        void onEvent(String event, String json);
+    }
+
+    private static IBackgroundEventListener bgEventListener;
 
     protected enum UnityEvent {
         // Init
@@ -83,16 +93,34 @@ public class MoPubUnityPlugin {
         NativeLoad("NativeLoad"),
         NativeFail("NativeFail"),
         // Impressions
-        ImpressionTracked("ImpressionTracked");
+        ImpressionTracked("ImpressionTracked", true);
 
         @NonNull
         final private String name;
 
-        UnityEvent(@NonNull final String name) { this.name = "Emit" + name + "Event"; }
+        /**
+         * Whether the event should be sent in the background, even when the Unity Player is paused.
+         */
+        final private boolean background;
+
+        UnityEvent(@NonNull final String name) { this(name, false); }
+
+        UnityEvent(@NonNull final String name, boolean background) {
+            this.name = "Emit" + name + "Event";
+            this.background = background;
+        }
+
 
         public void Emit(String... args) {
             try {
-                UnityPlayer.UnitySendMessage("MoPubManager", name, JSON.std.asString(args));
+                final String json = JSON.std.asString(args);
+                // Send the event immediately to the Unity Plugin via a background thread, if
+                // applicable.
+                if (background && bgEventListener != null)
+                    bgEventListener.onEvent(name, json);
+                // Send the event to the Unity Plugin via the foreground thread (which is delayed
+                // until the Unity Player resumes once the fullscreen ad is dismissed).
+                UnityPlayer.UnitySendMessage("MoPubManager", name, json);
             } catch (IOException e) {
                 MoPubLog.log(SdkLogEvent.ERROR_WITH_THROWABLE,
                         "Exception sending message to Unity", e);
@@ -158,6 +186,7 @@ public class MoPubUnityPlugin {
      * @param mediatedNetworkConfigurationsJson String with JSON containing adapter configuration
      *                                          options used to initialize third-party networks.
      * @param moPubRequestOptionsJson String with JSON containing adapter configuration options
+     * @param backgroundEventListener IBackgroundEventListener to receive background events.
      */
     public static void initializeSdk(final String adUnitId,
                                      final String adapterConfigurationClassesString,
@@ -165,7 +194,9 @@ public class MoPubUnityPlugin {
                                      final boolean allowLegitimateInterest,
                                      final int logLevel,
                                      final String mediatedNetworkConfigurationsJson,
-                                     final String moPubRequestOptionsJson) {
+                                     final String moPubRequestOptionsJson,
+                                     final IBackgroundEventListener backgroundEventListener) {
+        MoPubUnityPlugin.bgEventListener = backgroundEventListener;
 
         final SdkConfiguration.Builder sdkConfigurationBuilder =
             new SdkConfiguration.Builder(adUnitId)
@@ -288,6 +319,19 @@ public class MoPubUnityPlugin {
         runSafelyOnUiThread(new Runnable() {
             public void run() {
                 new MoPubConversionTracker(getActivity()).reportAppOpen();
+            }
+        });
+    }
+
+
+    /**
+     * Disables viewability measurement for the rest of the app session.
+     */
+    public static void disableViewability() {
+        runSafelyOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MoPub.disableViewability();
             }
         });
     }
@@ -702,6 +746,12 @@ public class MoPubUnityPlugin {
 
         @Override
         public String getConsentedVendorListIabFormat() {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public String chooseAdUnit() {
             return null;
         }
 

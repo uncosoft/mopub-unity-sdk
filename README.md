@@ -10,15 +10,46 @@ To get started visit our [Unity Engine Integration](https://www.mopub.com/resour
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.13.1 - July 09, 2020)
+## New in This Version (5.14.1 - October 5, 2020)
 
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
 - **Features**
-  - The MoPub Unity Plugin now includes version `5.13.1` of the MoPub Android and iOS SDKs.
+  - The MoPub Unity Plugin now includes version `5.14.0` of the MoPub Android SDK and version `5.14.1` of the iOS SDK.
+  - Added beta support for OMSDK version 1.3.4.
+  - Added background event for real-time impression tracking: `OnImpressionTrackedEventBg`. Please see [our Publisher Docs](https://developers.mopub.com/publishers/unity/impression-data/#register-for-the-impression-event) for details.
+  - Added ability to include `keywords` and `userDataKeywords` when requesting banners.
+  - The Android SDK dependency is now managed by the External Dependency Manger. Please see [upgrade note below](https://github.com/mopub/mopub-unity-sdk#upgrading-to-sdk-514).
+  - Added Pangle to `MoPub.SupportedNetwork` class.
+  - Removed Mintegral from `MoPub.SupportedNetwork` class.
 
 - **Bug Fixes**
-  - Fixed outdated version in sample app podspec.
+  - Fixed an issue with interstitial loading causing crashes on Unity 2020. Please see [requirements note below](https://github.com/mopub/mopub-unity-sdk#additional-requirements-for-unity-2020) if you are using Unity 2020.
+  - Fixed issue in SDK Manager when handling deprecated networks.
+
+## Upgrading to SDK 5.14
+
+After upgrading to the `5.14.1` Plugin, use the *Migrate* button in the *SDK Manager* dialog to remove the Android SDK, as this dependency is now managed by the External Dependency Manager. The removed components are:
+* `mopub-sdk-base.aar`
+* `mopub-sdk-banner.aar`
+* `mopub-sdk-fullscreen.aar`
+* `mopub-sdk-native-static.aar`
+* `mopub-volley-2.0.0.jar`
+
+Also, starting from version `5.14.1` the minimum supported Grade Tools version is `3.4.0`.
+
+### Additional Requirements for Unity 2020+
+
+To prevent issues with your MoPub integration on Android, please ensure your Unity 2020 application has the following gradle properties:
+```
+android.useAndroidX=true
+android.enableDexingArtifactTransform=false
+```
+If you have further issues, ensure multidex has been enabled as well.
+
+For more details on the above, please refer to the following documentation:
+* [Gradle for Android on Unity Manual](https://docs.unity3d.com/2020.1/Documentation/Manual/android-gradle-overview.html)
+* [Multidex on Android Studio User Guide](https://developer.android.com/studio/build/multidex)
 
 ## Upgrading to SDK 5.13
 
@@ -58,10 +89,6 @@ for more details, see https://developers.mopub.com/docs/unity/getting-started/#m
 Please see the [Getting Started Guide](https://developers.mopub.com/docs/unity/getting-started/) for instructions on upgrading from SDK `4.X` to SDK `5.0`.
 
 For GDPR-specific upgrading instructions, also see the [GDPR Integration Guide](https://developers.mopub.com/docs/publisher/gdpr-guide/).
-
-## License
-
-The MoPub SDK License can be found at [http://www.mopub.com/legal/sdk-license-agreement/](http://www.mopub.com/legal/sdk-license-agreement/).
 
 ## Developing on the MoPub Unity Plugin
 
@@ -103,3 +130,11 @@ Exporting the unity package can also be done manually, by opening the `unity/` p
 ### How do I run the sample unity project and test?
 
 After building per instructions above, open the `unity-sample-app/` project in Unity, click `File > Build Settings...`, select iOS or Android, click `Build and Run`.
+
+## License
+
+The MoPub SDK License can be found at [http://www.mopub.com/legal/sdk-license-agreement/](http://www.mopub.com/legal/sdk-license-agreement/).
+
+## Open Measurement License
+
+We have partnered with the IAB to provide Viewability measurement via the Open Measurement SDK as of version 5.14.0. To view the full license, visit [https://www.mopub.com/en/omlv1](https://www.mopub.com/en/omlv1)

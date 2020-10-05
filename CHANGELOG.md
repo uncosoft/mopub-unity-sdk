@@ -1,3 +1,17 @@
+## Version 5.14.1 (October 4, 2020)
+- **Features**
+  - The MoPub Unity Plugin now includes version `5.14.0` of the MoPub Android SDK and version `5.14.1` of the iOS SDK.
+  - Added beta support for OMSDK version 1.3.4.
+  - Added background event for real-time impression tracking: `OnImpressionTrackedEventBg`. Please see [our Publisher Docs](https://developers.mopub.com/publishers/unity/impression-data/#register-for-the-impression-event) for details.
+  - Added ability to include `keywords` and `userDataKeywords` when requesting banners.
+  - The Android SDK dependency is now managed by the External Dependency Manger. Please see [upgrade note below](https://github.com/mopub/mopub-unity-sdk#upgrading-to-sdk-514).
+  - Added Pangle to `MoPub.SupportedNetwork` class.
+  - Removed Mintegral from `MoPub.SupportedNetwork` class.
+
+- **Bug Fixes**
+  - Fixed an issue with interstitial loading causing crashes on Unity 2020. Please see [requirements note below](https://github.com/mopub/mopub-unity-sdk#additional-requirements-for-unity-2020) if you are using Unity 2020.
+  - Fixed issue in SDK Manager when handling deprecated networks.
+
 ## Version 5.13.1 (July 09, 2020)
 - **Features**
   - The MoPub Unity Plugin now includes version `5.13.1` of the MoPub Android and iOS SDKs.
