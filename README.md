@@ -6,26 +6,21 @@ Sign up for an account at [http://app.mopub.com/](http://app.mopub.com/).
 
 ## Need Help?
 
-To get started visit our [Unity Engine Integration](https://www.mopub.com/resources/docs/unity-engine-integration/) guide and find additional help documentation on our [developer help site](http://dev.twitter.com/mopub).
+To get started visit our [Unity Integration Guide](https://developers.mopub.com/publishers/unity/integrate/) and find additional help documentation on our [developer help site](https://developers.mopub.com/).
 
 To file an issue with our team please email [support@mopub.com](mailto:support@mopub.com).
 
-## New in This Version (5.14.1 - October 5, 2020)
+## New in This Version (5.15.0 - November 18, 2020)
 
 Please view the [MoPub Unity SDK changelog](https://github.com/mopub/mopub-unity-sdk/blob/master/CHANGELOG.md), [MoPub Android SDK changelog](https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md), and [MoPub iOS SDK changelog](https://github.com/mopub/mopub-ios-sdk/blob/master/CHANGELOG.md) for a complete list of additions, fixes, and enhancements across releases and platforms.
 
 - **Features**
-  - The MoPub Unity Plugin now includes version `5.14.0` of the MoPub Android SDK and version `5.14.1` of the iOS SDK.
-  - Added beta support for OMSDK version 1.3.4.
-  - Added background event for real-time impression tracking: `OnImpressionTrackedEventBg`. Please see [our Publisher Docs](https://developers.mopub.com/publishers/unity/impression-data/#register-for-the-impression-event) for details.
-  - Added ability to include `keywords` and `userDataKeywords` when requesting banners.
-  - The Android SDK dependency is now managed by the External Dependency Manger. Please see [upgrade note below](https://github.com/mopub/mopub-unity-sdk#upgrading-to-sdk-514).
-  - Added Pangle to `MoPub.SupportedNetwork` class.
-  - Removed Mintegral from `MoPub.SupportedNetwork` class.
+  - The MoPub Unity Plugin now includes version `5.15.0` of the MoPub Android and iOS SDKs.
+  - Added support for Snap Audience Network.
+  - Updated External Dependency Manager from 1.2.147 to 1.2.160.
 
 - **Bug Fixes**
-  - Fixed an issue with interstitial loading causing crashes on Unity 2020. Please see [requirements note below](https://github.com/mopub/mopub-unity-sdk#additional-requirements-for-unity-2020) if you are using Unity 2020.
-  - Fixed issue in SDK Manager when handling deprecated networks.
+  -  Cleaned up Android dependencies.
 
 ## Upgrading to SDK 5.14
 
@@ -121,7 +116,7 @@ Before you can build the plugin per the instructions below, you must do the foll
 
 ### How do I build?
 
-NOTE: Building is only needed for development of the MoPub Unity SDK; for MoPub SDK integration, please see our [Unity Engine Integration](https://www.mopub.com/resources/docs/unity-engine-integration/) guide.
+NOTE: Building is only needed for development of the MoPub Unity SDK; for MoPub SDK integration, please see our [Unity Integration Guide](https://developers.mopub.com/publishers/unity/integrate/) guide.
 
 Simply run [`./scripts/build.sh`](https://github.com/mopub/mopub-unity-sdk/blob/master/scripts/build.sh) (make sure the Unity IDE is *not* running), which builds the Android wrapper, copies it to the sample project, and then exports a unity package with everything needed for a successful MoPub integration.
 

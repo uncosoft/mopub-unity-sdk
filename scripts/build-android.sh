@@ -12,7 +12,7 @@ fi
 # Set the SDK directory as an environment variable for mopub-android-sdk-unity/settings.gradle
 export SDK_DIR=mopub-android-sdk
 
-SDK_NAME="PUBLIC Android SDK"
+SDK_NAME="EXTERNAL Android SDK"
 SDK_VERSION_SUFFIX=unity
 if [[ "$INTERNAL_SDK" = true ]]; then
   SDK_DIR=mopub-android
@@ -32,7 +32,20 @@ print_blue_line "Copying wrappers aar"
 AAR_DIR=build/outputs/aar
 UNITY_DIR=unity-sample-app/Assets/MoPub/Plugins/Android
 MOPUB_DEPENDENCIES_XML=unity-sample-app/Assets/MoPub/Scripts/Editor/MoPubDependencies.xml
-VOLLEY_DEPENDENCY='<androidPackage spec="com.mopub.volley:mopub-volley:2.1.0"\/>'
+INTERNAL_DEPENDENCIES='\
+<!--INTERNAL_DEPS_START-->\
+    <!-- NOTE: Internal dependencies are toggled by build-android.sh, so update them in that script! -->\
+    <androidPackage spec="com.mopub.volley:mopub-volley:2.1.0"\/>\
+    <androidPackage spec="com.mopub:omsdk-android:1.3.4@aar"\/>\
+    <androidPackage spec="androidx.legacy:legacy-support-v4:1.0.0"\/>\
+    <androidPackage spec="androidx.appcompat:appcompat:1.1.0"\/>\
+    <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.61"\/>\
+    <androidPackage spec="androidx.media2:media2-session:1.0.1"\/>\
+    <androidPackage spec="androidx.media2:media2-widget:1.0.1"\/>\
+    <androidPackage spec="androidx.media2:media2-player:1.0.1"\/>\
+    <androidPackage spec="androidx.core:core-ktx:1.1.0"\/>\
+    <androidPackage spec="com.google.code.gson:gson:2.8.5"\/>\
+<!--INTERNAL_DEPS_END-->'
 
 # Copy the generated mopub-unity-wrappers*.aar into the unity sample app
 cp mopub-android-sdk-unity/"$AAR_DIR"/mopub-unity-wrappers-release.aar "$UNITY_DIR"/mopub-unity-wrappers.aar
@@ -50,9 +63,9 @@ if [[ "$INTERNAL_SDK" = true ]]; then
     validate
   done
 
-  print_blue_line "Disabling Android SDK EDM Dependency"
-  # Comment out SDK and add Volley in MoPubDependencies.xml
-  sed -i "" -Ee "s/^  .*com.mopub:mopub-sdk.*/<!--&-->${VOLLEY_DEPENDENCY}/" ${MOPUB_DEPENDENCIES_XML}
+  print_blue_line "Updating MoPubDependencies.xml for INTERNAL Android SDK"
+  # Comment out SDK and add internal dependencies
+  sed -i "" -Ee "s/^  .*com.mopub:mopub-sdk.*/<!--&-->${INTERNAL_DEPENDENCIES}/" ${MOPUB_DEPENDENCIES_XML}
   validate
 else
 
@@ -60,10 +73,13 @@ else
   # Remove previously copied internal aars
   rm "$UNITY_DIR"/mopub-sdk-*.aar* >& /dev/null
 
-  print_blue_line "Enabling Android SDK EDM Dependency"
-  # Uncomment SDK and remove Volley dependency in MoPubDependencies.xml
-  sed -i "" -Ee '/<!--  .*com.mopub:mopub-sdk.*/s/^<!--//' \
-            -Ee "/.*com.mopub:mopub-sdk.*-->${VOLLEY_DEPENDENCY}/s/-->${VOLLEY_DEPENDENCY}//" ${MOPUB_DEPENDENCIES_XML}
+  print_blue_line "Updating MoPubDependencies.xml for EXTERNAL Android SDK"
+  # Uncomment SDK
+  sed -i "" -Ee "/<!--  .*com.mopub:mopub-sdk.*/s/^<!--//" \
+            -Ee "/.*com.mopub:mopub-sdk.*-->/s/-->//" ${MOPUB_DEPENDENCIES_XML}
+  validate
+  # Remove internal dependencies
+  sed -i "" -e '/INTERNAL_DEPS_START/,/INTERNAL_DEPS_END/d' ${MOPUB_DEPENDENCIES_XML}
   validate
 fi
 

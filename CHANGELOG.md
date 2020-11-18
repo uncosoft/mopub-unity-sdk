@@ -1,4 +1,13 @@
-## Version 5.14.1 (October 4, 2020)
+## Version 5.15.0 (November 18, 2020)
+- **Features**
+  - The MoPub Unity Plugin now includes version `5.15.0` of the MoPub Android and iOS SDKs.
+  - Added support for Snap Audience Network.
+  - Updated External Dependency Manager from 1.2.147 to 1.2.160.
+
+- **Bug Fixes**
+  -  Cleaned up Android dependencies.
+
+## Version 5.14.1 (October 5, 2020)
 - **Features**
   - The MoPub Unity Plugin now includes version `5.14.0` of the MoPub Android SDK and version `5.14.1` of the iOS SDK.
   - Added beta support for OMSDK version 1.3.4.

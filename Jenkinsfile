@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                sh 'sudo xcode-select --switch /Applications/Xcode_12.0.app/' // Run xcode-select and select stable
+                sh 'sudo xcode-select --switch /Applications/Xcode.app/' // Select Xcode version set on symlink (via Jenkins UI)
             }
         }
         stage('Build SDKs and Unity Package') {
